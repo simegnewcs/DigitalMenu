@@ -16,12 +16,12 @@ export default function QRCodeDisplay({ url }: QRCodeDisplayProps) {
 
   if (!qrCode) {
     return (
-      <div className="w-64 h-64 bg-gray-200 animate-pulse rounded-lg" />
+      <div className="w-full h-full bg-gray-200 animate-pulse rounded-lg" />
     );
   }
 
   return (
     // eslint-disable-next-line @next/next/no-img-element
-    <img src={qrCode} alt="Menu QR Code" className="w-64 h-64" />
+    <img src={qrCode} alt="Menu QR Code" className="w-full h-full object-contain" />
   );
 }
