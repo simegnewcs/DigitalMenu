@@ -8,17 +8,19 @@ interface MenuCardProps {
 
 export default function MenuCard({ item }: MenuCardProps) {
   return (
-    <div className="bg-white rounded-lg shadow-md p-4 mb-4 border border-gray-100">
-      <div className="flex justify-between items-start mb-2">
-        <div>
-          <h3 className="text-lg font-bold text-gray-800">{item.name}</h3>
-          <p className="text-sm text-amber-600 font-medium">{item.nameAmharic}</p>
+    <div className="flex items-baseline gap-2 py-3 border-b border-amber-900/20 last:border-b-0">
+      <div className="flex-1 min-w-0">
+        <div className="flex items-baseline gap-2">
+          <h3 className="text-white font-medium text-base truncate">{item.name}</h3>
+          <span className="text-amber-300 text-sm">{item.nameAmharic}</span>
         </div>
-        <div className="text-right">
-          <span className="text-xl font-bold text-green-600">{item.price} ETB</span>
-        </div>
+        <p className="text-amber-100/70 text-xs mt-1 leading-relaxed">{item.description}</p>
       </div>
-      <p className="text-gray-600 text-sm leading-relaxed">{item.description}</p>
+      <div className="flex-1 border-b border-dotted border-amber-400/50 mx-2 mb-1"></div>
+      <div className="text-right shrink-0">
+        <span className="text-amber-300 font-bold text-lg">{item.price}</span>
+        <span className="text-amber-400/70 text-xs ml-1">ETB</span>
+      </div>
     </div>
   );
 }
