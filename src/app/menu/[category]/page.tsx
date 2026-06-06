@@ -75,13 +75,13 @@ export default async function CategoryPage({ params }: Props) {
         </div>
 
         <section className="mb-6 sm:mb-10">
-          <div className="bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-600 rounded-t-lg py-2 sm:py-3 px-3 sm:px-6 shadow-lg">
+          <div className="bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-600 rounded-t-lg sm:rounded-t-xl py-2 sm:py-3 px-3 sm:px-6 shadow-lg sm:shadow-xl border-2 sm:border-4 border-blue-600/90">
             <h2 className="text-base sm:text-xl font-bold text-red-950 flex items-center justify-center flex-wrap gap-1">
               <span className="text-lg sm:text-2xl">{categoryData.nameAm}</span>
               <span className="text-sm sm:text-lg">/ {categoryData.name}</span>
             </h2>
           </div>
-          <div className="bg-gradient-to-b from-red-900/90 to-red-950/90 rounded-b-lg p-3 sm:p-5 border-2 border-amber-600/30 border-t-0 shadow-xl">
+          <div className="bg-gradient-to-b from-red-900/95 to-red-950/95 rounded-b-lg sm:rounded-b-xl p-3 sm:p-5 border-2 sm:border-4 border-blue-600/80 border-t-0 shadow-xl sm:shadow-2xl">
             {items.map((item) => (
               <MenuCard key={item.id} item={item} />
             ))}

@@ -1,3 +1,8 @@
+export interface MenuSubItem {
+  name: string;
+  nameAmharic?: string;
+}
+
 export interface MenuItem {
   id: string;
   name: string;
@@ -5,6 +10,7 @@ export interface MenuItem {
   description: string;
   price: number;
   category: string;
+  subItems?: MenuSubItem[];
 }
 
 export interface Category {

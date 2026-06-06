@@ -1,3 +1,6 @@
+'use client';
+
+import { useState } from 'react';
 import { menuItems, categories } from '@/data/menu';
 import MenuCard from '@/components/MenuCard';
 import CategoryNav from '@/components/CategoryNav';
@@ -5,6 +8,20 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 export default function MenuPage() {
+  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(
+    () => new Set(categories.map(c => c.id))
+  );
+
+  const toggleCategory = (categoryId: string) => {
+    const newExpanded = new Set(expandedCategories);
+    if (newExpanded.has(categoryId)) {
+      newExpanded.delete(categoryId);
+    } else {
+      newExpanded.add(categoryId);
+    }
+    setExpandedCategories(newExpanded);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-950 via-red-900 to-red-950">
       <header className="sticky top-0 z-50 bg-gradient-to-r from-red-950 via-red-900 to-red-950 border-b-2 border-amber-600/50 shadow-2xl">
@@ -37,19 +54,48 @@ export default function MenuPage() {
       <main className="max-w-4xl mx-auto px-2 sm:px-4 py-4 sm:py-6 pb-8 sm:pb-12">
         {categories.map((category) => {
           const items = menuItems.filter(item => item.category === category.id);
+          const isExpanded = expandedCategories.has(category.id);
+          
           return (
-            <section key={category.id} id={category.id} className="mb-6 sm:mb-10">
-              <div className="bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-600 rounded-t-lg py-2 sm:py-3 px-3 sm:px-6 shadow-lg">
-                <h2 className="text-base sm:text-xl font-bold text-red-950 flex items-center justify-center flex-wrap gap-1">
-                  <span className="text-lg sm:text-2xl">{category.nameAm}</span>
-                  <span className="text-sm sm:text-lg">/ {category.name}</span>
-                </h2>
-              </div>
-              <div className="bg-gradient-to-b from-red-900/90 to-red-950/90 rounded-b-lg p-3 sm:p-5 border-2 border-amber-600/30 border-t-0 shadow-xl">
-                {items.map((item) => (
-                  <MenuCard key={item.id} item={item} />
-                ))}
-              </div>
+            <section key={category.id} id={category.id} className="mb-6 sm:mb-8">
+              {/* Clickable Category Header */}
+              <button
+                onClick={() => toggleCategory(category.id)}
+                className="w-full bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-600 rounded-t-lg sm:rounded-t-xl py-2 sm:py-3 px-3 sm:px-6 shadow-lg sm:shadow-xl border-2 sm:border-4 border-blue-600/90 flex items-center justify-between hover:shadow-2xl hover:scale-[1.01] transition-all duration-300"
+              >
+                <div className="flex items-center justify-center flex-1 gap-1">
+                  <span className="text-lg sm:text-2xl font-bold text-red-950">{category.nameAm}</span>
+                  <span className="text-sm sm:text-lg font-bold text-red-950">/ {category.name}</span>
+                </div>
+                {/* Expand/Collapse Icon */}
+                <div className="ml-2 shrink-0">
+                  {isExpanded ? (
+                    <svg className="w-5 h-5 sm:w-6 sm:h-6 text-red-950 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 15l7-7 7 7" />
+                    </svg>
+                  ) : (
+                    <svg className="w-5 h-5 sm:w-6 sm:h-6 text-red-950 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  )}
+                </div>
+              </button>
+              
+              {/* Collapsible Items List */}
+              {isExpanded && (
+                <div className="bg-gradient-to-b from-red-900/95 to-red-950/95 rounded-b-lg sm:rounded-b-xl p-3 sm:p-5 border-2 sm:border-4 border-blue-600/80 border-t-0 shadow-xl sm:shadow-2xl">
+                  {items.map((item) => (
+                    <MenuCard key={item.id} item={item} />
+                  ))}
+                </div>
+              )}
+              
+              {/* Show item count when collapsed */}
+              {!isExpanded && (
+                <div className="bg-red-900/50 rounded-b-lg sm:rounded-b-xl py-2 px-3 sm:px-5 border-2 sm:border-4 border-blue-600/70 border-t-0 text-center shadow-lg">
+                  <span className="text-amber-300/60 text-xs sm:text-sm">{items.length} items available - tap to view</span>
+                </div>
+              )}
             </section>
           );
         })}
