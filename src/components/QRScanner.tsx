@@ -30,10 +30,14 @@ export default function QRScanner() {
           qrbox: { width: 250, height: 250 },
         },
         (decodedText) => {
-          // On successful scan
+          // On successful scan - redirect to /menu
+          scannerRef.current?.stop();
           if (decodedText.includes('/menu')) {
-            scannerRef.current?.stop();
             router.push(decodedText);
+          } else {
+            // If scanned URL doesn't have /menu, append it
+            const url = decodedText.replace(/\/$/, '') + '/menu';
+            router.push(url);
           }
         },
         (errorMessage) => {
