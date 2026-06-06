@@ -11,7 +11,7 @@ export default function QRCodeDisplay({ url }: QRCodeDisplayProps) {
   const [qrCode, setQrCode] = useState<string>('');
 
   useEffect(() => {
-    QRCode.toDataURL(url).then(setQrCode);
+    QRCode.toString(url, { type: 'svg' }).then(setQrCode);
   }, [url]);
 
   if (!qrCode) {
@@ -21,7 +21,10 @@ export default function QRCodeDisplay({ url }: QRCodeDisplayProps) {
   }
 
   return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img src={qrCode} alt="Menu QR Code" className="w-full h-full object-contain" />
+    <div 
+      data-qr-container 
+      className="w-full h-full flex items-center justify-center"
+      dangerouslySetInnerHTML={{ __html: qrCode }}
+    />
   );
 }
