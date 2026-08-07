@@ -166,8 +166,9 @@ export default function Home() {
             priority
           />
         </div>
-        <h1 className="text-xl sm:text-3xl font-bold text-amber-400 tracking-wide">Dagmaros Cafe & Restaurant</h1>
-        <p className="text-amber-300/80 text-sm sm:text-base mt-1 sm:mt-2">ዳግማሮስ ካፌ እና ሬስቶራንት</p>
+        <h1 className="text-3xl sm:text-5xl font-black text-amber-400 tracking-wide mb-1">WOMANU 😂</h1>
+        <h2 className="text-xl sm:text-2xl font-bold text-amber-300 tracking-wide mb-2">Dagmaros Cafe & Restaurant</h2>
+        <p className="text-amber-200/90 text-sm sm:text-base italic font-semibold max-w-sm mx-auto">"The digital menu that questions your decisions."</p>
       </header>
 
       <main className="container mx-auto px-3 sm:px-4 py-8 sm:py-12">

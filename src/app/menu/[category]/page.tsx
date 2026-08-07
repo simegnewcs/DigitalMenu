@@ -4,6 +4,7 @@ import CategoryNav from '@/components/CategoryNav';
 import Link from 'next/link';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
+import WomanuBadge from '@/components/WomanuBadge';
 
 export function generateStaticParams() {
   return [
@@ -63,6 +64,8 @@ export default async function CategoryPage({ params }: Props) {
           </div>
         </div>
       </header>
+
+      <WomanuBadge />
 
       <CategoryNav categories={categories} activeCategory={category} />
 

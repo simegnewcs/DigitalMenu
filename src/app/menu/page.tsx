@@ -6,6 +6,7 @@ import MenuCard from '@/components/MenuCard';
 import CategoryNav from '@/components/CategoryNav';
 import Link from 'next/link';
 import Image from 'next/image';
+import WomanuBadge from '@/components/WomanuBadge';
 
 // PDF Generation Function
 const generatePDF = () => {
@@ -248,6 +249,8 @@ export default function MenuPage() {
           </div>
         </div>
       </header>
+
+      <WomanuBadge />
 
       <CategoryNav categories={categories} activeCategory="all" />
 

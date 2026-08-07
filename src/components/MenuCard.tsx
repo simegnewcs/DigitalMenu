@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import { MenuItem } from '@/types/menu';
+import { useWomanu } from './WomanuContext';
+import { getWomanuPrice } from '@/data/womanuLogic';
 
 interface MenuCardProps {
   item: MenuItem;
@@ -9,13 +11,25 @@ interface MenuCardProps {
 
 export default function MenuCard({ item }: MenuCardProps) {
   const [showDetails, setShowDetails] = useState(false);
+  const { mode, setSelectedItem, setShowRecommendationModal } = useWomanu();
   const hasSubItems = item.subItems && item.subItems.length > 0;
+  
+  const displayedPrice = mode === 'womanu' ? getWomanuPrice(item.price) : item.price;
+
+  const handleClick = () => {
+    if (mode === 'womanu') {
+      setSelectedItem(item);
+      setShowRecommendationModal(true);
+    } else if (hasSubItems) {
+      setShowDetails(!showDetails);
+    }
+  };
 
   return (
     <div className="bg-gradient-to-br from-red-800/60 to-red-950/80 rounded-lg sm:rounded-xl p-2.5 sm:p-4 mb-2 sm:mb-3 border-2 sm:border-4 border-white/90 shadow-md sm:shadow-lg hover:shadow-lg sm:hover:shadow-xl hover:scale-[1.01] transition-all duration-300">
       {/* Main Item Row */}
-      <div className={`flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-2 ${hasSubItems ? 'cursor-pointer' : ''}`}
-           onClick={() => hasSubItems && setShowDetails(!showDetails)}>
+      <div className={`flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-2 ${(hasSubItems || mode === 'womanu') ? 'cursor-pointer' : ''}`}
+           onClick={handleClick}>
         <div className="flex-1 min-w-0">
           <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
             <h3 className="text-white font-semibold text-sm sm:text-base flex items-center gap-1">
@@ -39,8 +53,11 @@ export default function MenuCard({ item }: MenuCardProps) {
             }
           </span>
           <div className="text-right bg-red-900/60 rounded-lg px-2 sm:px-3 py-1 border border-amber-600/40">
-            <span className="text-amber-300 font-bold text-base sm:text-lg">{item.price}</span>
+            <span className="text-amber-300 font-bold text-base sm:text-lg">{displayedPrice}</span>
             <span className="text-amber-400/70 text-xs ml-1">ETB</span>
+            {mode === 'womanu' && (
+              <div className="text-[10px] text-amber-500 font-bold mt-[-2px]">+10% 😂</div>
+            )}
           </div>
         </div>
       </div>
