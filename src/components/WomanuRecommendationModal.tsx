@@ -32,7 +32,7 @@ export default function WomanuRecommendationModal() {
     }
   }, [showRecommendationModal, selectedItem]);
 
-  if (mode !== 'womanu' || !showRecommendationModal || !selectedItem || !recommendationData) return null;
+  if (mode !== 'womenu' || !showRecommendationModal || !selectedItem || !recommendationData) return null;
 
   const handleAcceptRecommendation = () => {
     setChangesCount(prev => prev + 1);
@@ -67,7 +67,7 @@ export default function WomanuRecommendationModal() {
         {step !== 'initial' && (
           <div className="mb-4 bg-red-950/50 rounded-lg p-3 border border-amber-600/30">
             <div className="flex justify-between items-center mb-1">
-              <span className="text-amber-200/80 text-xs font-bold">Decision Confidence</span>
+              <span className="text-amber-200/80 text-xs font-bold">የውሳኔ እርግጠኝነት</span>
               <span className="text-amber-400 text-xs font-bold">{confidenceScore}%</span>
             </div>
             <div className="w-full bg-red-950 rounded-full h-2">
@@ -82,8 +82,8 @@ export default function WomanuRecommendationModal() {
         {/* Step: Initial Selection acknowledgment */}
         {step === 'initial' && (
           <div className="text-center py-8 animate-pulse">
-            <h3 className="text-xl font-bold text-amber-300 mb-2">{selectedItem.name} selected!</h3>
-            <p className="text-amber-100/80">Okay, preparing your choice...</p>
+            <h3 className="text-xl font-bold text-amber-300 mb-2">{selectedItem.name} ተመርጧል!</h3>
+            <p className="text-amber-100/80">እሺ፣ ምርጫህን እያዘጋጀን ነው...</p>
           </div>
         )}
 
@@ -92,7 +92,7 @@ export default function WomanuRecommendationModal() {
           <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-300">
             <div className="text-center space-y-2">
               {changesCount > 0 && (
-                <p className="text-red-400 font-bold text-sm">Wait, you just changed your mind! 😂</p>
+                <p className="text-red-400 font-bold text-sm">ቆይ፣ አሁን እኮ ሀሳብህን ቀይረሃል! 😂</p>
               )}
               <h3 className="text-xl font-bold text-amber-300">{recommendationData.message}</h3>
               <p className="text-amber-100">{recommendationData.subMessage}</p>
@@ -125,13 +125,13 @@ export default function WomanuRecommendationModal() {
                 onClick={handleAcceptRecommendation}
                 className="w-full bg-gradient-to-r from-amber-600 to-amber-500 text-red-950 font-bold py-3 rounded-xl hover:opacity-90 transition-opacity"
               >
-                Change to {recommendationData.recommendedItem.name}
+                ወደ {recommendationData.recommendedItem.name} ቀይር
               </button>
               <button
                 onClick={handleReject}
                 className="w-full bg-red-950/50 border border-amber-600/30 text-amber-200/80 font-semibold py-3 rounded-xl hover:bg-red-900 transition-colors text-sm"
               >
-                No, I want my {selectedItem.name} 😤
+                አይ፣ የኔኑ {selectedItem.name} ነው የምፈልገው 😤
               </button>
             </div>
           </div>
@@ -144,7 +144,7 @@ export default function WomanuRecommendationModal() {
             <p className="text-amber-100 mb-4">{rejectionMsg.desc}</p>
             
             <div className="bg-red-950 rounded-xl p-4 border border-amber-500/30 text-left mb-4">
-              <span className="text-xs text-amber-200/60 block mb-1">You selected:</span>
+              <span className="text-xs text-amber-200/60 block mb-1">የመረጥከው:</span>
               <div className="font-bold text-amber-400 text-lg">{selectedItem.name}</div>
               <div className="text-amber-300/80 text-sm">{inflatedPrice} ETB</div>
             </div>
@@ -154,13 +154,13 @@ export default function WomanuRecommendationModal() {
                 onClick={handleFinalConfirm}
                 className="w-full bg-gradient-to-r from-red-600 to-red-500 text-white font-bold py-3 rounded-xl hover:opacity-90 transition-opacity shadow-[0_0_15px_rgba(220,38,38,0.4)]"
               >
-                YES, I'M SURE 😤
+                አዎ፣ እርግጠኛ ነኝ 😤
               </button>
               <button
                 onClick={() => setShowRecommendationModal(false)}
                 className="w-full bg-transparent border border-amber-600/30 text-amber-200/80 font-semibold py-3 rounded-xl hover:bg-red-900 transition-colors text-sm"
               >
-                Let me look again 😂
+                እንደገና ልይ 😂
               </button>
             </div>
           </div>

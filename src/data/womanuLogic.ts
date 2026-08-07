@@ -102,9 +102,9 @@ export const getRecommendation = (itemId: string, categoryId: string) => {
 };
 
 export const getRejectionMessage = (changes: number) => {
-  if (changes === 0) return { title: 'Are you sure? 👀', desc: '😐 Okay... But are you REALLY sure?' };
-  if (changes === 1) return { title: 'Who convinced you? 😂', desc: 'Your taste buds have entered the chat.' };
-  if (changes === 2) return { title: 'You changed your mind again?! 😭', desc: 'At this point the kitchen knows you personally.' };
-  if (changes >= 3) return { title: 'CRITICAL WARNING 😂', desc: 'Please make a decision before the food gets cold.' };
-  return { title: 'Are you sure? 👀', desc: 'Okay, I won\'t judge.' };
+  if (changes === 0) return { title: 'እርግጠኛ ነህ? 👀', desc: '😐 እሺ... ግን በእውነት እርግጠኛ ነህ?' };
+  if (changes === 1) return { title: 'ማን አሳመነህ? 😂', desc: 'ምላስህ ውሳኔ መስጠት ጀምሯል።' };
+  if (changes === 2) return { title: 'እንደገና ሃሳብህን ቀየርክ?! 😭', desc: 'አሁንስ ኪችን ውስጥ ያሉ ሰዎች በስም አወቁህ እኮ።' };
+  if (changes >= 3) return { title: 'አስቸኳይ ማሳሰቢያ 😂', desc: 'እባክህ ምግቡ ከመቀዝቀዙ በፊት ውሳኔ ላይ ድረስ።' };
+  return { title: 'እርግጠኛ ነህ? 👀', desc: 'እሺ፣ ምንም አልልም።' };
 };

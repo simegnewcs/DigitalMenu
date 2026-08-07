@@ -3,12 +3,12 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { MenuItem } from '@/types/menu';
 
-export type AppMode = 'menu' | 'womanu' | null;
+export type AppMode = 'menu' | 'womenu' | null;
 
 interface WomanuContextType {
   mode: AppMode;
   setMode: (mode: AppMode) => void;
-  // The item currently being interacted with in WOMANU mode
+  // The item currently being interacted with in WOMENU mode
   selectedItem: MenuItem | null;
   setSelectedItem: (item: MenuItem | null) => void;
   // The recommended alternative

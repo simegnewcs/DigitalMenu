@@ -8,7 +8,7 @@ export default function WomanuBadge() {
   return (
     <div className="bg-red-950/80 border-b border-amber-600/30 text-center py-1.5 shadow-md">
       <span className="text-xs sm:text-sm font-bold text-amber-300">
-        {mode === 'womanu' ? '😂 WOMANU MODE ACTIVE' : '👨 MEN-U MODE'}
+        {mode === 'womenu' ? '😂 WOMENU MODE ACTIVE' : '👨 MEN-U MODE'}
       </span>
     </div>
   );

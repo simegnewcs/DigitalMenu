@@ -16,7 +16,7 @@ export default function WomanuOrderSummary() {
     }
   }, [showOrderSummary]);
 
-  if (mode !== 'womanu' || !showOrderSummary || !selectedItem) return null;
+  if (mode !== 'womenu' || !showOrderSummary || !selectedItem) return null;
 
   const originalPrice = selectedItem.price;
   const womanuPrice = getWomanuPrice(originalPrice);
@@ -50,7 +50,7 @@ export default function WomanuOrderSummary() {
                 <span>{originalPrice} ETB</span>
               </div>
               <div className="flex justify-between text-amber-400 font-semibold border-b border-amber-600/30 pb-2">
-                <span>WOMANU comedy adjustment:</span>
+                <span>WOMENU comedy adjustment:</span>
                 <span>+{comedyAdjustment} ETB</span>
               </div>
               <div className="flex justify-between text-amber-300 font-bold text-lg pt-1">
@@ -66,7 +66,7 @@ export default function WomanuOrderSummary() {
               <span>15 min</span>
             </div>
             <div className="flex justify-between text-amber-400 font-semibold">
-              <span>WOMANU decision time:</span>
+              <span>WOMENU decision time:</span>
               <span>+10 min 😂</span>
             </div>
             <div className="flex justify-between text-amber-300 font-bold border-t border-amber-600/30 pt-2 mt-2">

@@ -28,19 +28,19 @@ export default function WomanuModeSelector() {
           </button>
 
           <button
-            onClick={() => setMode('womanu')}
+            onClick={() => setMode('womenu')}
             className="w-full bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-red-950 border-2 border-amber-300 shadow-[0_0_20px_rgba(245,158,11,0.3)] rounded-xl p-4 transition-all group flex flex-col items-center gap-2 relative overflow-hidden"
           >
             <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
             <span className="text-4xl group-hover:scale-110 transition-transform relative z-10">👩</span>
-            <span className="font-extrabold text-xl relative z-10">WOMAN-U</span>
+            <span className="font-extrabold text-xl relative z-10">WOMEN-U</span>
             <span className="text-red-950/80 text-xs font-semibold relative z-10">Enhanced Decision-Making Experience 😂</span>
           </button>
         </div>
         
         <div className="mt-8 text-center opacity-50">
           <p className="text-[10px] text-amber-200">
-            * WOMANU pricing and recommendations are fictional comedy features for this demo. 😂
+            * WOMENU pricing and recommendations are fictional comedy features for this demo. 😂
           </p>
         </div>
       </div>
