@@ -28,22 +28,23 @@ export default function WomanuOrderSummary() {
       {showConfetti && (
         <div className="absolute inset-0 pointer-events-none overflow-hidden flex justify-center">
           <div className="text-6xl animate-bounce mt-10">🎉</div>
-          <div className="text-6xl animate-bounce mt-20 ml-20" style={{animationDelay: '0.2s'}}>🎊</div>
-          <div className="text-6xl animate-bounce mt-16 mr-20" style={{animationDelay: '0.4s'}}>😂</div>
+          <div className="text-6xl animate-bounce mt-20 ml-20" style={{ animationDelay: '0.2s' }}>🎊</div>
+          <div className="text-6xl animate-bounce mt-16 mr-20" style={{ animationDelay: '0.4s' }}>😂</div>
         </div>
       )}
 
       <div className="w-full max-w-sm bg-gradient-to-b from-red-900 to-red-950 border-4 border-amber-500 rounded-2xl shadow-[0_0_40px_rgba(245,158,11,0.2)] p-6 animate-in slide-in-from-bottom-8 duration-500 relative z-10">
-        
+
         <div className="text-center mb-6 border-b border-amber-600/30 pb-4">
           <h2 className="text-2xl font-black text-amber-400">🎉 ORDER CONFIRMED</h2>
           <p className="text-amber-200/80 text-sm mt-1">You finally made a decision. Congratulations. 😂👏</p>
+          <p className="text-red-400 font-bold text-sm mt-2 bg-red-950/50 p-2 rounded-lg border border-red-500/30"> ግን በጣም ታናድዳለህ እሺ ድሮም ሃበሻ የሚጠቅመዉን እና የሚጠቀምበትን አያውቅም</p>
         </div>
 
         <div className="space-y-4 mb-6">
           <div className="bg-red-950/60 rounded-xl p-4 border border-amber-500/20">
             <h3 className="font-bold text-lg text-amber-300 mb-2">{selectedItem.name}</h3>
-            
+
             <div className="space-y-2 text-sm">
               <div className="flex justify-between text-amber-100/80">
                 <span>Original price:</span>
@@ -85,7 +86,7 @@ export default function WomanuOrderSummary() {
         >
           Continue to Menu
         </button>
-        
+
         <p className="text-center text-[10px] text-amber-200/50 mt-4">
           Demo Price. Actual store price remains {originalPrice} ETB.
         </p>
