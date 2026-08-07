@@ -29,12 +29,12 @@ export const categories = [
 
 export const menuItems: MenuItem[] = [
   // Pizza
-  { 
-    id: 'p1', 
-    name: 'Dagmaros Special Pizza', 
-    nameAmharic: 'የቤቷ ጥሬ', 
-    description: 'served with home special chili sauce', 
-    price: 450, 
+  {
+    id: 'p1',
+    name: 'Dagmaros Special Pizza',
+    nameAmharic: 'የቤቱ ጥሬ',
+    description: 'served with home special chili sauce',
+    price: 450,
     category: 'pizza',
     subItems: [
       { name: 'Cheese', nameAmharic: 'ቺዝ' },
@@ -45,12 +45,12 @@ export const menuItems: MenuItem[] = [
       { name: 'Seasoning', nameAmharic: 'ቅመም' },
     ]
   },
-  { 
-    id: 'p2', 
-    name: 'Abyssinia Pizza', 
-    nameAmharic: 'አቢሲኒያ ጥሬ', 
-    description: 'Traditional Ethiopian style pizza', 
-    price: 425, 
+  {
+    id: 'p2',
+    name: 'Abyssinia Pizza',
+    nameAmharic: 'አቢሲኒያ ጥሬ',
+    description: 'Traditional Ethiopian style pizza',
+    price: 425,
     category: 'pizza',
     subItems: [
       { name: 'Cheese', nameAmharic: 'ቺዝ' },
@@ -60,12 +60,12 @@ export const menuItems: MenuItem[] = [
       { name: 'Green Chili', nameAmharic: 'አረንጓዴ ሚጥሚጣ' },
     ]
   },
-  { 
-    id: 'p3', 
-    name: 'Beef Pizza', 
-    nameAmharic: 'ስጋ ጥሬ', 
-    description: 'served with hot chili sauce', 
-    price: 395, 
+  {
+    id: 'p3',
+    name: 'Beef Pizza',
+    nameAmharic: 'ስጋ ጥሬ',
+    description: 'served with hot chili sauce',
+    price: 395,
     category: 'pizza',
     subItems: [
       { name: 'Minced Beef', nameAmharic: 'የተቦረሰ ስጋ' },
@@ -78,12 +78,12 @@ export const menuItems: MenuItem[] = [
       { name: 'Garlic', nameAmharic: 'ነጭ ሽንኩርት' },
     ]
   },
-  { 
-    id: 'p4', 
-    name: 'Vegetable Pizza', 
-    nameAmharic: 'አትክልት ጥሬ', 
-    description: 'served with home special chili sauce', 
-    price: 295, 
+  {
+    id: 'p4',
+    name: 'Vegetable Pizza',
+    nameAmharic: 'አትክልት ጥሬ',
+    description: 'served with home special chili sauce',
+    price: 295,
     category: 'pizza',
     subItems: [
       { name: 'Seasonal Vegetable', nameAmharic: 'የወቅት አትክልት' },
@@ -91,12 +91,12 @@ export const menuItems: MenuItem[] = [
       { name: 'Garlic', nameAmharic: 'ነጭ ሽንኩርት' },
     ]
   },
-  { 
-    id: 'p5', 
-    name: 'Tuna Pizza', 
-    nameAmharic: 'የአሳ ጥሬ', 
-    description: 'served with lemon flavor chili sauce', 
-    price: 415, 
+  {
+    id: 'p5',
+    name: 'Tuna Pizza',
+    nameAmharic: 'የአሳ ጥሬ',
+    description: 'served with lemon flavor chili sauce',
+    price: 415,
     category: 'pizza',
     subItems: [
       { name: 'Cheese', nameAmharic: 'ቺዝ' },
@@ -109,12 +109,12 @@ export const menuItems: MenuItem[] = [
       { name: 'Garlic', nameAmharic: 'ነጭ ሽንኩርት' },
     ]
   },
-  { 
-    id: 'p6', 
-    name: 'Chicken Pizza', 
-    nameAmharic: 'የዶሮ ጥሬ', 
-    description: 'served with Chilly sauce', 
-    price: 425, 
+  {
+    id: 'p6',
+    name: 'Chicken Pizza',
+    nameAmharic: 'የዶሮ ጥሬ',
+    description: 'served with Chilly sauce',
+    price: 425,
     category: 'pizza',
     subItems: [
       { name: 'Chicken Meat', nameAmharic: 'የዶሮ ስጋ' },
@@ -123,12 +123,12 @@ export const menuItems: MenuItem[] = [
       { name: 'Olive Paste', nameAmharic: 'የወይን ዱቄት' },
     ]
   },
-  { 
-    id: 'p7', 
-    name: 'Special Vegetable Pizza', 
-    nameAmharic: 'የቤቷ አትክልት ጥሬ', 
-    description: 'served with home special chili sauce', 
-    price: 405, 
+  {
+    id: 'p7',
+    name: 'Special Vegetable Pizza',
+    nameAmharic: 'የቤቱ አትክልት ጥሬ',
+    description: 'served with home special chili sauce',
+    price: 405,
     category: 'pizza',
     subItems: [
       { name: 'Seasonal Vegetable', nameAmharic: 'የወቅት አትክልት' },
@@ -136,12 +136,12 @@ export const menuItems: MenuItem[] = [
       { name: 'Garlic', nameAmharic: 'ነጭ ሽንኩርት' },
     ]
   },
-  { 
-    id: 'p8', 
-    name: 'Cheese Pizza', 
-    nameAmharic: 'ቺዝ ጥሬ', 
-    description: 'Classic cheese pizza with seasoning sauce', 
-    price: 395, 
+  {
+    id: 'p8',
+    name: 'Cheese Pizza',
+    nameAmharic: 'ቺዝ ጥሬ',
+    description: 'Classic cheese pizza with seasoning sauce',
+    price: 395,
     category: 'pizza',
     subItems: [
       { name: 'Cheese', nameAmharic: 'ቺዝ' },
@@ -151,14 +151,14 @@ export const menuItems: MenuItem[] = [
       { name: 'Seasoning', nameAmharic: 'ቅመም' },
     ]
   },
-  
+
   // Lunch Items
-  { 
-    id: 'l1', 
-    name: 'Shiro', 
-    nameAmharic: 'ሽሮ', 
-    description: 'served with Enjera', 
-    price: 175, 
+  {
+    id: 'l1',
+    name: 'Shiro',
+    nameAmharic: 'ሽሮ',
+    description: 'served with Enjera',
+    price: 175,
     category: 'lunch',
     subItems: [
       { name: 'Ground Chickpeas', nameAmharic: 'የተፈጨ ክክ' },
@@ -166,12 +166,12 @@ export const menuItems: MenuItem[] = [
       { name: 'Ginger', nameAmharic: 'ዘንጅብል' },
     ]
   },
-  { 
-    id: 'l2', 
-    name: 'Shiro Tegebino', 
-    nameAmharic: 'ሽሮ ተገቢኖ', 
-    description: 'Special shiro with additional ingredients', 
-    price: 215, 
+  {
+    id: 'l2',
+    name: 'Shiro Tegebino',
+    nameAmharic: 'ሽሮ ተገቢኖ',
+    description: 'Special shiro with additional ingredients',
+    price: 215,
     category: 'lunch',
     subItems: [
       { name: 'Ground Chickpeas', nameAmharic: 'የተፈጨ ክክ' },
@@ -180,12 +180,12 @@ export const menuItems: MenuItem[] = [
       { name: 'Butter', nameAmharic: 'ቅቤ' },
     ]
   },
-  { 
-    id: 'l3', 
-    name: 'Special Shiro', 
-    nameAmharic: 'የቤቷ ሽሮ', 
-    description: 'served with homemade garnish', 
-    price: 235, 
+  {
+    id: 'l3',
+    name: 'Special Shiro',
+    nameAmharic: 'የቤቱ ሽሮ',
+    description: 'served with homemade garnish',
+    price: 235,
     category: 'lunch',
     subItems: [
       { name: 'Ground Chickpeas', nameAmharic: 'የተፈጨ ክክ' },
@@ -194,12 +194,12 @@ export const menuItems: MenuItem[] = [
       { name: 'Ginger', nameAmharic: 'ዘንጅብል' },
     ]
   },
-  { 
-    id: 'l4', 
-    name: 'Shiro Bozena', 
-    nameAmharic: 'ሽሮ ቦዘና', 
-    description: 'served with Enjera', 
-    price: 300, 
+  {
+    id: 'l4',
+    name: 'Shiro Bozena',
+    nameAmharic: 'ሽሮ ቦዘና',
+    description: 'served with Enjera',
+    price: 300,
     category: 'lunch',
     subItems: [
       { name: 'Ground Chickpeas', nameAmharic: 'የተፈጨ ክክ' },
@@ -209,12 +209,12 @@ export const menuItems: MenuItem[] = [
       { name: 'Ginger', nameAmharic: 'ዘንጅብል' },
     ]
   },
-  { 
-    id: 'l5', 
-    name: 'Tomato Kurt', 
-    nameAmharic: 'ቲማቲም ቁርቶ', 
-    description: 'Fresh tomato based Ethiopian stew', 
-    price: 170, 
+  {
+    id: 'l5',
+    name: 'Tomato Kurt',
+    nameAmharic: 'ቲማቲም ቁርቶ',
+    description: 'Fresh tomato based Ethiopian stew',
+    price: 170,
     category: 'lunch',
     subItems: [
       { name: 'Fresh Tomato', nameAmharic: 'የጣፋጭ ቲማቲም' },
@@ -223,12 +223,12 @@ export const menuItems: MenuItem[] = [
       { name: 'Green Chili', nameAmharic: 'አረንጓዴ ሚጥሚጣ' },
     ]
   },
-  { 
-    id: 'l6', 
-    name: 'Telba Fitfit', 
-    nameAmharic: 'ተልባ ፍትፍት', 
-    description: 'Ground flaxseed mixed with injera', 
-    price: 270, 
+  {
+    id: 'l6',
+    name: 'Telba Fitfit',
+    nameAmharic: 'ተልባ ፍትፍት',
+    description: 'Ground flaxseed mixed with injera',
+    price: 270,
     category: 'lunch',
     subItems: [
       { name: 'Ground Flaxseed', nameAmharic: 'የተፈጨ ተልባ' },
@@ -236,12 +236,12 @@ export const menuItems: MenuItem[] = [
       { name: 'Spices', nameAmharic: 'ቅመሞች' },
     ]
   },
-  { 
-    id: 'l7', 
-    name: 'Hafi Hafi', 
-    nameAmharic: 'ሀፊ ሀፊ', 
-    description: 'Light mixed dish', 
-    price: 250, 
+  {
+    id: 'l7',
+    name: 'Hafi Hafi',
+    nameAmharic: 'ሀፊ ሀፊ',
+    description: 'Light mixed dish',
+    price: 250,
     category: 'lunch',
     subItems: [
       { name: 'Injera Pieces', nameAmharic: 'የእንጀራ ቁራጭ' },
@@ -249,12 +249,12 @@ export const menuItems: MenuItem[] = [
       { name: 'Butter', nameAmharic: 'ቅቤ' },
     ]
   },
-  { 
-    id: 'l8', 
-    name: 'Fasting Fir Fir', 
-    nameAmharic: 'የፆም ፍርፍር', 
-    description: 'Scrambled Enjera in vegetarian hot sauce', 
-    price: 250, 
+  {
+    id: 'l8',
+    name: 'Fasting Fir Fir',
+    nameAmharic: 'የፆም ፍርፍር',
+    description: 'Scrambled Enjera in vegetarian hot sauce',
+    price: 250,
     category: 'lunch',
     subItems: [
       { name: 'Scrambled Injera', nameAmharic: 'የተበላሸ እንጀራ' },
@@ -264,12 +264,12 @@ export const menuItems: MenuItem[] = [
       { name: 'Green Chili', nameAmharic: 'አረንጓዴ ሚጥሚጣ' },
     ]
   },
-  { 
-    id: 'l9', 
-    name: 'Derkosh Fir Fir', 
-    nameAmharic: 'ደርቆስ ፍርፍር', 
-    description: 'Scrambled dry Enjera in hot & alech sauce', 
-    price: 260, 
+  {
+    id: 'l9',
+    name: 'Derkosh Fir Fir',
+    nameAmharic: 'ደርቆስ ፍርፍር',
+    description: 'Scrambled dry Enjera in hot & alech sauce',
+    price: 260,
     category: 'lunch',
     subItems: [
       { name: 'Dry Injera', nameAmharic: 'ደርቆስ' },
@@ -279,12 +279,12 @@ export const menuItems: MenuItem[] = [
       { name: 'Tomato', nameAmharic: 'ቲማቲም' },
     ]
   },
-  { 
-    id: 'l10', 
-    name: 'Special Fasting Fir Fir', 
-    nameAmharic: 'የቤቷ የፆም ፍርፍር', 
-    description: 'served with Enjera', 
-    price: 230, 
+  {
+    id: 'l10',
+    name: 'Special Fasting Fir Fir',
+    nameAmharic: 'የቤቱ የፆም ፍርፍር',
+    description: 'served with Enjera',
+    price: 230,
     category: 'lunch',
     subItems: [
       { name: 'Scrambled Injera', nameAmharic: 'የተበላሸ እንጀራ' },
@@ -294,12 +294,12 @@ export const menuItems: MenuItem[] = [
       { name: 'Onion', nameAmharic: 'ሽንኩርት' },
     ]
   },
-  { 
-    id: 'l11', 
-    name: 'Msir Bedst', 
-    nameAmharic: 'ምስር በድስት', 
-    description: 'Red lentil stew', 
-    price: 195, 
+  {
+    id: 'l11',
+    name: 'Msir Bedst',
+    nameAmharic: 'ምስር በድስት',
+    description: 'Red lentil stew',
+    price: 195,
     category: 'lunch',
     subItems: [
       { name: 'Red Lentil', nameAmharic: 'ምስር' },
@@ -308,12 +308,12 @@ export const menuItems: MenuItem[] = [
       { name: 'Berbere', nameAmharic: 'በርበሬ' },
     ]
   },
-  { 
-    id: 'l12', 
-    name: 'Kiki Bedst', 
-    nameAmharic: 'ክክ በድስት', 
-    description: 'Chickpea stew', 
-    price: 185, 
+  {
+    id: 'l12',
+    name: 'Kiki Bedst',
+    nameAmharic: 'ክክ በድስት',
+    description: 'Chickpea stew',
+    price: 185,
     category: 'lunch',
     subItems: [
       { name: 'Chickpeas', nameAmharic: 'ክክ' },
@@ -322,13 +322,13 @@ export const menuItems: MenuItem[] = [
       { name: 'Ginger', nameAmharic: 'ዘንጅብል' },
     ]
   },
-  { id: 'l13', name: 'Dagmaros Yefisk', nameAmharic: 'የቤቷ የፍስክ', description: 'Special fish dish', price: 2050, category: 'lunch' },
-  { 
-    id: 'l14', 
-    name: 'Quanta FirFir', 
-    nameAmharic: 'ቋንጣ ፍርፍር', 
-    description: 'Dried meat with injera scramble', 
-    price: 385, 
+  { id: 'l13', name: 'Dagmaros Yefisk', nameAmharic: 'የቤቱ የፍስክ', description: 'Special fish dish', price: 2050, category: 'lunch' },
+  {
+    id: 'l14',
+    name: 'Quanta FirFir',
+    nameAmharic: 'ቋንጣ ፍርፍር',
+    description: 'Dried meat with injera scramble',
+    price: 385,
     category: 'lunch',
     subItems: [
       { name: 'Dried Meat', nameAmharic: 'ቋንጣ' },
@@ -340,15 +340,15 @@ export const menuItems: MenuItem[] = [
   { id: 'l15', name: 'Non Fasting Combo', nameAmharic: 'የፆም ሳይሆን ኮምቦ', description: 'Mixed non-fasting dishes combo', price: 850, category: 'lunch' },
   { id: 'l16', name: 'Yefisk Full Agelgil', nameAmharic: 'የፍስክ ሙሉ አገልግል', description: 'Full fish serving', price: 1750, category: 'lunch' },
   { id: 'l17', name: 'Yefisk Hafi Agelgil', nameAmharic: 'የፍስክ ሀፊ አገልግል', description: 'Half fish serving', price: 1250, category: 'lunch' },
-  { id: 'l18', name: 'Yefisk Special', nameAmharic: 'የቤቷ የፍስክ', description: 'Special fish preparation', price: 1750, category: 'lunch' },
+  { id: 'l18', name: 'Yefisk Special', nameAmharic: 'የቤቱ የፍስክ', description: 'Special fish preparation', price: 1750, category: 'lunch' },
   { id: 'l19', name: 'Derkosh With Quanta', nameAmharic: 'ደርቆስ በቋንጣ', description: 'Dried meat with special sauce', price: 395, category: 'lunch' },
   { id: 'l20', name: 'Derkosh With Meat', nameAmharic: 'ደርቆስ በስጋ', description: 'Meat with special sauce', price: 320, category: 'lunch' },
-  { 
-    id: 'l21', 
-    name: 'Tibs FirFir', 
-    nameAmharic: 'ጥብስ ፍርፍር', 
-    description: 'Sautéed meat with injera', 
-    price: 450, 
+  {
+    id: 'l21',
+    name: 'Tibs FirFir',
+    nameAmharic: 'ጥብስ ፍርፍር',
+    description: 'Sautéed meat with injera',
+    price: 450,
     category: 'lunch',
     subItems: [
       { name: 'Sautéed Meat', nameAmharic: 'ጥብስ' },
@@ -360,21 +360,21 @@ export const menuItems: MenuItem[] = [
   },
   { id: 'l22', name: 'Ship Dulet', nameAmharic: 'ሽፕ ዱለት', description: 'Spicy tripe mix', price: 295, category: 'lunch' },
   { id: 'l23', name: 'Ktifo', nameAmharic: 'ክትፎ', description: 'Traditional dish', price: 685, category: 'lunch' },
-  { id: 'l24', name: 'Special Ktifo', nameAmharic: 'የቤቷ ክትፎ', description: 'Special ktifo preparation', price: 850, category: 'lunch' },
+  { id: 'l24', name: 'Special Ktifo', nameAmharic: 'የቤቱ ክትፎ', description: 'Special ktifo preparation', price: 850, category: 'lunch' },
   { id: 'l25', name: 'Sega FirFir', nameAmharic: 'ስጋ ፍርፍር', description: 'Meat with scrambled injera', price: 325, category: 'lunch' },
-  { id: 'l26', name: 'Special Quanta FirFir', nameAmharic: 'የቤቷ ቋንጣ ፍርፍር', description: 'Special dried meat dish', price: 405, category: 'lunch' },
+  { id: 'l26', name: 'Special Quanta FirFir', nameAmharic: 'የቤቱ ቋንጣ ፍርፍር', description: 'Special dried meat dish', price: 405, category: 'lunch' },
   { id: 'l27', name: 'Nashufe', nameAmharic: 'ናሹፌ', description: 'Traditional Ethiopian dish', price: 200, category: 'lunch' },
   { id: 'l28', name: 'Chicken Cotelet', nameAmharic: 'የዶሮ ኮትሌት', description: 'Chicken cutlet', price: 370, category: 'lunch' },
   { id: 'l29', name: 'Full Roasted Chicken', nameAmharic: 'የዶሮ አረንጓዴ ሙሉ', description: 'Whole roasted chicken', price: 1700, category: 'lunch' },
   { id: 'l30', name: 'Hafi Roasted Chicken', nameAmharic: 'የዶሮ አረንጓዴ ሐፍሐፍ', description: 'Half roasted chicken', price: 950, category: 'lunch' },
 
   // Burger & Sandwich
-  { 
-    id: 'b1', 
-    name: 'Dagmaros Special Burger', 
-    nameAmharic: 'የቤቷ በርገር', 
-    description: 'served with French fries', 
-    price: 420, 
+  {
+    id: 'b1',
+    name: 'Dagmaros Special Burger',
+    nameAmharic: 'የቤቱ በርገር',
+    description: 'served with French fries',
+    price: 420,
     category: 'burger',
     subItems: [
       { name: 'Beef Patty', nameAmharic: 'የስጋ ጎማ' },
@@ -384,12 +384,12 @@ export const menuItems: MenuItem[] = [
       { name: 'French Fries', nameAmharic: 'ፍሬንች ፍራይስ' },
     ]
   },
-  { 
-    id: 'b2', 
-    name: 'Burger', 
-    nameAmharic: 'በርገር', 
-    description: 'served with French fries', 
-    price: 370, 
+  {
+    id: 'b2',
+    name: 'Burger',
+    nameAmharic: 'በርገር',
+    description: 'served with French fries',
+    price: 370,
     category: 'burger',
     subItems: [
       { name: 'Beef Patty', nameAmharic: 'የስጋ ጎማ' },
@@ -399,12 +399,12 @@ export const menuItems: MenuItem[] = [
       { name: 'French Fries', nameAmharic: 'ፍሬንች ፍራይስ' },
     ]
   },
-  { 
-    id: 'b3', 
-    name: 'Chicken Burger', 
-    nameAmharic: 'የዶሮ በርገር', 
-    description: 'served with French fries', 
-    price: 450, 
+  {
+    id: 'b3',
+    name: 'Chicken Burger',
+    nameAmharic: 'የዶሮ በርገር',
+    description: 'served with French fries',
+    price: 450,
     category: 'burger',
     subItems: [
       { name: 'Grilled Chicken', nameAmharic: 'የተጠበሰ ዶሮ' },
@@ -414,12 +414,12 @@ export const menuItems: MenuItem[] = [
       { name: 'French Fries', nameAmharic: 'ፍሬንች ፍራይስ' },
     ]
   },
-  { 
-    id: 'b4', 
-    name: 'Cheese Burger', 
-    nameAmharic: 'ቺዝ በርገር', 
-    description: 'served with French fries', 
-    price: 385, 
+  {
+    id: 'b4',
+    name: 'Cheese Burger',
+    nameAmharic: 'ቺዝ በርገር',
+    description: 'served with French fries',
+    price: 385,
     category: 'burger',
     subItems: [
       { name: 'Beef Patty', nameAmharic: 'የስጋ ጎማ' },
@@ -430,12 +430,12 @@ export const menuItems: MenuItem[] = [
       { name: 'French Fries', nameAmharic: 'ፍሬንች ፍራይስ' },
     ]
   },
-  { 
-    id: 'b5', 
-    name: 'Vegetable Burger', 
-    nameAmharic: 'አትክልት በርገር', 
-    description: 'served with French fries', 
-    price: 275, 
+  {
+    id: 'b5',
+    name: 'Vegetable Burger',
+    nameAmharic: 'አትክልት በርገር',
+    description: 'served with French fries',
+    price: 275,
     category: 'burger',
     subItems: [
       { name: 'Seasonal Vegetable', nameAmharic: 'የወቅት አትክልት' },
@@ -445,7 +445,7 @@ export const menuItems: MenuItem[] = [
       { name: 'French Fries', nameAmharic: 'ፍሬንች ፍራይስ' },
     ]
   },
-  { id: 'b6', name: 'Special Vegetable Burger', nameAmharic: 'የቤቷ አትክልት በርገር', description: 'Special vegetable burger', price: 295, category: 'burger' },
+  { id: 'b6', name: 'Special Vegetable Burger', nameAmharic: 'የቤቱ አትክልት በርገር', description: 'Special vegetable burger', price: 295, category: 'burger' },
   { id: 'b7', name: 'Club Sandwich', nameAmharic: 'ክለብ ሳንድዊች', description: 'Traditional club sandwich with chicken, beef, egg, cheese, lettuce served with French fries', price: 435, category: 'burger' },
   { id: 'b8', name: 'Egg Sandwich', nameAmharic: 'እንቁላል ሳንድዊች', description: 'Farm Egg, onion, tomato, chili, mayonnaise & ketchup served with French fries', price: 250, category: 'burger' },
   { id: 'b9', name: 'Vegetable Sandwich', nameAmharic: 'አትክልት ሳንድዊች', description: 'Grilled seasonal vegetable in toasted burger served with French fries', price: 210, category: 'burger' },
@@ -454,12 +454,12 @@ export const menuItems: MenuItem[] = [
   { id: 'b12', name: 'French Fries', nameAmharic: 'ፍሬንች ፍራይስ', description: 'Crispy fried potato strips', price: 195, category: 'burger' },
 
   // Breakfast
-  { 
-    id: 'br1', 
-    name: 'Chechebsa', 
-    nameAmharic: 'ቺቺብሳ', 
-    description: 'Traditional Ethiopian pan cakes', 
-    price: 215, 
+  {
+    id: 'br1',
+    name: 'Chechebsa',
+    nameAmharic: 'ቺቺብሳ',
+    description: 'Traditional Ethiopian pan cakes',
+    price: 215,
     category: 'breakfast',
     subItems: [
       { name: 'Wheat Flour', nameAmharic: 'የስንዴ ዱቄት' },
@@ -468,12 +468,12 @@ export const menuItems: MenuItem[] = [
       { name: 'Honey', nameAmharic: 'ማር' },
     ]
   },
-  { 
-    id: 'br2', 
-    name: 'Tefe Chechebsa', 
-    nameAmharic: 'ተፈ ቺቺብሳ', 
-    description: 'Chechebsa with tefe flour', 
-    price: 235, 
+  {
+    id: 'br2',
+    name: 'Tefe Chechebsa',
+    nameAmharic: 'ተፈ ቺቺብሳ',
+    description: 'Chechebsa with tefe flour',
+    price: 235,
     category: 'breakfast',
     subItems: [
       { name: 'Teff Flour', nameAmharic: 'የጤፍ ዱቄት' },
@@ -482,16 +482,16 @@ export const menuItems: MenuItem[] = [
       { name: 'Honey', nameAmharic: 'ማር' },
     ]
   },
-  { id: 'br3', name: 'Special Chechebsa', nameAmharic: 'የቤቷ ቺቺብሳ', description: 'Special chechebsa preparation', price: 270, category: 'breakfast' },
-  { id: 'br4', name: 'Special Tefe Chechebsa', nameAmharic: 'የቤቷ ተፈ ቺቺብሳ', description: 'Traditionally made Ethiopian pan cakes cut & tossed in hot seasoned & Egg chili powder', price: 275, category: 'breakfast' },
+  { id: 'br3', name: 'Special Chechebsa', nameAmharic: 'የቤቱ ቺቺብሳ', description: 'Special chechebsa preparation', price: 270, category: 'breakfast' },
+  { id: 'br4', name: 'Special Tefe Chechebsa', nameAmharic: 'የቤቱ ተፈ ቺቺብሳ', description: 'Traditionally made Ethiopian pan cakes cut & tossed in hot seasoned & Egg chili powder', price: 275, category: 'breakfast' },
   { id: 'br5', name: 'Fatira', nameAmharic: 'ፋቲራ', description: 'Traditional breakfast pastry', price: 245, category: 'breakfast' },
-  { id: 'br6', name: 'Special Fatira', nameAmharic: 'የቤቷ ፋቲራ', description: 'Special fatira preparation', price: 275, category: 'breakfast' },
-  { 
-    id: 'br7', 
-    name: 'Scrambled Egg', 
-    nameAmharic: 'አሰልታ እንቁላል', 
-    description: 'served with bread or Enjera', 
-    price: 235, 
+  { id: 'br6', name: 'Special Fatira', nameAmharic: 'የቤቱ ፋቲራ', description: 'Special fatira preparation', price: 275, category: 'breakfast' },
+  {
+    id: 'br7',
+    name: 'Scrambled Egg',
+    nameAmharic: 'አሰልታ እንቁላል',
+    description: 'served with bread or Enjera',
+    price: 235,
     category: 'breakfast',
     subItems: [
       { name: 'Egg', nameAmharic: 'እንቁላል' },
@@ -502,12 +502,12 @@ export const menuItems: MenuItem[] = [
     ]
   },
   { id: 'br8', name: 'Egg Sels', nameAmharic: 'አሰልታ ሰልስ', description: 'Egg scrambled with onion, chili powder garlic & tomato served with bread or Enjera', price: 235, category: 'breakfast' },
-  { 
-    id: 'br9', 
-    name: 'Omelette', 
-    nameAmharic: 'አረንጓዴ እንቁላል', 
-    description: 'served with bread', 
-    price: 245, 
+  {
+    id: 'br9',
+    name: 'Omelette',
+    nameAmharic: 'አረንጓዴ እንቁላል',
+    description: 'served with bread',
+    price: 245,
     category: 'breakfast',
     subItems: [
       { name: 'Egg', nameAmharic: 'እንቁላል' },
@@ -517,13 +517,13 @@ export const menuItems: MenuItem[] = [
       { name: 'Tomato', nameAmharic: 'ቲማቲም' },
     ]
   },
-  { id: 'br10', name: 'Special Omelette', nameAmharic: 'የቤቷ አረንጓዴ', description: 'Egg with onion, green chili, garlic & tomato served with bread', price: 270, category: 'breakfast' },
-  { 
-    id: 'br11', 
-    name: 'Egg with Meat', 
-    nameAmharic: 'እንቁላል በስጋ', 
-    description: 'served with bread or Enjera', 
-    price: 275, 
+  { id: 'br10', name: 'Special Omelette', nameAmharic: 'የቤቱ አረንጓዴ', description: 'Egg with onion, green chili, garlic & tomato served with bread', price: 270, category: 'breakfast' },
+  {
+    id: 'br11',
+    name: 'Egg with Meat',
+    nameAmharic: 'እንቁላል በስጋ',
+    description: 'served with bread or Enjera',
+    price: 275,
     category: 'breakfast',
     subItems: [
       { name: 'Egg', nameAmharic: 'እንቁላል' },
@@ -534,12 +534,12 @@ export const menuItems: MenuItem[] = [
       { name: 'Tomato', nameAmharic: 'ቲማቲም' },
     ]
   },
-  { 
-    id: 'br12', 
-    name: 'Normal Full', 
-    nameAmharic: 'መደበኛ ሙሉ', 
-    description: 'served with bread', 
-    price: 150, 
+  {
+    id: 'br12',
+    name: 'Normal Full',
+    nameAmharic: 'መደበኛ ሙሉ',
+    description: 'served with bread',
+    price: 150,
     category: 'breakfast',
     subItems: [
       { name: 'Fava Beans', nameAmharic: 'ባቄላ' },
@@ -549,17 +549,17 @@ export const menuItems: MenuItem[] = [
       { name: 'Garlic', nameAmharic: 'ነጭ ሽንኩርት' },
     ]
   },
-  { id: 'br13', name: 'Fasting Special Full', nameAmharic: 'የቤቷ የፆም ሙሉ', description: 'Special fasting breakfast combo', price: 175, category: 'breakfast' },
-  { id: 'br14', name: 'Non Fasting Special Full', nameAmharic: 'የፆም ያልሆነ የቤቷ ሙሉ', description: 'Special non-fasting breakfast combo', price: 225, category: 'breakfast' },
+  { id: 'br13', name: 'Fasting Special Full', nameAmharic: 'የቤቱ የፆም ሙሉ', description: 'Special fasting breakfast combo', price: 175, category: 'breakfast' },
+  { id: 'br14', name: 'Non Fasting Special Full', nameAmharic: 'የፆም ያልሆነ የቤቱ ሙሉ', description: 'Special non-fasting breakfast combo', price: 225, category: 'breakfast' },
   { id: 'br15', name: 'Qenche', nameAmharic: 'ቅንጬ', description: 'Traditional Ethiopian breakfast', price: 150, category: 'breakfast' },
 
   // Soup
-  { 
-    id: 's1', 
-    name: 'Meat Soup', 
-    nameAmharic: 'ስጋ ሾርባ', 
-    description: 'Rich meat-based soup', 
-    price: 250, 
+  {
+    id: 's1',
+    name: 'Meat Soup',
+    nameAmharic: 'ስጋ ሾርባ',
+    description: 'Rich meat-based soup',
+    price: 250,
     category: 'soup',
     subItems: [
       { name: 'Beef', nameAmharic: 'ስጋ' },
@@ -569,12 +569,12 @@ export const menuItems: MenuItem[] = [
       { name: 'Spices', nameAmharic: 'ቅመሞች' },
     ]
   },
-  { 
-    id: 's2', 
-    name: 'Tomato Soup', 
-    nameAmharic: 'ቲማቲም ሾርባ', 
-    description: 'Creamy tomato soup', 
-    price: 150, 
+  {
+    id: 's2',
+    name: 'Tomato Soup',
+    nameAmharic: 'ቲማቲም ሾርባ',
+    description: 'Creamy tomato soup',
+    price: 150,
     category: 'soup',
     subItems: [
       { name: 'Fresh Tomato', nameAmharic: 'የጣፋጭ ቲማቲም' },
@@ -589,12 +589,12 @@ export const menuItems: MenuItem[] = [
   { id: 's6', name: 'Lentil Soup', nameAmharic: 'ምስር ሾርባ', description: 'Hearty lentil soup', price: 270, category: 'soup' },
 
   // Milk Shake
-  { 
-    id: 'ms1', 
-    name: 'Milk shake Strawberry', 
-    nameAmharic: 'የጥብስ ሻህ ስትሮበሪ', 
-    description: 'Creamy strawberry milkshake', 
-    price: 225, 
+  {
+    id: 'ms1',
+    name: 'Milk shake Strawberry',
+    nameAmharic: 'የጥብስ ሻህ ስትሮበሪ',
+    description: 'Creamy strawberry milkshake',
+    price: 225,
     category: 'milkshake',
     subItems: [
       { name: 'Fresh Milk', nameAmharic: 'ባለሙገሰ ወተት' },
@@ -603,12 +603,12 @@ export const menuItems: MenuItem[] = [
       { name: 'Sugar', nameAmharic: 'ስኳር' },
     ]
   },
-  { 
-    id: 'ms2', 
-    name: 'Milk shake Mango', 
-    nameAmharic: 'የጥብስ ሻህ ማንጎ', 
-    description: 'Fresh mango milkshake', 
-    price: 225, 
+  {
+    id: 'ms2',
+    name: 'Milk shake Mango',
+    nameAmharic: 'የጥብስ ሻህ ማንጎ',
+    description: 'Fresh mango milkshake',
+    price: 225,
     category: 'milkshake',
     subItems: [
       { name: 'Fresh Milk', nameAmharic: 'ባለሙገሰ ወተት' },
@@ -617,12 +617,12 @@ export const menuItems: MenuItem[] = [
       { name: 'Sugar', nameAmharic: 'ስኳር' },
     ]
   },
-  { 
-    id: 'ms3', 
-    name: 'Milk shake Guava', 
-    nameAmharic: 'የጥብስ ሻህ ጓቫ', 
-    description: 'Tropical guava milkshake', 
-    price: 225, 
+  {
+    id: 'ms3',
+    name: 'Milk shake Guava',
+    nameAmharic: 'የጥብስ ሻህ ጓቫ',
+    description: 'Tropical guava milkshake',
+    price: 225,
     category: 'milkshake',
     subItems: [
       { name: 'Fresh Milk', nameAmharic: 'ባለሙገሰ ወተት' },
@@ -637,12 +637,12 @@ export const menuItems: MenuItem[] = [
   { id: 'ms7', name: 'Milk shake Banana', nameAmharic: 'የጥብስ ሻህ ሙዝ', description: 'Creamy banana milkshake', price: 225, category: 'milkshake' },
 
   // Juice
-  { 
-    id: 'j1', 
-    name: 'Avocado Juice', 
-    nameAmharic: 'አቮካዶ ጭማ', 
-    description: 'Fresh avocado juice', 
-    price: 185, 
+  {
+    id: 'j1',
+    name: 'Avocado Juice',
+    nameAmharic: 'አቮካዶ ጭማ',
+    description: 'Fresh avocado juice',
+    price: 185,
     category: 'juice',
     subItems: [
       { name: 'Fresh Avocado', nameAmharic: 'የጣፋጭ አቮካዶ' },
@@ -651,12 +651,12 @@ export const menuItems: MenuItem[] = [
       { name: 'Lime', nameAmharic: 'ሎሚ' },
     ]
   },
-  { 
-    id: 'j2', 
-    name: 'Mango Juice', 
-    nameAmharic: 'ማንጎ ጭማ', 
-    description: 'Fresh mango juice', 
-    price: 185, 
+  {
+    id: 'j2',
+    name: 'Mango Juice',
+    nameAmharic: 'ማንጎ ጭማ',
+    description: 'Fresh mango juice',
+    price: 185,
     category: 'juice',
     subItems: [
       { name: 'Fresh Mango', nameAmharic: 'የጣፋጭ ማንጎ' },
@@ -664,12 +664,12 @@ export const menuItems: MenuItem[] = [
       { name: 'Sugar', nameAmharic: 'ስኳር' },
     ]
   },
-  { 
-    id: 'j3', 
-    name: 'Pineapple Juice', 
-    nameAmharic: 'አናናስ ጭማ', 
-    description: 'Fresh pineapple juice', 
-    price: 200, 
+  {
+    id: 'j3',
+    name: 'Pineapple Juice',
+    nameAmharic: 'አናናስ ጭማ',
+    description: 'Fresh pineapple juice',
+    price: 200,
     category: 'juice',
     subItems: [
       { name: 'Fresh Pineapple', nameAmharic: 'የጣፋጭ አናናስ' },
@@ -678,12 +678,12 @@ export const menuItems: MenuItem[] = [
     ]
   },
   { id: 'j4', name: 'Papaya Juice', nameAmharic: 'ፓፓያ ጭማ', description: 'Fresh papaya juice', price: 185, category: 'juice' },
-  { 
-    id: 'j5', 
-    name: 'Special Juice', 
-    nameAmharic: 'የቤቷ ጭማ', 
-    description: 'House special mixed juice', 
-    price: 230, 
+  {
+    id: 'j5',
+    name: 'Special Juice',
+    nameAmharic: 'የቤቱ ጭማ',
+    description: 'House special mixed juice',
+    price: 230,
     category: 'juice',
     subItems: [
       { name: 'Mixed Fruits', nameAmharic: 'ቅልቅል ፍራቶች' },
@@ -705,12 +705,12 @@ export const menuItems: MenuItem[] = [
   { id: 'hd2', name: 'Tea Correnti', nameAmharic: 'ሻይ ኮረንቲ', description: 'Strong black tea', price: 65, category: 'hotdrinks' },
   { id: 'hd3', name: 'Spice Tea', nameAmharic: 'ሻይ ስፒስ', description: 'Spiced tea', price: 60, category: 'hotdrinks' },
   { id: 'hd4', name: 'Double Spice', nameAmharic: 'ድብል ስፒስ', description: 'Extra spiced tea', price: 75, category: 'hotdrinks' },
-  { 
-    id: 'hd5', 
-    name: 'Special tea', 
-    nameAmharic: 'የቤቷ ሻይ', 
-    description: 'House special tea', 
-    price: 120, 
+  {
+    id: 'hd5',
+    name: 'Special tea',
+    nameAmharic: 'የቤቱ ሻይ',
+    description: 'House special tea',
+    price: 120,
     category: 'hotdrinks',
     subItems: [
       { name: 'Black Tea', nameAmharic: 'ጥቁር ሻይ' },
@@ -721,16 +721,16 @@ export const menuItems: MenuItem[] = [
   },
   { id: 'hd6', name: 'Loze Tea', nameAmharic: 'ሎዘ ሻይ', description: 'Milk tea', price: 105, category: 'hotdrinks' },
   { id: 'hd7', name: 'Loze With Coffee', nameAmharic: 'ሎዘ በቡና', description: 'Tea with coffee', price: 75, category: 'hotdrinks' },
-  { id: 'hd8', name: 'Special Loze', nameAmharic: 'የቤቷ ሎዘ', description: 'Special milk tea', price: 85, category: 'hotdrinks' },
+  { id: 'hd8', name: 'Special Loze', nameAmharic: 'የቤቱ ሎዘ', description: 'Special milk tea', price: 85, category: 'hotdrinks' },
   { id: 'hd9', name: 'Coffee', nameAmharic: 'ቡና', description: 'Ethiopian coffee', price: 100, category: 'hotdrinks' },
   { id: 'hd10', name: 'Traditional Coffee', nameAmharic: 'የቤት ቡና', description: 'Traditional Ethiopian coffee', price: 65, category: 'hotdrinks' },
   { id: 'hd11', name: 'Double coffee', nameAmharic: 'ድብል ቡና', description: 'Double strength coffee', price: 50, category: 'hotdrinks' },
-  { 
-    id: 'hd12', 
-    name: 'Coffee Latte', 
-    nameAmharic: 'ኮፊ ላቴ', 
-    description: 'Coffee with steamed milk', 
-    price: 130, 
+  {
+    id: 'hd12',
+    name: 'Coffee Latte',
+    nameAmharic: 'ኮፊ ላቴ',
+    description: 'Coffee with steamed milk',
+    price: 130,
     category: 'hotdrinks',
     subItems: [
       { name: 'Espresso', nameAmharic: 'ኤስፕሬሶ' },
@@ -742,12 +742,12 @@ export const menuItems: MenuItem[] = [
   { id: 'hd14', name: 'Double macchiato', nameAmharic: 'ድብል ማኪያቶ', description: 'Double macchiato', price: 80, category: 'hotdrinks' },
   { id: 'hd15', name: 'Fasting macchiato', nameAmharic: 'የፆም ማኪያቶ', description: 'Fasting style macchiato', price: 140, category: 'hotdrinks' },
   { id: 'hd16', name: 'Double fasting macchiato', nameAmharic: 'ድብል የፆም ማኪያቶ', description: 'Double fasting macchiato', price: 85, category: 'hotdrinks' },
-  { 
-    id: 'hd17', 
-    name: 'Special Macchiato', 
-    nameAmharic: 'የቤቷ ማኪያቶ', 
-    description: 'House special macchiato', 
-    price: 165, 
+  {
+    id: 'hd17',
+    name: 'Special Macchiato',
+    nameAmharic: 'የቤቱ ማኪያቶ',
+    description: 'House special macchiato',
+    price: 165,
     category: 'hotdrinks',
     subItems: [
       { name: 'Espresso', nameAmharic: 'ኤስፕሬሶ' },
@@ -762,12 +762,12 @@ export const menuItems: MenuItem[] = [
   { id: 'hd21', name: 'Hot Chocolate', nameAmharic: 'ሆት ቸኮሌት', description: 'Rich hot chocolate', price: 130, category: 'hotdrinks' },
 
   // Fruit Tea
-  { 
-    id: 'ft1', 
-    name: 'Orange Tea', 
-    nameAmharic: 'ብርቱካን ሻይ', 
-    description: 'Orange flavored tea', 
-    price: 75, 
+  {
+    id: 'ft1',
+    name: 'Orange Tea',
+    nameAmharic: 'ብርቱካን ሻይ',
+    description: 'Orange flavored tea',
+    price: 75,
     category: 'fruitea',
     subItems: [
       { name: 'Black Tea', nameAmharic: 'ጥቁር ሻይ' },
@@ -775,12 +775,12 @@ export const menuItems: MenuItem[] = [
       { name: 'Sugar', nameAmharic: 'ስኳር' },
     ]
   },
-  { 
-    id: 'ft2', 
-    name: 'Lemon Tea', 
-    nameAmharic: 'ሎሚ ሻይ', 
-    description: 'Lemon flavored tea', 
-    price: 55, 
+  {
+    id: 'ft2',
+    name: 'Lemon Tea',
+    nameAmharic: 'ሎሚ ሻይ',
+    description: 'Lemon flavored tea',
+    price: 55,
     category: 'fruitea',
     subItems: [
       { name: 'Black Tea', nameAmharic: 'ጥቁር ሻይ' },
@@ -788,12 +788,12 @@ export const menuItems: MenuItem[] = [
       { name: 'Sugar', nameAmharic: 'ስኳር' },
     ]
   },
-  { 
-    id: 'ft3', 
-    name: 'Mango Tea', 
-    nameAmharic: 'ማንጎ ሻይ', 
-    description: 'Mango flavored tea', 
-    price: 75, 
+  {
+    id: 'ft3',
+    name: 'Mango Tea',
+    nameAmharic: 'ማንጎ ሻይ',
+    description: 'Mango flavored tea',
+    price: 75,
     category: 'fruitea',
     subItems: [
       { name: 'Black Tea', nameAmharic: 'ጥቁር ሻይ' },
@@ -802,12 +802,12 @@ export const menuItems: MenuItem[] = [
     ]
   },
   { id: 'ft4', name: 'Pineapple Tea', nameAmharic: 'አናናስ ሻይ', description: 'Pineapple flavored tea', price: 75, category: 'fruitea' },
-  { 
-    id: 'ft5', 
-    name: 'Zengebel Tea', 
-    nameAmharic: 'ዘንጅብል ሻይ', 
-    description: 'Ginger tea', 
-    price: 75, 
+  {
+    id: 'ft5',
+    name: 'Zengebel Tea',
+    nameAmharic: 'ዘንጅብል ሻይ',
+    description: 'Ginger tea',
+    price: 75,
     category: 'fruitea',
     subItems: [
       { name: 'Black Tea', nameAmharic: 'ጥቁር ሻይ' },
@@ -818,12 +818,12 @@ export const menuItems: MenuItem[] = [
   },
 
   // Cake
-  { 
-    id: 'ck1', 
-    name: 'Black forest', 
-    nameAmharic: 'ብላክ ፎረስት', 
-    description: 'Black forest cake', 
-    price: 100, 
+  {
+    id: 'ck1',
+    name: 'Black forest',
+    nameAmharic: 'ብላክ ፎረስት',
+    description: 'Black forest cake',
+    price: 100,
     category: 'cake',
     subItems: [
       { name: 'Chocolate Sponge', nameAmharic: 'ቸኮሌት ኬክ' },
@@ -832,12 +832,12 @@ export const menuItems: MenuItem[] = [
       { name: 'Chocolate Shavings', nameAmharic: 'ቸኮሌት ቁራጭ' },
     ]
   },
-  { 
-    id: 'ck2', 
-    name: 'White forest', 
-    nameAmharic: 'ዋይት ፎረስት', 
-    description: 'White forest cake', 
-    price: 100, 
+  {
+    id: 'ck2',
+    name: 'White forest',
+    nameAmharic: 'ዋይት ፎረስት',
+    description: 'White forest cake',
+    price: 100,
     category: 'cake',
     subItems: [
       { name: 'Vanilla Sponge', nameAmharic: 'ቫኒላ ኬክ' },
@@ -847,12 +847,12 @@ export const menuItems: MenuItem[] = [
     ]
   },
   { id: 'ck3', name: 'Sliced Cake', nameAmharic: 'ስላይስድ ኬክ', description: 'Sliced cake portion', price: 100, category: 'cake' },
-  { 
-    id: 'ck4', 
-    name: 'Orange Cake', 
-    nameAmharic: 'ኦራንጅ ኬክ', 
-    description: 'Orange flavored cake', 
-    price: 75, 
+  {
+    id: 'ck4',
+    name: 'Orange Cake',
+    nameAmharic: 'ኦራንጅ ኬክ',
+    description: 'Orange flavored cake',
+    price: 75,
     category: 'cake',
     subItems: [
       { name: 'Orange Flavor', nameAmharic: 'የብርቱካን ስሜት' },
@@ -867,12 +867,12 @@ export const menuItems: MenuItem[] = [
   { id: 'ck9', name: 'Torta Cake 4kg', nameAmharic: 'ቶርታ ኬክ 4 ኪ.ግ', description: 'Torta cake 4 kilogram', price: 3750, category: 'cake' },
 
   // Beverages - Beer, Soft Drinks, Mineral Water, Wine
-  { 
-    id: 'bv1', 
-    name: 'Dashan, Harere, Walya, Habesha, Smoll Bedela', 
-    nameAmharic: 'ዳሻን, ሃረሬ, ዋልያ, ሃበሻ, ትንሽ በደላ', 
-    description: 'Local Ethiopian beers', 
-    price: 140, 
+  {
+    id: 'bv1',
+    name: 'Dashan, Harere, Walya, Habesha, Smoll Bedela',
+    nameAmharic: 'ዳሻን, ሃረሬ, ዋልያ, ሃበሻ, ትንሽ በደላ',
+    description: 'Local Ethiopian beers',
+    price: 140,
     category: 'beverages',
     subItems: [
       { name: 'Ethiopian Beer', nameAmharic: 'የሃበሻ ቢራ' },
