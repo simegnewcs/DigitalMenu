@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
 import toast from "react-hot-toast";
+import DevvoltzLogo from "@/components/DevvoltzLogo";
 
 interface UserProfile {
   id?: string;
@@ -76,10 +77,8 @@ export default function Home() {
           <div className="flex justify-between h-16 items-center">
             {/* Logo */}
             <div className="flex items-center space-x-2">
-              <Link href="/" className="flex items-center space-x-2">
-                <span className="text-2xl font-black text-primary-600 tracking-tight">
-                  DigitalMenu
-                </span>
+              <Link href="/" className="flex items-center hover:opacity-90 transition-opacity">
+                <DevvoltzLogo size={38} showText={true} showTagline={false} variant="light" />
               </Link>
             </div>
 

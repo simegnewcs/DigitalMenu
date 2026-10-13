@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
 import toast from "react-hot-toast";
+import DevvoltzLogo from "@/components/DevvoltzLogo";
 
 interface Restaurant {
   id: string;
@@ -130,9 +131,9 @@ export default function DashboardPage() {
 
               <Link
                 href="/"
-                className="text-xl sm:text-2xl font-black text-primary-600 tracking-tight hover:opacity-90 transition-opacity"
+                className="hover:opacity-90 transition-opacity"
               >
-                DigitalMenu
+                <DevvoltzLogo size={34} showText={true} showTagline={false} variant="color" />
               </Link>
 
               <span className="text-xs bg-primary-50 text-primary-700 font-bold px-2.5 py-1 rounded-full border border-primary-200 hidden md:inline-block">
