@@ -16,12 +16,18 @@ export async function GET() {
     
     if (session.user.role === "ADMIN") {
       restaurants = await prisma.restaurant.findMany({
-        include: { owner: { select: { name: true, email: true } } },
+        include: {
+          owner: { select: { name: true, email: true } },
+          _count: { select: { categories: true, qrCodes: true } },
+        },
         orderBy: { createdAt: "desc" },
       });
     } else {
       restaurants = await prisma.restaurant.findMany({
         where: { ownerId: session.user.id },
+        include: {
+          _count: { select: { categories: true, qrCodes: true } },
+        },
         orderBy: { createdAt: "desc" },
       });
     }
