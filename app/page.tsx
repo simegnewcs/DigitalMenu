@@ -121,6 +121,12 @@ export default function Home() {
                 <>
                   {/* Guest Links */}
                   <Link
+                    href="/menu"
+                    className="text-gray-700 hover:text-primary-600 px-3.5 py-2 rounded-xl text-sm font-semibold hover:bg-gray-50 transition-colors"
+                  >
+                    Explore Menu
+                  </Link>
+                  <Link
                     href="/login"
                     className="text-gray-700 hover:text-primary-600 px-3.5 py-2 rounded-xl text-sm font-semibold hover:bg-gray-50 transition-colors"
                   >
@@ -171,6 +177,14 @@ export default function Home() {
                 </Link>
               </div>
             )}
+            <div className="rounded-xl shadow-xs mt-3 sm:mt-0">
+              <Link
+                href="/menu"
+                className="w-full flex items-center justify-center gap-2 px-8 py-3.5 border border-gray-200 text-base font-bold rounded-xl text-gray-800 bg-white hover:bg-gray-50 md:py-4 md:text-lg transition-all"
+              >
+                <span>🍽️ View Live Menu</span>
+              </Link>
+            </div>
           </div>
         </div>
 
