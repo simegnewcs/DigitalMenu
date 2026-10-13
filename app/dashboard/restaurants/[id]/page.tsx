@@ -635,7 +635,7 @@ export default function RestaurantManagePage() {
                               </p>
                             )}
                             <p className="text-xs font-bold text-primary-600 mt-1">
-                              ${Number(item.price).toFixed(2)}
+                              ETB {Number(item.price).toFixed(2)}
                             </p>
                           </div>
                         </div>
@@ -1105,14 +1105,14 @@ export default function RestaurantManagePage() {
 
                 <div>
                   <label className="block text-xs font-semibold uppercase tracking-wider text-gray-700 mb-1">
-                    Price ($) <span className="text-red-500">*</span>
+                    Price (ETB) <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="number"
                     step="0.01"
                     min="0"
                     required
-                    placeholder="12.99"
+                    placeholder="250.00"
                     value={itemForm.price}
                     onChange={(e) => setItemForm({ ...itemForm, price: e.target.value })}
                     className="w-full px-3.5 py-2 bg-gray-50 border border-gray-300 rounded-xl text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"

@@ -78,7 +78,7 @@ async function main() {
           {
             name: 'Bruschetta',
             description: 'Grilled bread with tomatoes, garlic, and basil',
-            price: 8.99,
+            price: 250.00,
             isAvailable: true,
             isPopular: true,
             categoryId: category.id,
@@ -87,7 +87,7 @@ async function main() {
           {
             name: 'Caesar Salad',
             description: 'Romaine lettuce with Caesar dressing and croutons',
-            price: 10.99,
+            price: 320.00,
             isAvailable: true,
             categoryId: category.id,
             sortOrder: 2,
@@ -102,7 +102,7 @@ async function main() {
           {
             name: 'Grilled Salmon',
             description: 'Fresh salmon with lemon butter sauce',
-            price: 24.99,
+            price: 650.00,
             isAvailable: true,
             isPopular: true,
             categoryId: category.id,
@@ -111,7 +111,7 @@ async function main() {
           {
             name: 'Ribeye Steak',
             description: '12oz ribeye with mashed potatoes',
-            price: 32.99,
+            price: 950.00,
             isAvailable: true,
             categoryId: category.id,
             sortOrder: 2,
@@ -119,7 +119,7 @@ async function main() {
           {
             name: 'Pasta Primavera',
             description: 'Fresh vegetables with pasta in light sauce',
-            price: 18.99,
+            price: 480.00,
             isAvailable: true,
             categoryId: category.id,
             sortOrder: 3,
@@ -134,7 +134,7 @@ async function main() {
           {
             name: 'Tiramisu',
             description: 'Classic Italian coffee-flavored dessert',
-            price: 9.99,
+            price: 280.00,
             isAvailable: true,
             isPopular: true,
             categoryId: category.id,
@@ -143,7 +143,7 @@ async function main() {
           {
             name: 'Chocolate Lava Cake',
             description: 'Warm chocolate cake with vanilla ice cream',
-            price: 11.99,
+            price: 350.00,
             isAvailable: true,
             categoryId: category.id,
             sortOrder: 2,
@@ -158,7 +158,7 @@ async function main() {
           {
             name: 'Fresh Lemonade',
             description: 'Homemade lemonade with mint',
-            price: 4.99,
+            price: 120.00,
             isAvailable: true,
             categoryId: category.id,
             sortOrder: 1,
@@ -166,7 +166,7 @@ async function main() {
           {
             name: 'Iced Coffee',
             description: 'Cold brew coffee with cream',
-            price: 5.99,
+            price: 180.00,
             isAvailable: true,
             categoryId: category.id,
             sortOrder: 2,

@@ -581,7 +581,7 @@ export default function MenuView({
 
                           <div className="mt-3 flex items-center justify-between">
                             <span className="text-base font-black text-slate-900">
-                              ${Number(item.price).toFixed(2)}
+                              ETB {Number(item.price).toFixed(2)}
                             </span>
 
                             {/* Add / Qty Control */}
@@ -677,7 +677,7 @@ export default function MenuView({
               </div>
               <div>
                 <p className="text-xs text-slate-400 font-medium">Your Table Tray</p>
-                <p className="text-sm font-black tracking-tight">${totalTrayPrice.toFixed(2)}</p>
+                <p className="text-sm font-black tracking-tight">ETB {totalTrayPrice.toFixed(2)}</p>
               </div>
             </div>
 
@@ -732,7 +732,7 @@ export default function MenuView({
                 )}
               </div>
               <span className="text-xl font-black text-rose-600">
-                ${Number(selectedItem.price).toFixed(2)}
+                ETB {Number(selectedItem.price).toFixed(2)}
               </span>
             </div>
 
@@ -784,7 +784,7 @@ export default function MenuView({
                 className="flex-1 py-3 px-5 bg-rose-600 hover:bg-rose-700 text-white rounded-2xl font-bold text-sm shadow-lg shadow-rose-600/20 transition flex items-center justify-between"
               >
                 <span>Add to Tray</span>
-                <span>${(selectedItem.price * itemModalQty).toFixed(2)}</span>
+                <span>ETB {(selectedItem.price * itemModalQty).toFixed(2)}</span>
               </button>
             </div>
           </div>
@@ -830,7 +830,7 @@ export default function MenuView({
                     <div className="flex-1 min-w-0">
                       <h4 className="font-bold text-slate-900 text-sm">{entry.item.name}</h4>
                       <p className="text-xs text-slate-500 font-semibold mt-0.5">
-                        ${entry.item.price.toFixed(2)} each
+                        ETB {entry.item.price.toFixed(2)} each
                       </p>
                       {entry.specialInstructions && (
                         <p className="text-[11px] text-amber-800 bg-amber-50/80 px-2 py-0.5 rounded-md mt-1 border border-amber-200/50">
@@ -841,7 +841,7 @@ export default function MenuView({
 
                     <div className="flex flex-col items-end gap-1.5 shrink-0">
                       <span className="text-sm font-black text-slate-900">
-                        ${(entry.item.price * entry.quantity).toFixed(2)}
+                        ETB {(entry.item.price * entry.quantity).toFixed(2)}
                       </span>
 
                       <div className="flex items-center bg-white rounded-xl border border-slate-200 p-0.5">
@@ -873,7 +873,7 @@ export default function MenuView({
                 <div className="space-y-1.5 text-xs">
                   <div className="flex justify-between text-slate-500">
                     <span>Subtotal</span>
-                    <span className="font-semibold text-slate-800">${totalTrayPrice.toFixed(2)}</span>
+                    <span className="font-semibold text-slate-800">ETB {totalTrayPrice.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-slate-500">
                     <span>Estimated Tax / Service</span>
@@ -881,7 +881,7 @@ export default function MenuView({
                   </div>
                   <div className="flex justify-between text-sm font-black text-slate-900 pt-1.5 border-t border-slate-100">
                     <span>Total</span>
-                    <span className="text-rose-600">${totalTrayPrice.toFixed(2)}</span>
+                    <span className="text-rose-600">ETB {totalTrayPrice.toFixed(2)}</span>
                   </div>
                 </div>
 
