@@ -4,8 +4,8 @@ import { useState, useEffect, Suspense } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import toast from "react-hot-toast";
-import DevvoltzLogo from "@/components/DevvoltzLogo";
 
 function AuthForm() {
   const router = useRouter();
@@ -176,8 +176,18 @@ function AuthForm() {
     <div className="w-full max-w-md">
       {/* Brand Header */}
       <div className="text-center mb-8">
-        <Link href="/" className="inline-flex items-center mb-3 group hover:opacity-90 transition-opacity">
-          <DevvoltzLogo size={44} showText={true} showTagline={true} variant="light" />
+        <Link href="/" className="inline-flex items-center gap-3 mb-3 group">
+          <Image
+            src="/logo.png"
+            alt="DigitalMenu"
+            width={48}
+            height={48}
+            className="w-12 h-12 object-contain rounded-2xl shadow-md group-hover:scale-105 transition-transform duration-200"
+            priority
+          />
+          <span className="text-2xl font-black bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+            Digital<span className="text-primary-600">Menu</span>
+          </span>
         </Link>
         <h2 className="text-2xl font-bold text-gray-900 tracking-tight">
           {mode === "login" ? "Welcome back" : "Create your account"}

@@ -3,9 +3,9 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { signOut } from "next-auth/react";
 import toast from "react-hot-toast";
-import DevvoltzLogo from "@/components/DevvoltzLogo";
 
 interface Restaurant {
   id: string;
@@ -131,9 +131,16 @@ export default function DashboardPage() {
 
               <Link
                 href="/"
-                className="hover:opacity-90 transition-opacity"
+                className="flex items-center space-x-2 text-xl sm:text-2xl font-black text-slate-900 tracking-tight hover:opacity-90 transition-opacity"
               >
-                <DevvoltzLogo size={34} showText={true} showTagline={false} variant="color" />
+                <Image
+                  src="/logo.png"
+                  alt="DigitalMenu"
+                  width={34}
+                  height={34}
+                  className="w-8 h-8 object-contain rounded-lg shadow-xs"
+                />
+                <span>Digital<span className="text-primary-600">Menu</span></span>
               </Link>
 
               <span className="text-xs bg-primary-50 text-primary-700 font-bold px-2.5 py-1 rounded-full border border-primary-200 hidden md:inline-block">
