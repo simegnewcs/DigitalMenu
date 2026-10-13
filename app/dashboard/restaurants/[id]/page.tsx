@@ -50,6 +50,25 @@ interface Restaurant {
   qrCodes: QRCodeData[];
 }
 
+const COLOR_PRESETS = [
+  { name: "Onyx Black", hex: "#111827" },
+  { name: "Pure White", hex: "#FFFFFF" },
+  { name: "Ruby Red", hex: "#DC2626" },
+  { name: "Warm Amber", hex: "#D97706" },
+  { name: "Emerald Green", hex: "#047857" },
+  { name: "Navy Blue", hex: "#1E3A8A" },
+  { name: "Royal Violet", hex: "#7C3AED" },
+  { name: "Espresso Brown", hex: "#451A03" },
+];
+
+function isColorLight(hex: string): boolean {
+  const c = hex.replace("#", "");
+  const r = parseInt(c.substring(0, 2), 16) || 0;
+  const g = parseInt(c.substring(2, 4), 16) || 0;
+  const b = parseInt(c.substring(4, 6), 16) || 0;
+  return 0.299 * r + 0.587 * g + 0.114 * b > 170;
+}
+
 export default function RestaurantManagePage() {
   const params = useParams();
   const router = useRouter();
@@ -91,6 +110,7 @@ export default function RestaurantManagePage() {
   const [showQRModal, setShowQRModal] = useState(false);
   const [tableNumber, setTableNumber] = useState("");
   const [generatedQR, setGeneratedQR] = useState<QRCodeData | null>(null);
+  const [qrBgColor, setQrBgColor] = useState<string>("#111827");
 
   const restaurantId = params.id as string;
 
@@ -392,6 +412,153 @@ export default function RestaurantManagePage() {
     link.click();
     document.body.removeChild(link);
     toast.success("QR Code downloaded!");
+  };
+
+  const downloadA4Sheet = (
+    qrImageUrl: string,
+    code: string,
+    tableNum?: number | null,
+    bgColor = qrBgColor
+  ) => {
+    if (userRole !== "ADMIN" && !restaurant?.isQrPaid) {
+      toast.error(
+        "Payment of 1,300 ETB via Telebirr (0962935163) required to download QR codes"
+      );
+      return;
+    }
+
+    const canvas = document.createElement("canvas");
+    // Standard high-res A4 proportions @ 150 DPI: 1240 x 1754
+    const width = 1240;
+    const height = 1754;
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const isLight = isColorLight(bgColor);
+    const textColor = isLight ? "#0f172a" : "#ffffff";
+    const subtextColor = isLight ? "#475569" : "#cbd5e1";
+    const accentBorder = isLight
+      ? "rgba(0, 0, 0, 0.08)"
+      : "rgba(255, 255, 255, 0.16)";
+
+    // 1. Paint entire A4 sheet with selected color
+    ctx.fillStyle = bgColor;
+    ctx.fillRect(0, 0, width, height);
+
+    // 2. Decorative outer & inner borders
+    ctx.strokeStyle = accentBorder;
+    ctx.lineWidth = 10;
+    ctx.strokeRect(50, 50, width - 100, height - 100);
+
+    ctx.strokeStyle = accentBorder;
+    ctx.lineWidth = 2;
+    ctx.strokeRect(70, 70, width - 140, height - 140);
+
+    // 3. Header - Centered Restaurant Name
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    ctx.fillStyle = textColor;
+    ctx.font = "bold 64px Inter, system-ui, sans-serif";
+    ctx.fillText(restaurant?.name || "Digital Menu", width / 2, 220);
+
+    if (tableNum) {
+      const badgeY = 320;
+      ctx.fillStyle = isLight ? "#e2e8f0" : "rgba(255, 255, 255, 0.2)";
+      ctx.beginPath();
+      if (ctx.roundRect) {
+        ctx.roundRect(width / 2 - 160, badgeY - 32, 320, 64, 32);
+      } else {
+        ctx.rect(width / 2 - 160, badgeY - 32, 320, 64);
+      }
+      ctx.fill();
+
+      ctx.fillStyle = isLight ? "#0f172a" : "#ffffff";
+      ctx.font = "bold 32px Inter, system-ui, sans-serif";
+      ctx.fillText(`TABLE #${tableNum}`, width / 2, badgeY);
+    } else {
+      ctx.fillStyle = subtextColor;
+      ctx.font = "600 32px Inter, system-ui, sans-serif";
+      ctx.fillText("CONTACTLESS DINING MENU", width / 2, 310);
+    }
+
+    ctx.fillStyle = textColor;
+    ctx.font = "800 48px Inter, system-ui, sans-serif";
+    ctx.fillText("SCAN TO VIEW MENU", width / 2, 430);
+
+    ctx.fillStyle = subtextColor;
+    ctx.font = "400 26px Inter, system-ui, sans-serif";
+    ctx.fillText("Point your camera at the QR code below", width / 2, 490);
+
+    // 4. Center QR Stand Card
+    const cardSize = 640;
+    const cardX = (width - cardSize) / 2;
+    const cardY = 560;
+
+    // Card shadow
+    ctx.shadowColor = "rgba(0, 0, 0, 0.25)";
+    ctx.shadowBlur = 30;
+    ctx.shadowOffsetY = 15;
+
+    ctx.fillStyle = "#ffffff";
+    ctx.beginPath();
+    if (ctx.roundRect) {
+      ctx.roundRect(cardX, cardY, cardSize, cardSize, 36);
+    } else {
+      ctx.rect(cardX, cardY, cardSize, cardSize);
+    }
+    ctx.fill();
+
+    ctx.shadowColor = "transparent";
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetY = 0;
+
+    ctx.strokeStyle = "rgba(0, 0, 0, 0.08)";
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    if (ctx.roundRect) {
+      ctx.roundRect(cardX, cardY, cardSize, cardSize, 36);
+    } else {
+      ctx.rect(cardX, cardY, cardSize, cardSize);
+    }
+    ctx.stroke();
+
+    // QR Image
+    const qrImg = new Image();
+    qrImg.crossOrigin = "anonymous";
+    qrImg.onload = () => {
+      const pad = 44;
+      ctx.drawImage(qrImg, cardX + pad, cardY + pad, cardSize - pad * 2, cardSize - pad * 2);
+
+      // Bottom instructions
+      ctx.fillStyle = textColor;
+      ctx.font = "bold 32px Inter, system-ui, sans-serif";
+      ctx.fillText("NO APP REQUIRED", width / 2, cardY + cardSize + 110);
+
+      ctx.fillStyle = subtextColor;
+      ctx.font = "400 24px Inter, system-ui, sans-serif";
+      ctx.fillText("Open Camera • Scan Code • Browse Menu", width / 2, cardY + cardSize + 160);
+
+      ctx.fillStyle = subtextColor;
+      ctx.font = "500 22px Inter, system-ui, sans-serif";
+      ctx.fillText("Powered by DevVoltz DigitalMenu", width / 2, height - 120);
+
+      // Trigger download
+      const link = document.createElement("a");
+      const filename = tableNum
+        ? `A4-QR-Table-${tableNum}-${restaurant?.slug || "menu"}.png`
+        : `A4-QR-Main-${restaurant?.slug || "menu"}.png`;
+      link.download = filename;
+      link.href = canvas.toDataURL("image/png");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      toast.success("A4 Printable Poster downloaded!");
+    };
+    qrImg.src = qrImageUrl;
   };
 
   if (loading) {
@@ -979,7 +1146,19 @@ export default function RestaurantManagePage() {
                       }`}
                     >
                       <span>⬇</span>
-                      <span>Download PNG</span>
+                      <span>QR PNG</span>
+                    </button>
+                    <button
+                      onClick={() => downloadA4Sheet(qr.qrImageUrl, qr.code, qr.tableNumber, qrBgColor)}
+                      className={`px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
+                        canAccessQR
+                          ? "bg-gray-900 hover:bg-gray-800 text-white shadow-sm"
+                          : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                      }`}
+                      title="Download A4 Poster"
+                    >
+                      <span>📄</span>
+                      <span>A4</span>
                     </button>
                     <button
                       onClick={() => handleDeleteQR(qr.id)}
@@ -1196,13 +1375,78 @@ export default function RestaurantManagePage() {
       {/* GENERATE QR MODAL */}
       {showQRModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl border border-gray-100">
-            <h3 className="text-lg font-bold text-gray-900 mb-2">
-              Generate Contactless QR Code
-            </h3>
+          <div className="bg-white rounded-3xl p-6 w-full max-w-lg shadow-2xl border border-gray-100 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-lg font-bold text-gray-900">
+                Generate Contactless QR Code
+              </h3>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowQRModal(false);
+                  setGeneratedQR(null);
+                }}
+                className="w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 flex items-center justify-center text-xs font-bold"
+              >
+                ✕
+              </button>
+            </div>
             <p className="text-xs text-gray-500 mb-4">
-              Create a QR code for a specific dining table or a general menu.
+              Select your background theme color below to generate an A4 printable poster with the QR code centered.
             </p>
+
+            {/* COLOR DOTS SELECTION PALETTE */}
+            <div className="mb-5 bg-gray-50/90 p-3.5 rounded-2xl border border-gray-200">
+              <div className="flex items-center justify-between mb-2">
+                <label className="text-xs font-bold text-gray-800 flex items-center gap-1.5">
+                  <span>🎨</span>
+                  <span>A4 Poster Background Color</span>
+                </label>
+                <span className="text-[11px] font-mono font-semibold text-gray-500 uppercase">
+                  {qrBgColor}
+                </span>
+              </div>
+              <div className="flex items-center gap-2.5 flex-wrap">
+                {COLOR_PRESETS.map((color) => (
+                  <button
+                    key={color.hex}
+                    type="button"
+                    title={color.name}
+                    onClick={() => setQrBgColor(color.hex)}
+                    style={{ backgroundColor: color.hex }}
+                    className={`w-7 h-7 rounded-full border-2 transition-all transform hover:scale-110 flex items-center justify-center shadow-xs ${
+                      qrBgColor.toLowerCase() === color.hex.toLowerCase()
+                        ? "border-primary-600 ring-2 ring-primary-500/40 scale-110"
+                        : "border-gray-300 hover:border-gray-400"
+                    }`}
+                  >
+                    {qrBgColor.toLowerCase() === color.hex.toLowerCase() && (
+                      <span
+                        className={`text-[10px] font-bold ${
+                          isColorLight(color.hex) ? "text-gray-900" : "text-white"
+                        }`}
+                      >
+                        ✓
+                      </span>
+                    )}
+                  </button>
+                ))}
+
+                {/* Custom Color Dot */}
+                <label
+                  title="Choose custom color"
+                  className="w-7 h-7 rounded-full border-2 border-dashed border-gray-400 hover:border-primary-500 flex items-center justify-center cursor-pointer transition-colors relative overflow-hidden bg-white"
+                >
+                  <input
+                    type="color"
+                    value={qrBgColor}
+                    onChange={(e) => setQrBgColor(e.target.value)}
+                    className="opacity-0 absolute inset-0 cursor-pointer w-full h-full"
+                  />
+                  <span className="text-xs">🎨</span>
+                </label>
+              </div>
+            </div>
 
             {!generatedQR ? (
               <form onSubmit={handleGenerateQR}>
@@ -1241,39 +1485,134 @@ export default function RestaurantManagePage() {
               </form>
             ) : (
               <div className="text-center">
-                <div className="bg-gray-50 p-4 rounded-2xl border border-gray-200 mb-4 flex items-center justify-center">
-                  <img
-                    src={generatedQR.qrImageUrl}
-                    alt="Generated QR"
-                    className="w-56 h-56 object-contain"
-                  />
+                {/* LIVE A4 PRINTABLE SHEET PREVIEW (QR IS ON CENTERAL) */}
+                <div className="flex justify-center mb-4">
+                  <div
+                    style={{ backgroundColor: qrBgColor }}
+                    className="w-60 sm:w-64 aspect-[210/297] rounded-2xl shadow-xl p-4 flex flex-col justify-between items-center text-center relative border border-black/10 transition-colors duration-300 overflow-hidden"
+                  >
+                    {/* Inner framing */}
+                    <div
+                      style={{
+                        borderColor: isColorLight(qrBgColor)
+                          ? "rgba(0,0,0,0.08)"
+                          : "rgba(255,255,255,0.18)",
+                      }}
+                      className="absolute inset-2 rounded-xl border pointer-events-none"
+                    />
+
+                    {/* Top Header */}
+                    <div className="z-10 mt-1 w-full px-2">
+                      <h4
+                        style={{
+                          color: isColorLight(qrBgColor) ? "#0f172a" : "#ffffff",
+                        }}
+                        className="font-black text-xs sm:text-sm tracking-tight truncate"
+                      >
+                        {restaurant?.name || "Digital Menu"}
+                      </h4>
+                      {generatedQR.tableNumber ? (
+                        <span
+                          style={{
+                            backgroundColor: isColorLight(qrBgColor)
+                              ? "rgba(0,0,0,0.08)"
+                              : "rgba(255,255,255,0.2)",
+                            color: isColorLight(qrBgColor) ? "#0f172a" : "#ffffff",
+                          }}
+                          className="inline-block mt-1 text-[10px] font-bold px-2.5 py-0.5 rounded-full"
+                        >
+                          TABLE #{generatedQR.tableNumber}
+                        </span>
+                      ) : (
+                        <span
+                          style={{
+                            color: isColorLight(qrBgColor) ? "#64748b" : "#cbd5e1",
+                          }}
+                          className="block text-[9px] font-semibold mt-0.5"
+                        >
+                          CONTACTLESS MENU
+                        </span>
+                      )}
+                      <p
+                        style={{
+                          color: isColorLight(qrBgColor) ? "#0f172a" : "#ffffff",
+                        }}
+                        className="text-[10px] font-extrabold mt-1 tracking-wider uppercase"
+                      >
+                        Scan to View Menu
+                      </p>
+                    </div>
+
+                    {/* Centered QR Code on A4 Paper */}
+                    <div className="z-10 bg-white p-3 rounded-2xl shadow-lg border border-black/5 my-auto flex items-center justify-center">
+                      <img
+                        src={generatedQR.qrImageUrl}
+                        alt="Centered QR"
+                        className="w-32 h-32 sm:w-36 sm:h-36 object-contain"
+                      />
+                    </div>
+
+                    {/* Bottom Footer */}
+                    <div className="z-10 mb-1 w-full px-2">
+                      <p
+                        style={{
+                          color: isColorLight(qrBgColor) ? "#0f172a" : "#ffffff",
+                        }}
+                        className="text-[9px] font-bold"
+                      >
+                        Point your phone camera
+                      </p>
+                      <p
+                        style={{
+                          color: isColorLight(qrBgColor) ? "#64748b" : "#94a3b8",
+                        }}
+                        className="text-[8px] mt-0.5"
+                      >
+                        Powered by DevVoltz DigitalMenu
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <p className="text-sm font-bold text-gray-900 mb-1">
-                  {generatedQR.tableNumber
-                    ? `Table #${generatedQR.tableNumber} QR Code`
-                    : "General Menu QR Code"}
-                </p>
-                <p className="text-xs text-gray-400 font-mono mb-4 break-all">
+
+                <p className="text-xs text-gray-500 font-mono mb-4 break-all bg-gray-50 p-2 rounded-xl border border-gray-100">
                   {generatedQR.menuUrl}
                 </p>
 
-                <div className="flex space-x-3">
+                {/* Action Buttons */}
+                <div className="flex flex-col gap-2">
                   <button
-                    onClick={() => downloadQR(generatedQR.qrImageUrl, generatedQR.code)}
-                    className="flex-1 bg-primary-600 hover:bg-primary-700 text-white py-2.5 rounded-xl text-sm font-bold shadow-md shadow-primary-600/20 transition-all flex items-center justify-center gap-1.5"
+                    onClick={() =>
+                      downloadA4Sheet(
+                        generatedQR.qrImageUrl,
+                        generatedQR.code,
+                        generatedQR.tableNumber,
+                        qrBgColor
+                      )
+                    }
+                    className="w-full bg-primary-600 hover:bg-primary-700 text-white py-3 rounded-xl text-xs font-bold shadow-md shadow-primary-600/20 transition-all flex items-center justify-center gap-2"
                   >
-                    <span>⬇</span>
-                    <span>Download PNG</span>
+                    <span>📄</span>
+                    <span>Download A4 Printable Poster (PNG)</span>
                   </button>
-                  <button
-                    onClick={() => {
-                      setGeneratedQR(null);
-                      setTableNumber("");
-                    }}
-                    className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-2.5 rounded-xl text-sm font-semibold transition-colors"
-                  >
-                    Generate Another
-                  </button>
+
+                  <div className="flex space-x-2">
+                    <button
+                      onClick={() => downloadQR(generatedQR.qrImageUrl, generatedQR.code)}
+                      className="flex-1 bg-gray-900 hover:bg-gray-800 text-white py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5"
+                    >
+                      <span>⬇</span>
+                      <span>QR Code Only</span>
+                    </button>
+                    <button
+                      onClick={() => {
+                        setGeneratedQR(null);
+                        setTableNumber("");
+                      }}
+                      className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-2.5 rounded-xl text-xs font-semibold transition-colors"
+                    >
+                      Generate Another
+                    </button>
+                  </div>
                 </div>
               </div>
             )}
