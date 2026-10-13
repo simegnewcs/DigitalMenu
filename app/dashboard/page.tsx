@@ -114,45 +114,48 @@ export default function DashboardPage() {
       {/* Navbar with Back Button to Home Page */}
       <nav className="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            {/* Left: Back to Home + Logo + Dashboard Badge */}
-            <div className="flex items-center space-x-3 sm:space-x-4">
+          <div className="flex justify-between h-16 items-center gap-2">
+            {/* Left: Logo & Dashboard Badge */}
+            <div className="flex items-center space-x-2 sm:space-x-3 min-w-0">
               <Link
                 href="/"
                 id="back-to-home-btn"
-                className="inline-flex items-center gap-2 px-3 py-1.5 text-xs sm:text-sm font-bold text-gray-700 hover:text-primary-600 bg-gray-100 hover:bg-gray-200/80 rounded-xl transition-all border border-gray-200 shadow-xs group"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-bold text-gray-700 hover:text-primary-600 bg-gray-100 hover:bg-gray-200 rounded-xl transition-all border border-gray-200 shadow-xs shrink-0"
                 title="Return to Home Page"
               >
-                <span className="transition-transform group-hover:-translate-x-0.5">←</span>
-                <span>Back to Home</span>
+                <span>←</span>
+                <span className="hidden sm:inline">Back to </span>
+                <span>Home</span>
               </Link>
 
-              <div className="h-5 w-px bg-gray-200 hidden sm:block"></div>
+              <div className="h-5 w-px bg-gray-200 hidden sm:block shrink-0"></div>
 
               <Link
                 href="/"
-                className="flex items-center space-x-2 text-xl sm:text-2xl font-black text-slate-900 tracking-tight hover:opacity-90 transition-opacity"
+                className="flex items-center space-x-2 text-lg sm:text-2xl font-black text-slate-900 tracking-tight hover:opacity-90 transition-opacity shrink-0"
               >
                 <Image
                   src="/logo.png"
                   alt="DigitalMenu"
                   width={34}
                   height={34}
-                  className="w-8 h-8 object-contain rounded-lg shadow-xs"
+                  className="w-7 h-7 sm:w-8 sm:h-8 object-contain rounded-lg"
                 />
-                <span>Digital<span className="text-primary-600">Menu</span></span>
+                <span className="hidden xs:inline sm:inline">
+                  Digital<span className="text-primary-600">Menu</span>
+                </span>
               </Link>
 
-              <span className="text-xs bg-primary-50 text-primary-700 font-bold px-2.5 py-1 rounded-full border border-primary-200 hidden md:inline-block">
+              <span className="text-[11px] sm:text-xs bg-primary-50 text-primary-700 font-bold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full border border-primary-200 hidden md:inline-block shrink-0">
                 Dashboard
               </span>
             </div>
 
             {/* Right: User Chip + Add Restaurant + Logout */}
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2 sm:space-x-3 shrink-0">
               {currentUser && (
                 <div className="hidden lg:flex items-center space-x-2 px-3 py-1.5 bg-gray-50 border border-gray-200/80 rounded-xl text-xs">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                   <span className="font-semibold text-gray-800 max-w-[140px] truncate">
                     {currentUser.name || currentUser.email}
                   </span>
@@ -166,15 +169,15 @@ export default function DashboardPage() {
 
               <button
                 onClick={() => setShowCreateModal(true)}
-                className="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-xl text-sm font-semibold shadow-md shadow-primary-600/20 transition-all flex items-center gap-1.5"
+                className="bg-primary-600 hover:bg-primary-700 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold shadow-md shadow-primary-600/20 transition-all flex items-center gap-1.5 shrink-0"
               >
-                <span>+</span>
+                <span className="text-base leading-none">+</span>
                 <span>Add Restaurant</span>
               </button>
 
               <button
                 onClick={handleLogout}
-                className="text-gray-500 hover:text-red-600 hover:bg-red-50 text-sm font-semibold px-3 py-2 rounded-xl transition-colors"
+                className="text-gray-500 hover:text-red-600 hover:bg-red-50 text-xs sm:text-sm font-semibold px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl transition-colors shrink-0"
               >
                 Logout
               </button>

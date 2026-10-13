@@ -587,52 +587,53 @@ export default function RestaurantManagePage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Top Navbar */}
-      <nav className="bg-white border-b border-gray-200 sticky top-0 z-40">
+      <nav className="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <div className="flex items-center space-x-2 sm:space-x-3">
-              <Link
-                href="/"
-                className="inline-flex items-center gap-1 text-xs font-semibold text-gray-700 hover:text-primary-600 bg-gray-100 hover:bg-gray-200 px-2.5 py-1.5 rounded-lg transition-colors border border-gray-200"
-                title="Return to Home Page"
-              >
-                <span>←</span>
-                <span>Home</span>
-              </Link>
+          <div className="flex justify-between h-16 items-center gap-2">
+            <div className="flex items-center space-x-2 sm:space-x-3 min-w-0">
               <Link
                 href="/dashboard"
-                className="inline-flex items-center gap-1 text-xs font-semibold text-gray-700 hover:text-primary-600 bg-gray-100 hover:bg-gray-200 px-2.5 py-1.5 rounded-lg transition-colors border border-gray-200"
+                className="inline-flex items-center gap-1 text-xs font-bold text-gray-700 hover:text-primary-600 bg-gray-100 hover:bg-gray-200 px-2.5 py-1.5 rounded-xl transition-all border border-gray-200 shrink-0"
+                title="Return to Dashboard"
               >
+                <span>←</span>
+                <span className="hidden sm:inline">Back to </span>
                 <span>Dashboard</span>
               </Link>
-              <div>
-                <h1 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                  <span>{restaurant.name}</span>
+
+              <div className="h-5 w-px bg-gray-200 hidden sm:block shrink-0"></div>
+
+              <div className="min-w-0">
+                <div className="flex items-center gap-2 truncate">
+                  <h1 className="text-sm sm:text-lg font-bold text-gray-900 truncate">
+                    {restaurant.name}
+                  </h1>
                   {userRole === "ADMIN" ? (
-                    <span className="text-[11px] font-semibold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full">
-                      Admin Mode
+                    <span className="text-[10px] font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full shrink-0">
+                      Admin
                     </span>
                   ) : restaurant.isQrPaid ? (
-                    <span className="text-[11px] font-semibold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">
+                    <span className="text-[10px] font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full shrink-0">
                       QR Paid
                     </span>
                   ) : (
-                    <span className="text-[11px] font-semibold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full">
+                    <span className="text-[10px] font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full shrink-0">
                       QR Unpaid
                     </span>
                   )}
-                </h1>
-                <p className="text-xs text-gray-400">/{restaurant.slug}</p>
+                </div>
+                <p className="text-[10px] text-gray-400 font-mono truncate hidden sm:block">/{restaurant.slug}</p>
               </div>
             </div>
 
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2 shrink-0">
               <Link
                 href={`/menu/${restaurant.slug}`}
                 target="_blank"
-                className="inline-flex items-center gap-1.5 text-xs font-semibold bg-primary-50 text-primary-700 hover:bg-primary-100 px-3 py-2 rounded-lg transition-colors border border-primary-200"
+                className="inline-flex items-center gap-1.5 text-xs font-bold bg-primary-50 text-primary-700 hover:bg-primary-100 px-3 py-2 rounded-xl transition-colors border border-primary-200 shadow-xs shrink-0"
               >
-                <span>Preview Menu</span>
+                <span>Preview</span>
+                <span className="hidden sm:inline"> Menu</span>
                 <span>↗</span>
               </Link>
             </div>
@@ -640,9 +641,9 @@ export default function RestaurantManagePage() {
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         {/* Navigation Tabs */}
-        <div className="flex border-b border-gray-200 mb-8 space-x-8">
+        <div className="flex border-b border-gray-200 mb-8 space-x-4 sm:space-x-8 overflow-x-auto">
           <button
             onClick={() => setActiveTab("categories")}
             className={`pb-4 text-sm font-semibold border-b-2 transition-all flex items-center gap-2 ${
