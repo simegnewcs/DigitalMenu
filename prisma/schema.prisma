@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -30,12 +30,12 @@ model Account {
   type              String
   provider          String
   providerAccountId String  @map("provider_account_id")
-  refresh_token     String?
-  access_token      String?
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String?
+  id_token          String? @db.Text
   session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -70,7 +70,7 @@ model Restaurant {
   logo        String?
   address     String?
   phone       String?
-  description String?
+  description String?    @db.Text
   ownerId     String     @map("owner_id")
   owner       User       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   categories  Category[]
@@ -91,7 +91,7 @@ model Category {
   restaurantId String     @map("restaurant_id")
   restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
   name         String
-  description  String?
+  description  String?    @db.Text
   sortOrder    Int        @default(0) @map("sort_order")
   menuItems    MenuItem[]
   createdAt    DateTime   @default(now()) @map("created_at")
@@ -106,9 +106,9 @@ model MenuItem {
   categoryId  String   @map("category_id")
   category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   name        String
-  description String?
+  description String?  @db.Text
   price       Float
-  image       String?
+  image       String?  @db.Text
   isAvailable Boolean  @default(true) @map("is_available")
   isPopular   Boolean  @default(false) @map("is_popular")
   sortOrder   Int      @default(0) @map("sort_order")
@@ -124,7 +124,7 @@ model QRCode {
   restaurantId String     @map("restaurant_id")
   restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
   code         String     @unique
-  qrImageUrl   String     @map("qr_image_url")
+  qrImageUrl   String     @map("qr_image_url") @db.MediumText
   tableNumber  Int?       @map("table_number")
   isActive     Boolean    @default(true) @map("is_active")
   scanCount    Int        @default(0) @map("scan_count")
