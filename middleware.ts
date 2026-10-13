@@ -25,11 +25,27 @@ export default auth((req) => {
   }
 
   if (!isLoggedIn) {
-    return NextResponse.redirect(new URL("/login", nextUrl));
+    const loginUrl = new URL("/login", req.nextUrl);
+    const host = req.headers.get("host");
+    if (host) {
+      loginUrl.host = host;
+      if (host.includes("localhost") || host.includes("127.0.0.1")) {
+        loginUrl.protocol = "http:";
+      }
+    }
+    return NextResponse.redirect(loginUrl);
   }
 
   if (isAdminRoute && userRole !== "ADMIN") {
-    return NextResponse.redirect(new URL("/dashboard", nextUrl));
+    const dashUrl = new URL("/dashboard", req.nextUrl);
+    const host = req.headers.get("host");
+    if (host) {
+      dashUrl.host = host;
+      if (host.includes("localhost") || host.includes("127.0.0.1")) {
+        dashUrl.protocol = "http:";
+      }
+    }
+    return NextResponse.redirect(dashUrl);
   }
 
   return NextResponse.next();

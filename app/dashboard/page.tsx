@@ -39,7 +39,6 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [searchFilter, setSearchFilter] = useState("");
   const [activeNavTab, setActiveNavTab] = useState<"overview" | "restaurants" | "qrcodes" | "billing">("overview");
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
@@ -55,7 +54,7 @@ export default function DashboardPage() {
   const [userRole, setUserRole] = useState<"ADMIN" | "OWNER">("OWNER");
 
   useEffect(() => {
-    // 1. Session check
+    // Session check
     fetch("/api/auth/session")
       .then((res) => res.json())
       .then((session) => {
@@ -85,6 +84,16 @@ export default function DashboardPage() {
     fetchRestaurants();
   }, []);
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && showCreateModal) {
+        setShowCreateModal(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [showCreateModal]);
+
   const fetchRestaurants = async () => {
     try {
       setLoading(true);
@@ -105,7 +114,7 @@ export default function DashboardPage() {
   const handleCreateRestaurant = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newRestaurant.name.trim()) {
-      toast.error("Restaurant name is required");
+      toast.error("Menu name is required");
       return;
     }
 
@@ -118,16 +127,16 @@ export default function DashboardPage() {
 
       if (res.ok) {
         const created = await res.json();
-        toast.success(`${created.name} created successfully!`);
+        toast.success(`Menu "${created.name}" created successfully!`);
         setShowCreateModal(false);
         setNewRestaurant({ name: "", address: "", phone: "", description: "" });
         fetchRestaurants();
       } else {
         const err = await res.json();
-        toast.error(err.error || "Failed to create restaurant");
+        toast.error(err.error || "Failed to create menu");
       }
     } catch (error) {
-      toast.error("Error creating restaurant");
+      toast.error("Error creating menu");
     }
   };
 
@@ -165,723 +174,1065 @@ export default function DashboardPage() {
   );
 
   return (
-    <div className="min-h-screen bg-[#F4F7FB] flex text-slate-800 font-sans selection:bg-primary-500 selection:text-white">
-      {/* Mobile Sidebar Backdrop */}
+    <div className="min-h-screen w-full max-w-full overflow-x-hidden bg-slate-100 font-serif text-slate-700 antialiased selection:bg-sky-500 selection:text-white">
+      {/* Mobile Sidebar Overlay */}
       {sidebarOpen && (
         <div
           onClick={() => setSidebarOpen(false)}
-          className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-40 lg:hidden"
+          className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-40 md:hidden"
         />
       )}
 
-      {/* 1. LEFT SIDEBAR (TailwindAdmin Style) */}
-      <aside
-        className={`fixed top-0 bottom-0 left-0 z-50 bg-white border-r border-slate-200/90 flex flex-col transition-all duration-300 ease-in-out shadow-xs ${
-          sidebarCollapsed ? "w-20" : "w-64"
-        } ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+      {/* 1. NOTUS REACT SIDEBAR */}
+      <nav
+        className={`md:left-0 md:block md:fixed md:top-0 md:bottom-0 md:overflow-y-auto md:flex-row md:flex-nowrap md:overflow-hidden shadow-xl bg-white flex flex-wrap items-center justify-between relative md:w-64 z-50 py-4 px-6 transition-transform duration-300 ${
+          sidebarOpen ? "fixed top-0 bottom-0 left-0 w-64 translate-x-0" : "-translate-x-full md:translate-x-0"
         }`}
       >
-        {/* Brand Header */}
-        <div className="h-18 flex items-center justify-between px-5 border-b border-slate-100">
-          <Link href="/" className="flex items-center gap-3 group overflow-hidden">
-            <Image
-              src="/logo.png"
-              alt="DigitalMenu"
-              width={36}
-              height={36}
-              className="w-9 h-9 object-contain rounded-xl shrink-0 group-hover:scale-105 transition-transform"
-              priority
-            />
-            {!sidebarCollapsed && (
-              <span className="text-xl font-black text-slate-900 tracking-tight whitespace-nowrap">
-                Digital<span className="text-primary-600">Menu</span>
-              </span>
-            )}
-          </Link>
-
-          {/* Close button on mobile */}
-          <button
-            onClick={() => setSidebarOpen(false)}
-            className="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100"
-          >
-            ✕
-          </button>
-        </div>
-
-        {/* Sidebar Nav Links */}
-        <div className="flex-1 overflow-y-auto px-4 py-6 space-y-6">
-          {/* Group 1: HOME */}
-          <div>
-            {!sidebarCollapsed && (
-              <p className="px-3 text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">
-                Home
-              </p>
-            )}
-            <div className="space-y-1">
-              <button
-                onClick={() => {
-                  setActiveNavTab("overview");
-                  setSidebarOpen(false);
-                }}
-                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all ${
-                  activeNavTab === "overview"
-                    ? "bg-primary-600 text-white shadow-md shadow-primary-600/25"
-                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-100/80"
-                }`}
-              >
-                <span className="text-lg shrink-0">📊</span>
-                {!sidebarCollapsed && <span>Dashboard</span>}
-              </button>
-
-              <Link
-                href="/"
-                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100/80 transition-all"
-              >
-                <span className="text-lg shrink-0">🌐</span>
-                {!sidebarCollapsed && <span>Landing Page</span>}
-              </Link>
-            </div>
-          </div>
-
-          {/* Group 2: RESTAURANTS & MENUS */}
-          <div>
-            {!sidebarCollapsed && (
-              <p className="px-3 text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">
-                Management
-              </p>
-            )}
-            <div className="space-y-1">
-              <button
-                onClick={() => {
-                  setActiveNavTab("restaurants");
-                  setSidebarOpen(false);
-                }}
-                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all ${
-                  activeNavTab === "restaurants"
-                    ? "bg-primary-600 text-white shadow-md shadow-primary-600/25"
-                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-100/80"
-                }`}
-              >
-                <span className="text-lg shrink-0">🏬</span>
-                {!sidebarCollapsed && (
-                  <div className="flex-1 flex items-center justify-between text-left">
-                    <span>My Restaurants</span>
-                    <span className="text-xs px-2 py-0.5 rounded-full bg-slate-200/70 text-slate-700 font-bold">
-                      {totalRestaurants}
-                    </span>
-                  </div>
-                )}
-              </button>
-
-              <button
-                onClick={() => {
-                  setActiveNavTab("qrcodes");
-                  setSidebarOpen(false);
-                }}
-                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all ${
-                  activeNavTab === "qrcodes"
-                    ? "bg-primary-600 text-white shadow-md shadow-primary-600/25"
-                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-100/80"
-                }`}
-              >
-                <span className="text-lg shrink-0">📱</span>
-                {!sidebarCollapsed && (
-                  <div className="flex-1 flex items-center justify-between text-left">
-                    <span>Table QR Posters</span>
-                    <span className="text-xs px-2 py-0.5 rounded-full bg-slate-200/70 text-slate-700 font-bold">
-                      {totalQRCodes}
-                    </span>
-                  </div>
-                )}
-              </button>
-            </div>
-          </div>
-
-          {/* Group 3: SERVICES */}
-          <div>
-            {!sidebarCollapsed && (
-              <p className="px-3 text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">
-                Services
-              </p>
-            )}
-            <div className="space-y-1">
-              <button
-                onClick={() => {
-                  setActiveNavTab("billing");
-                  setSidebarOpen(false);
-                }}
-                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all ${
-                  activeNavTab === "billing"
-                    ? "bg-primary-600 text-white shadow-md shadow-primary-600/25"
-                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-100/80"
-                }`}
-              >
-                <span className="text-lg shrink-0">💳</span>
-                {!sidebarCollapsed && <span>Telebirr Billing</span>}
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Sidebar Footer User Card */}
-        <div className="p-4 border-t border-slate-100 bg-slate-50/70">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary-600 to-amber-500 text-white flex items-center justify-center font-bold text-sm shadow-xs shrink-0">
-              {currentUser?.name?.charAt(0).toUpperCase() || "U"}
-            </div>
-            {!sidebarCollapsed && (
-              <div className="min-w-0 flex-1">
-                <p className="text-xs font-bold text-slate-900 truncate">
-                  {currentUser?.name || currentUser?.email || "Restaurant Owner"}
-                </p>
-                <span className="inline-block text-[10px] font-bold text-primary-700 bg-primary-100 px-1.5 py-0.2 rounded uppercase tracking-wider">
-                  {userRole}
-                </span>
-              </div>
-            )}
-          </div>
-        </div>
-      </aside>
-
-      {/* 2. MAIN CONTENT AREA */}
-      <div
-        className={`flex-1 flex flex-col transition-all duration-300 ease-in-out ${
-          sidebarCollapsed ? "lg:pl-20" : "lg:pl-64"
-        }`}
-      >
-        {/* Top Navbar Header */}
-        <header className="h-18 bg-white border-b border-slate-200/80 sticky top-0 z-30 px-4 sm:px-6 lg:px-8 flex items-center justify-between shadow-xs">
-          {/* Left: Sidebar Toggle + Breadcrumb */}
-          <div className="flex items-center gap-3 sm:gap-4">
-            <button
-              onClick={() => {
-                if (window.innerWidth >= 1024) {
-                  setSidebarCollapsed(!sidebarCollapsed);
-                } else {
-                  setSidebarOpen(!sidebarOpen);
-                }
-              }}
-              className="p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
-              aria-label="Toggle Sidebar"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
-
-            {/* Quick Search */}
-            <div className="hidden sm:flex items-center gap-2 bg-slate-100/80 px-3 py-1.5 rounded-xl border border-slate-200/60 text-xs w-64 md:w-80">
-              <span className="text-slate-400">🔍</span>
-              <input
-                type="text"
-                placeholder="Search restaurants, slugs, locations..."
-                value={searchFilter}
-                onChange={(e) => setSearchFilter(e.target.value)}
-                className="bg-transparent border-none outline-none text-slate-800 placeholder-slate-400 w-full"
-              />
-              {searchFilter && (
-                <button
-                  onClick={() => setSearchFilter("")}
-                  className="text-slate-400 hover:text-slate-600 font-bold"
-                >
-                  ✕
-                </button>
-              )}
-            </div>
-          </div>
-
-          {/* Right: Actions + Profile */}
-          <div className="flex items-center gap-3">
-            {/* Return to Home Link */}
+        <div className="md:flex-col md:items-stretch md:min-h-full md:flex-nowrap px-0 flex flex-wrap items-center justify-between w-full mx-auto">
+          {/* Brand Header */}
+          <div className="flex items-center justify-between w-full border-b border-slate-100 md:border-b-0 pb-3 md:pb-0">
             <Link
               href="/"
-              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-700 transition"
+              className="md:block text-left text-slate-700 inline-block whitespace-nowrap text-base uppercase font-bold tracking-wider hover:text-sky-600 transition-colors"
             >
-              <span>← Home</span>
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-sky-600 text-white flex items-center justify-center font-bold text-sm shadow-md shadow-sky-600/30">
+                  D
+                </div>
+                <span>Digital Menu</span>
+              </div>
             </Link>
 
-            {/* Add Restaurant CTA */}
+            {/* Mobile close button */}
             <button
-              onClick={() => setShowCreateModal(true)}
-              className="bg-primary-600 hover:bg-primary-700 text-white px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-bold shadow-md shadow-primary-600/20 transition-all flex items-center gap-1.5"
+              onClick={() => setSidebarOpen(false)}
+              className="md:hidden text-slate-400 hover:text-slate-700 p-1.5 rounded-lg text-lg font-bold"
+              aria-label="Close sidebar"
             >
-              <span className="text-base leading-none">+</span>
-              <span className="hidden xs:inline sm:inline">Add Restaurant</span>
+              ✕
             </button>
+          </div>
 
-            {/* User Dropdown */}
-            <div className="relative">
-              <button
-                onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                className="flex items-center gap-2 p-1 rounded-xl hover:bg-slate-100 transition"
-              >
-                <div className="w-8 h-8 rounded-xl bg-primary-600 text-white flex items-center justify-center font-bold text-xs shadow-xs">
+          {/* Sidebar Nav Links */}
+          <div className="md:flex md:flex-col md:items-stretch md:opacity-100 md:relative md:mt-4 md:shadow-none shadow absolute top-0 left-0 right-0 z-40 overflow-y-auto overflow-x-hidden h-auto items-center flex-1 rounded w-full">
+            {/* Heading 1: ADMIN LAYOUT PAGES */}
+            <h6 className="md:min-w-full text-slate-400 text-xs uppercase font-bold block pt-4 pb-2 no-underline tracking-wider">
+              Admin Layout Pages
+            </h6>
+
+            <ul className="md:flex-col md:min-w-full flex flex-col list-none space-y-1">
+              <li className="items-center">
+                <button
+                  onClick={() => {
+                    setActiveNavTab("overview");
+                    setSidebarOpen(false);
+                  }}
+                  className={`text-xs uppercase py-3 font-bold flex items-center gap-3 w-full transition-colors ${
+                    activeNavTab === "overview"
+                      ? "text-sky-600 hover:text-sky-700"
+                      : "text-slate-700 hover:text-slate-500"
+                  }`}
+                >
+                  <span className="text-base text-sky-500">📊</span>
+                  <span>Dashboard</span>
+                </button>
+              </li>
+
+              <li className="items-center">
+                <button
+                  onClick={() => {
+                    setActiveNavTab("restaurants");
+                    setSidebarOpen(false);
+                  }}
+                  className={`text-xs uppercase py-3 font-bold flex items-center justify-between w-full transition-colors ${
+                    activeNavTab === "restaurants"
+                      ? "text-sky-600 hover:text-sky-700"
+                      : "text-slate-700 hover:text-slate-500"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-base text-red-500">🏬</span>
+                    <span>My Restaurants</span>
+                  </div>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 font-bold text-slate-600">
+                    {totalRestaurants}
+                  </span>
+                </button>
+              </li>
+
+              <li className="items-center">
+                <button
+                  onClick={() => {
+                    setActiveNavTab("qrcodes");
+                    setSidebarOpen(false);
+                  }}
+                  className={`text-xs uppercase py-3 font-bold flex items-center justify-between w-full transition-colors ${
+                    activeNavTab === "qrcodes"
+                      ? "text-sky-600 hover:text-sky-700"
+                      : "text-slate-700 hover:text-slate-500"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-base text-pink-500">📱</span>
+                    <span>Table QR Posters</span>
+                  </div>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 font-bold text-slate-600">
+                    {totalQRCodes}
+                  </span>
+                </button>
+              </li>
+
+              <li className="items-center">
+                <button
+                  onClick={() => {
+                    setActiveNavTab("billing");
+                    setSidebarOpen(false);
+                  }}
+                  className={`text-xs uppercase py-3 font-bold flex items-center justify-between w-full transition-colors ${
+                    activeNavTab === "billing"
+                      ? "text-sky-600 hover:text-sky-700"
+                      : "text-slate-700 hover:text-slate-500"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-base text-emerald-500">💳</span>
+                    <span>Telebirr Billing</span>
+                  </div>
+                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 font-bold">
+                    ETB
+                  </span>
+                </button>
+              </li>
+            </ul>
+
+            {/* Divider */}
+            <hr className="my-4 md:min-w-full border-slate-200" />
+
+            {/* Heading 2: ACTIONS & PAGES */}
+            <h6 className="md:min-w-full text-slate-400 text-xs uppercase font-bold block pt-1 pb-2 no-underline tracking-wider">
+              Quick Actions
+            </h6>
+
+            <ul className="md:flex-col md:min-w-full flex flex-col list-none space-y-1">
+              <li>
+                <button
+                  onClick={() => {
+                    setShowCreateModal(true);
+                    setSidebarOpen(false);
+                  }}
+                  className="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs uppercase py-2.5 px-4 rounded-lg shadow hover:shadow-md transition-all flex items-center justify-center gap-2 my-2"
+                >
+                  <span>+</span>
+                  <span>Add New Menu</span>
+                </button>
+              </li>
+
+              <li className="items-center">
+                <Link
+                  href="/"
+                  className="text-slate-700 hover:text-slate-500 text-xs uppercase py-3 font-bold flex items-center gap-3 block transition-colors"
+                >
+                  <span className="text-base text-slate-400">🌐</span>
+                  <span>Landing Page</span>
+                </Link>
+              </li>
+
+              <li className="items-center">
+                <button
+                  onClick={handleLogout}
+                  className="text-red-600 hover:text-red-700 text-xs uppercase py-3 font-bold flex items-center gap-3 w-full text-left transition-colors"
+                >
+                  <span className="text-base">🚪</span>
+                  <span>Log Out</span>
+                </button>
+              </li>
+            </ul>
+
+            {/* User Profile Card at bottom of sidebar */}
+            <div className="mt-8 pt-4 border-t border-slate-100">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-full bg-slate-800 text-white flex items-center justify-center font-bold text-xs shadow shrink-0">
                   {currentUser?.name?.charAt(0).toUpperCase() || "U"}
                 </div>
-                <span className="hidden md:inline text-xs font-bold text-slate-700 max-w-[120px] truncate">
-                  {currentUser?.name || "My Account"}
-                </span>
-                <span className="text-[10px] text-slate-400">▼</span>
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs font-bold text-slate-800 truncate">
+                    {currentUser?.name || "Restaurant Manager"}
+                  </p>
+                  <p className="text-[11px] text-slate-400 truncate">
+                    {currentUser?.email || ""}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      {/* 2. NOTUS MAIN CONTENT AREA */}
+      <div className="relative md:ml-64 bg-slate-100 min-h-screen flex flex-col justify-between max-w-full overflow-x-hidden">
+        {/* NOTUS TOP BLUE HEADER REGION */}
+        <div className="relative bg-sky-600 pb-32 pt-12 md:pt-16">
+          {/* Top Navbar */}
+          <nav className="absolute top-0 left-0 w-full z-10 bg-transparent flex items-center justify-between p-4 px-4 md:px-10">
+            {/* Left: Mobile Toggle & Page Title */}
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setSidebarOpen(true)}
+                className="md:hidden text-white text-xl p-2 rounded-lg bg-sky-700 hover:bg-sky-800 transition"
+                aria-label="Open sidebar"
+              >
+                ☰
               </button>
 
-              {userDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-slate-100 py-2 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
-                  <div className="px-4 py-2 border-b border-slate-100">
-                    <p className="text-xs font-bold text-slate-900 truncate">
-                      {currentUser?.name || "Restaurant Manager"}
-                    </p>
-                    <p className="text-[11px] text-slate-500 truncate">
-                      {currentUser?.email || ""}
-                    </p>
-                    <span className="inline-block mt-1 text-[9px] font-bold uppercase tracking-wider bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">
-                      {userRole} Account
-                    </span>
+              <span className="text-white text-sm uppercase font-bold tracking-wider hidden md:inline-block">
+                Dashboard
+              </span>
+            </div>
+
+            {/* Right: Search, Action Button & User Dropdown */}
+            <div className="flex items-center gap-3 md:gap-4">
+              {/* Quick Search Input */}
+              <div className="relative flex items-center">
+                <span className="absolute left-3 text-slate-400 text-xs">🔍</span>
+                <input
+                  type="text"
+                  placeholder="Search menus..."
+                  value={searchFilter}
+                  onChange={(e) => setSearchFilter(e.target.value)}
+                  className="border-0 px-3 py-2 pl-8 placeholder-slate-400 text-slate-700 relative bg-white rounded-lg text-xs shadow outline-none focus:outline-none focus:ring-2 focus:ring-sky-300 w-36 sm:w-56 md:w-64 transition-all"
+                />
+              </div>
+
+              {/* Add New Menu CTA Button */}
+              <button
+                onClick={() => setShowCreateModal(true)}
+                className="bg-white hover:bg-slate-50 text-sky-600 font-bold px-3 py-2 sm:px-4 sm:py-2 rounded-lg text-xs uppercase shadow hover:shadow-md transition-all flex items-center gap-1.5 shrink-0"
+              >
+                <span className="text-sm font-bold leading-none">+</span>
+                <span className="hidden sm:inline">Add New Menu</span>
+                <span className="sm:hidden">Menu</span>
+              </button>
+
+              {/* User Avatar & Dropdown */}
+              <div className="relative">
+                <button
+                  onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+                  className="w-9 h-9 rounded-full bg-slate-900 border-2 border-white/60 text-white flex items-center justify-center font-bold text-xs shadow-md hover:scale-105 transition-transform"
+                >
+                  {currentUser?.name?.charAt(0).toUpperCase() || "A"}
+                </button>
+
+                {userDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-52 bg-white rounded-xl shadow-2xl border border-slate-100 py-2 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
+                    <div className="px-4 py-2 border-b border-slate-100">
+                      <p className="text-xs font-bold text-slate-900 truncate">
+                        {currentUser?.name || "Admin Partner"}
+                      </p>
+                      <p className="text-[11px] text-slate-500 truncate">
+                        {currentUser?.email || ""}
+                      </p>
+                      <span className="inline-block mt-1 text-[9px] font-bold uppercase tracking-wider bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">
+                        {userRole} Mode
+                      </span>
+                    </div>
+                    <Link
+                      href="/"
+                      className="block px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition"
+                      onClick={() => setUserDropdownOpen(false)}
+                    >
+                      Landing Page
+                    </Link>
+                    <button
+                      onClick={() => {
+                        setUserDropdownOpen(false);
+                        handleLogout();
+                      }}
+                      className="w-full text-left px-4 py-2 text-xs font-bold text-red-600 hover:bg-red-50 transition border-t border-slate-100 mt-1"
+                    >
+                      Log Out
+                    </button>
                   </div>
-                  <Link
-                    href="/"
-                    className="block px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition"
-                    onClick={() => setUserDropdownOpen(false)}
-                  >
-                    Landing Page
-                  </Link>
+                )}
+              </div>
+            </div>
+          </nav>
+
+          {/* NOTUS 4 FLOATING STATS CARDS */}
+          <div className="px-4 md:px-10 mx-auto w-full mt-10 md:mt-12">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+              {/* Card 1: TRAFFIC / ACTIVE RESTAURANTS (Red Icon Badge) */}
+              <div className="relative flex flex-col min-w-0 break-words bg-white rounded-xl shadow-lg p-4 transition-transform hover:-translate-y-0.5">
+                <div className="flex-auto">
+                  <div className="flex flex-wrap items-center justify-between">
+                    <div className="relative w-full pr-4 max-w-full flex-grow flex-1">
+                      <h5 className="text-slate-400 uppercase font-bold text-xs tracking-wider">
+                        Active Restaurants
+                      </h5>
+                      <span className="font-bold text-xl text-slate-700 mt-1 block">
+                        {activeRestaurants}{" "}
+                        <span className="text-xs text-slate-400 font-normal">
+                          / {totalRestaurants}
+                        </span>
+                      </span>
+                    </div>
+                    <div className="relative w-auto pl-4 flex-initial">
+                      <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 shadow-md rounded-full bg-red-500 text-xl font-bold">
+                        🏬
+                      </div>
+                    </div>
+                  </div>
+                  <p className="text-xs text-slate-500 mt-3 flex items-center gap-1.5">
+                    <span className="text-emerald-500 font-bold">↑ 100%</span>
+                    <span>Ready for QR scanning</span>
+                  </p>
+                </div>
+              </div>
+
+              {/* Card 2: NEW USERS / MENU CATEGORIES (Orange Icon Badge) */}
+              <div className="relative flex flex-col min-w-0 break-words bg-white rounded-xl shadow-lg p-4 transition-transform hover:-translate-y-0.5">
+                <div className="flex-auto">
+                  <div className="flex flex-wrap items-center justify-between">
+                    <div className="relative w-full pr-4 max-w-full flex-grow flex-1">
+                      <h5 className="text-slate-400 uppercase font-bold text-xs tracking-wider">
+                        Menu Categories
+                      </h5>
+                      <span className="font-bold text-xl text-slate-700 mt-1 block">
+                        {totalCategories}
+                      </span>
+                    </div>
+                    <div className="relative w-auto pl-4 flex-initial">
+                      <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 shadow-md rounded-full bg-orange-500 text-xl font-bold">
+                        📋
+                      </div>
+                    </div>
+                  </div>
+                  <p className="text-xs text-slate-500 mt-3 flex items-center gap-1.5">
+                    <span className="text-emerald-500 font-bold">↑ Active</span>
+                    <span>Live categorized dishes</span>
+                  </p>
+                </div>
+              </div>
+
+              {/* Card 3: SALES / TABLE QR POSTERS (Pink Icon Badge) */}
+              <div className="relative flex flex-col min-w-0 break-words bg-white rounded-xl shadow-lg p-4 transition-transform hover:-translate-y-0.5">
+                <div className="flex-auto">
+                  <div className="flex flex-wrap items-center justify-between">
+                    <div className="relative w-full pr-4 max-w-full flex-grow flex-1">
+                      <h5 className="text-slate-400 uppercase font-bold text-xs tracking-wider">
+                        Table QR Codes
+                      </h5>
+                      <span className="font-bold text-xl text-slate-700 mt-1 block">
+                        {totalQRCodes}
+                      </span>
+                    </div>
+                    <div className="relative w-auto pl-4 flex-initial">
+                      <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 shadow-md rounded-full bg-pink-500 text-xl font-bold">
+                        📱
+                      </div>
+                    </div>
+                  </div>
+                  <p className="text-xs text-slate-500 mt-3 flex items-center gap-1.5">
+                    <span className="text-emerald-500 font-bold">↑ Ready</span>
+                    <span>Printable A4 QR Posters</span>
+                  </p>
+                </div>
+              </div>
+
+              {/* Card 4: PERFORMANCE / BILLING (Light Blue Icon Badge) */}
+              <div className="relative flex flex-col min-w-0 break-words bg-white rounded-xl shadow-lg p-4 transition-transform hover:-translate-y-0.5">
+                <div className="flex-auto">
+                  <div className="flex flex-wrap items-center justify-between">
+                    <div className="relative w-full pr-4 max-w-full flex-grow flex-1">
+                      <h5 className="text-slate-400 uppercase font-bold text-xs tracking-wider">
+                        Currency & Billing
+                      </h5>
+                      <span className="font-bold text-xl text-slate-700 mt-1 block">
+                        ETB
+                      </span>
+                    </div>
+                    <div className="relative w-auto pl-4 flex-initial">
+                      <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 shadow-md rounded-full bg-sky-500 text-xl font-bold">
+                        💳
+                      </div>
+                    </div>
+                  </div>
+                  <p className="text-xs text-slate-500 mt-3 flex items-center gap-1.5 truncate">
+                    <span className="text-sky-600 font-bold">●</span>
+                    <span className="truncate">
+                      {userRole === "ADMIN" ? "Unlimited Admin Mode" : "1,300 ETB / Restaurant"}
+                    </span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* NOTUS MAIN BODY OVERLAPPING CONTAINER */}
+        <div className="px-4 md:px-10 mx-auto w-full -mt-24 flex-1">
+          {/* ROW 1: THE TWO NOTUS REACT CHARTS */}
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-6">
+            {/* 1. DARK OVERVIEW CHART (Notus 'Sales Value' Line Chart) */}
+            <div className="relative flex flex-col min-w-0 break-words w-full shadow-lg rounded-xl bg-slate-800 text-white xl:col-span-2 overflow-hidden">
+              <div className="rounded-t mb-0 px-5 py-4 bg-transparent border-b border-slate-700/60">
+                <div className="flex flex-wrap items-center justify-between">
+                  <div className="relative w-full max-w-full flex-grow flex-1">
+                    <h6 className="uppercase text-slate-400 mb-1 text-xs font-semibold tracking-wider">
+                      Overview
+                    </h6>
+                    <h2 className="text-white text-xl font-bold">
+                      Menu Views & Customer Scans
+                    </h2>
+                  </div>
+                  <div className="flex items-center gap-4 text-xs">
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-3 h-3 rounded-full bg-indigo-500 inline-block"></span>
+                      <span className="text-slate-300">2026 Scans</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-3 h-3 rounded-full bg-white inline-block"></span>
+                      <span className="text-slate-300">2025 Base</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Interactive SVG Line Graph */}
+              <div className="p-5 flex-auto">
+                <div className="relative h-64 w-full">
+                  <svg className="w-full h-full" viewBox="0 0 600 220" preserveAspectRatio="none">
+                    <defs>
+                      <linearGradient id="blueGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#6366f1" stopOpacity="0.35" />
+                        <stop offset="100%" stopColor="#6366f1" stopOpacity="0.0" />
+                      </linearGradient>
+                    </defs>
+
+                    {/* Dotted horizontal grid lines */}
+                    {[30, 70, 110, 150, 190].map((y, idx) => (
+                      <line
+                        key={idx}
+                        x1="30"
+                        y1={y}
+                        x2="590"
+                        y2={y}
+                        stroke="#475569"
+                        strokeDasharray="4 4"
+                        strokeWidth="1"
+                      />
+                    ))}
+
+                    {/* Area fill for 2026 */}
+                    <path
+                      d="M 40 190 Q 120 70 200 100 T 360 160 T 520 80 L 580 90 L 580 190 L 40 190 Z"
+                      fill="url(#blueGradient)"
+                    />
+
+                    {/* 2026 Line (Indigo) */}
+                    <path
+                      d="M 40 190 Q 120 70 200 100 T 360 160 T 520 80 L 580 90"
+                      fill="none"
+                      stroke="#6366f1"
+                      strokeWidth="3.5"
+                    />
+
+                    {/* 2025 Line (White) */}
+                    <path
+                      d="M 40 210 Q 140 150 220 60 T 360 130 T 520 120 L 580 50"
+                      fill="none"
+                      stroke="#ffffff"
+                      strokeWidth="3"
+                    />
+
+                    {/* Glowing Data Points */}
+                    <circle cx="200" cy="100" r="5" fill="#6366f1" stroke="#ffffff" strokeWidth="2" />
+                    <circle cx="360" cy="160" r="5" fill="#6366f1" stroke="#ffffff" strokeWidth="2" />
+                    <circle cx="580" cy="90" r="5" fill="#6366f1" stroke="#ffffff" strokeWidth="2" />
+
+                    <circle cx="220" cy="60" r="5" fill="#ffffff" stroke="#1e293b" strokeWidth="2" />
+                    <circle cx="360" cy="130" r="5" fill="#ffffff" stroke="#1e293b" strokeWidth="2" />
+                    <circle cx="580" cy="50" r="5" fill="#ffffff" stroke="#1e293b" strokeWidth="2" />
+                  </svg>
+                </div>
+
+                {/* Month Axis Labels */}
+                <div className="flex justify-between px-3 text-[11px] text-slate-400 uppercase font-semibold mt-2">
+                  <span>Jan</span>
+                  <span>Feb</span>
+                  <span>Mar</span>
+                  <span>Apr</span>
+                  <span>May</span>
+                  <span>Jun</span>
+                  <span>Jul</span>
+                </div>
+              </div>
+            </div>
+
+            {/* 2. LIGHT PERFORMANCE CHART (Notus 'Total Orders' Bar Chart) */}
+            <div className="relative flex flex-col min-w-0 break-words w-full shadow-lg rounded-xl bg-white col-span-1 overflow-hidden">
+              <div className="rounded-t mb-0 px-5 py-4 bg-transparent border-b border-slate-100">
+                <div className="flex flex-wrap items-center justify-between">
+                  <div className="relative w-full max-w-full flex-grow flex-1">
+                    <h6 className="uppercase text-slate-400 mb-1 text-xs font-semibold tracking-wider">
+                      Performance
+                    </h6>
+                    <h2 className="text-slate-700 text-xl font-bold">
+                      QR Table Scans
+                    </h2>
+                  </div>
+                  <div className="flex items-center gap-3 text-xs">
+                    <div className="flex items-center gap-1">
+                      <span className="w-2.5 h-2.5 rounded-full bg-pink-500 inline-block"></span>
+                      <span className="text-slate-500 font-bold">2026</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <span className="w-2.5 h-2.5 rounded-full bg-indigo-900 inline-block"></span>
+                      <span className="text-slate-500 font-bold">2025</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Bar Chart Graphics */}
+              <div className="p-5 flex-auto">
+                <div className="relative h-64 w-full flex items-end justify-between px-4 pb-2 border-b border-dashed border-slate-200">
+                  {/* Month 1 */}
+                  <div className="flex items-end gap-1.5 h-full">
+                    <div className="w-3 bg-pink-500 rounded-t" style={{ height: "45%" }}></div>
+                    <div className="w-3 bg-indigo-900 rounded-t" style={{ height: "35%" }}></div>
+                  </div>
+                  {/* Month 2 */}
+                  <div className="flex items-end gap-1.5 h-full">
+                    <div className="w-3 bg-pink-500 rounded-t" style={{ height: "78%" }}></div>
+                    <div className="w-3 bg-indigo-900 rounded-t" style={{ height: "65%" }}></div>
+                  </div>
+                  {/* Month 3 */}
+                  <div className="flex items-end gap-1.5 h-full">
+                    <div className="w-3 bg-pink-500 rounded-t" style={{ height: "55%" }}></div>
+                    <div className="w-3 bg-indigo-900 rounded-t" style={{ height: "85%" }}></div>
+                  </div>
+                  {/* Month 4 */}
+                  <div className="flex items-end gap-1.5 h-full">
+                    <div className="w-3 bg-pink-500 rounded-t" style={{ height: "38%" }}></div>
+                    <div className="w-3 bg-indigo-900 rounded-t" style={{ height: "72%" }}></div>
+                  </div>
+                  {/* Month 5 */}
+                  <div className="flex items-end gap-1.5 h-full">
+                    <div className="w-3 bg-pink-500 rounded-t" style={{ height: "95%" }}></div>
+                    <div className="w-3 bg-indigo-900 rounded-t" style={{ height: "20%" }}></div>
+                  </div>
+                  {/* Month 6 */}
+                  <div className="flex items-end gap-1.5 h-full">
+                    <div className="w-3 bg-pink-500 rounded-t" style={{ height: "60%" }}></div>
+                    <div className="w-3 bg-indigo-900 rounded-t" style={{ height: "82%" }}></div>
+                  </div>
+                </div>
+
+                <div className="flex justify-between px-2 text-[11px] text-slate-400 uppercase font-semibold mt-2">
+                  <span>Jan</span>
+                  <span>Feb</span>
+                  <span>Mar</span>
+                  <span>Apr</span>
+                  <span>May</span>
+                  <span>Jun</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* ROW 2: THE TWO NOTUS REACT TABLES */}
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
+            {/* TABLE 1: RESTAURANT CATALOG & OPERATIONS (Notus 'Page Visits' Style) */}
+            <div className="relative flex flex-col min-w-0 break-words bg-white w-full shadow-lg rounded-xl xl:col-span-2 overflow-hidden">
+              {/* Notus Table Header */}
+              <div className="rounded-t mb-0 px-5 py-4 border-b border-slate-100 flex flex-wrap items-center justify-between gap-3">
+                <div className="relative w-full max-w-full flex-grow flex-1">
+                  <h6 className="uppercase text-slate-400 text-xs font-semibold tracking-wider">
+                    Catalog Breakdown
+                  </h6>
+                  <h3 className="font-bold text-base text-slate-700">
+                    Restaurant Menus & QR Deployment
+                  </h3>
+                </div>
+                <div className="relative flex items-center gap-2">
                   <button
-                    onClick={() => {
-                      setUserDropdownOpen(false);
-                      handleLogout();
-                    }}
-                    className="w-full text-left px-4 py-2 text-xs font-bold text-red-600 hover:bg-red-50 transition border-t border-slate-100 mt-1"
+                    onClick={() => setShowCreateModal(true)}
+                    className="bg-indigo-500 active:bg-indigo-600 hover:bg-indigo-600 text-white font-bold uppercase text-xs px-3.5 py-1.5 rounded-lg shadow hover:shadow-md outline-none focus:outline-none transition-all"
                   >
-                    Log Out
+                    + Add New Menu
                   </button>
+                </div>
+              </div>
+
+              {/* Mobile Table Scroll Hint */}
+              <div className="sm:hidden px-5 py-2 bg-slate-50 border-b border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
+                <span className="flex items-center gap-1.5">
+                  <span>👉</span>
+                  <span>Swipe table horizontally to view actions</span>
+                </span>
+                <span className="text-[10px] font-bold text-sky-700 bg-sky-50 px-1.5 py-0.5 rounded">
+                  Scrollable
+                </span>
+              </div>
+
+              {/* Table Body */}
+              {loading ? (
+                <div className="p-12 text-center text-slate-400">
+                  <div className="w-10 h-10 border-4 border-sky-600 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
+                  <p className="text-sm font-semibold">Loading your menus...</p>
+                </div>
+              ) : filteredRestaurants.length === 0 ? (
+                <div className="p-8 sm:p-12 text-center">
+                  <div className="w-16 h-16 rounded-3xl bg-slate-100 text-slate-400 flex items-center justify-center text-3xl mx-auto mb-4">
+                    🏬
+                  </div>
+                  <h3 className="text-base font-bold text-slate-800">
+                    {searchFilter ? "No matching restaurants found" : "No menus registered yet"}
+                  </h3>
+                  <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
+                    {searchFilter
+                      ? "Try adjusting your search keywords."
+                      : "Create your first digital menu to start generating table QR posters and categories."}
+                  </p>
+                  {!searchFilter && (
+                    <button
+                      onClick={() => setShowCreateModal(true)}
+                      className="mt-5 bg-indigo-500 hover:bg-indigo-600 text-white px-5 py-2 rounded-lg text-xs uppercase font-bold shadow hover:shadow-md transition"
+                    >
+                      + Add New Menu
+                    </button>
+                  )}
+                </div>
+              ) : (
+                <div className="block w-full overflow-x-auto overscroll-x-contain">
+                  <table className="items-center w-full min-w-[700px] bg-transparent border-collapse text-xs">
+                    <thead>
+                      <tr>
+                        <th className="px-6 bg-slate-50 text-slate-500 align-middle border border-solid border-slate-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+                          Restaurant & Menu
+                        </th>
+                        <th className="px-6 bg-slate-50 text-slate-500 align-middle border border-solid border-slate-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+                          Location / Contact
+                        </th>
+                        <th className="px-6 bg-slate-50 text-slate-500 align-middle border border-solid border-slate-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+                          Catalog Breakdown
+                        </th>
+                        <th className="px-6 bg-slate-50 text-slate-500 align-middle border border-solid border-slate-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+                          QR Status
+                        </th>
+                        <th className="px-6 bg-slate-50 text-slate-500 align-middle border border-solid border-slate-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-right">
+                          Actions
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {filteredRestaurants.map((restaurant) => (
+                        <tr key={restaurant.id} className="hover:bg-slate-50/80 transition-colors">
+                          {/* Name & Avatar */}
+                          <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
+                            <div className="flex items-center gap-3">
+                              {restaurant.logo ? (
+                                <img
+                                  src={restaurant.logo}
+                                  alt={restaurant.name}
+                                  className="w-10 h-10 rounded-full object-cover border border-slate-200 shrink-0 shadow-xs"
+                                />
+                              ) : (
+                                <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-sky-600 to-indigo-600 text-white flex items-center justify-center font-bold text-sm shrink-0 shadow-xs">
+                                  {restaurant.name.charAt(0).toUpperCase()}
+                                </div>
+                              )}
+                              <div>
+                                <span className="font-bold text-slate-800 text-sm block">
+                                  {restaurant.name}
+                                </span>
+                                <span className="text-[11px] text-slate-400 font-mono">
+                                  /{restaurant.slug}
+                                </span>
+                              </div>
+                            </div>
+                          </td>
+
+                          {/* Address & Phone */}
+                          <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                            <p className="truncate max-w-[180px] font-semibold text-slate-700">
+                              {restaurant.address || "No address provided"}
+                            </p>
+                            <p className="text-[11px] text-slate-400 font-mono mt-0.5">
+                              {restaurant.phone || "No phone"}
+                            </p>
+                          </td>
+
+                          {/* Catalog Badges */}
+                          <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                            <div className="flex items-center gap-2">
+                              <span className="px-2.5 py-1 rounded-md bg-sky-50 text-sky-700 font-bold text-xs border border-sky-100">
+                                {restaurant._count?.categories || 0} Categories
+                              </span>
+                              <span className="px-2.5 py-1 rounded-md bg-purple-50 text-purple-700 font-bold text-xs border border-purple-100">
+                                {restaurant._count?.qrCodes || 0} QRs
+                              </span>
+                            </div>
+                          </td>
+
+                          {/* QR Status */}
+                          <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                            {userRole === "ADMIN" ? (
+                              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800">
+                                ★ Admin Mode
+                              </span>
+                            ) : restaurant.isQrPaid ? (
+                              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">
+                                ✓ QR Paid (1,300 ETB)
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-800">
+                                Pending Telebirr
+                              </span>
+                            )}
+                          </td>
+
+                          {/* Action Links */}
+                          <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-right">
+                            <div className="flex items-center justify-end gap-2">
+                              <Link
+                                href={`/dashboard/restaurants/${restaurant.id}`}
+                                className="px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs uppercase shadow-xs transition"
+                              >
+                                Manage Menu →
+                              </Link>
+                              <Link
+                                href={`/menu/${restaurant.slug}`}
+                                target="_blank"
+                                className="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition"
+                              >
+                                Preview ↗
+                              </Link>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               )}
             </div>
-          </div>
-        </header>
 
-        {/* Dashboard Content Container */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 space-y-6">
-          {/* 3. HERO WELCOME BANNER (TailwindAdmin Style) */}
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-blue-50/90 via-indigo-50/80 to-purple-50/70 border border-blue-100/90 p-6 sm:p-8 shadow-xs">
-            <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-              <div>
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/80 border border-blue-200/60 text-primary-700 text-xs font-bold mb-3 shadow-xs">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                  DevVoltz Cloud Active • Hostinger MySQL
+            {/* TABLE 2: CATEGORY TRAFFIC & COMPLETION (Notus 'Social Traffic' Style) */}
+            <div className="relative flex flex-col min-w-0 break-words bg-white w-full shadow-lg rounded-xl col-span-1 overflow-hidden">
+              <div className="rounded-t mb-0 px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+                <div className="relative w-full max-w-full flex-grow flex-1">
+                  <h6 className="uppercase text-slate-400 text-xs font-semibold tracking-wider">
+                    Menu Distribution
+                  </h6>
+                  <h3 className="font-bold text-base text-slate-700">
+                    Category Engagement
+                  </h3>
                 </div>
-                <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-                  Welcome back, {currentUser?.name || "Partner"}! 👋
-                </h1>
-                <p className="mt-1 text-sm text-slate-600 max-w-xl leading-relaxed">
-                  Manage your contactless digital menus, customize A4 table QR codes, and deliver instant touchless ordering across all your branches.
-                </p>
-              </div>
-
-              <div className="flex items-center gap-3 shrink-0">
                 <button
-                  onClick={() => setShowCreateModal(true)}
-                  className="bg-primary-600 hover:bg-primary-700 text-white px-5 py-3 rounded-2xl text-xs sm:text-sm font-bold shadow-lg shadow-primary-600/25 transition-all transform hover:-translate-y-0.5"
+                  onClick={() => setActiveNavTab("restaurants")}
+                  className="bg-indigo-500 active:bg-indigo-600 hover:bg-indigo-600 text-white font-bold uppercase text-xs px-3 py-1 rounded-lg shadow outline-none"
                 >
-                  + New Restaurant
+                  See all
                 </button>
               </div>
-            </div>
-          </div>
 
-          {/* 4. PASTEL STAT METRIC CARDS (TailwindAdmin Style) */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            {/* Metric 1 */}
-            <div className="bg-[#E6FFFA] rounded-2xl p-5 border border-[#B2F5EA] flex items-center justify-between shadow-xs hover:shadow-md transition-shadow">
-              <div>
-                <p className="text-xs font-bold text-[#234E52] uppercase tracking-wider">
-                  Active Restaurants
-                </p>
-                <h3 className="text-2xl font-black text-[#1D4044] mt-1">
-                  {activeRestaurants} <span className="text-sm font-normal text-slate-500">/ {totalRestaurants}</span>
-                </h3>
-                <p className="text-[11px] text-[#2C7A7B] font-semibold mt-1">
-                  Ready for scanning
-                </p>
-              </div>
-              <div className="w-12 h-12 rounded-2xl bg-white/80 text-emerald-600 flex items-center justify-center text-2xl font-bold shadow-xs">
-                🏬
-              </div>
-            </div>
-
-            {/* Metric 2 */}
-            <div className="bg-[#FFF5F5] rounded-2xl p-5 border border-[#FED7D7] flex items-center justify-between shadow-xs hover:shadow-md transition-shadow">
-              <div>
-                <p className="text-xs font-bold text-[#742A2A] uppercase tracking-wider">
-                  Menu Categories
-                </p>
-                <h3 className="text-2xl font-black text-[#63171B] mt-1">
-                  {totalCategories}
-                </h3>
-                <p className="text-[11px] text-[#9B2C2C] font-semibold mt-1">
-                  Live categorized dishes
-                </p>
-              </div>
-              <div className="w-12 h-12 rounded-2xl bg-white/80 text-rose-600 flex items-center justify-center text-2xl font-bold shadow-xs">
-                📋
-              </div>
-            </div>
-
-            {/* Metric 3 */}
-            <div className="bg-[#EBF8FF] rounded-2xl p-5 border border-[#BEE3F8] flex items-center justify-between shadow-xs hover:shadow-md transition-shadow">
-              <div>
-                <p className="text-xs font-bold text-[#2A4365] uppercase tracking-wider">
-                  Table QR Codes
-                </p>
-                <h3 className="text-2xl font-black text-[#2C5282] mt-1">
-                  {totalQRCodes}
-                </h3>
-                <p className="text-[11px] text-[#3182CE] font-semibold mt-1">
-                  A4 Posters Generated
-                </p>
-              </div>
-              <div className="w-12 h-12 rounded-2xl bg-white/80 text-sky-600 flex items-center justify-center text-2xl font-bold shadow-xs">
-                📱
-              </div>
-            </div>
-
-            {/* Metric 4 */}
-            <div className="bg-[#FAF5FF] rounded-2xl p-5 border border-[#E9D8FD] flex items-center justify-between shadow-xs hover:shadow-md transition-shadow">
-              <div>
-                <p className="text-xs font-bold text-[#44337A] uppercase tracking-wider">
-                  Currency & Billing
-                </p>
-                <h3 className="text-2xl font-black text-[#553C9A] mt-1">
-                  ETB
-                </h3>
-                <p className="text-[11px] text-[#6B46C1] font-semibold mt-1">
-                  {userRole === "ADMIN" ? "Admin Mode (Unlimited)" : "1,300 ETB / Restaurant"}
-                </p>
-              </div>
-              <div className="w-12 h-12 rounded-2xl bg-white/80 text-purple-600 flex items-center justify-center text-2xl font-bold shadow-xs">
-                💳
-              </div>
-            </div>
-          </div>
-
-          {/* 5. RESTAURANT PERFORMANCE & MANAGEMENT (TailwindAdmin Product Performance Table) */}
-          <div className="bg-white rounded-3xl border border-slate-200/80 shadow-xs overflow-hidden">
-            {/* Card Header */}
-            <div className="p-6 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div>
-                <h2 className="text-lg font-black text-slate-900 tracking-tight">
-                  Restaurant Catalog & Operations
-                </h2>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Overview of all registered dining locations, categories, and QR deployment status.
-                </p>
-              </div>
-
-              {/* Mobile Search Input */}
-              <div className="sm:hidden flex items-center gap-2 bg-slate-50 px-3 py-2 rounded-xl border border-slate-200 text-xs">
-                <span>🔍</span>
-                <input
-                  type="text"
-                  placeholder="Filter by name or slug..."
-                  value={searchFilter}
-                  onChange={(e) => setSearchFilter(e.target.value)}
-                  className="bg-transparent border-none outline-none w-full"
-                />
-              </div>
-            </div>
-
-            {/* Table */}
-            {loading ? (
-              <div className="p-12 text-center text-slate-400">
-                <div className="w-10 h-10 border-4 border-primary-600 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
-                <p className="text-sm font-semibold">Loading your restaurants...</p>
-              </div>
-            ) : filteredRestaurants.length === 0 ? (
-              <div className="p-12 text-center">
-                <div className="w-16 h-16 rounded-3xl bg-slate-100 text-slate-400 flex items-center justify-center text-3xl mx-auto mb-4">
-                  🏬
-                </div>
-                <h3 className="text-base font-bold text-slate-800">
-                  {searchFilter ? "No matching restaurants found" : "No restaurants registered yet"}
-                </h3>
-                <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
-                  {searchFilter
-                    ? "Try adjusting your search keywords."
-                    : "Create your first restaurant profile to generate table QR posters and upload your menu."}
-                </p>
-                {!searchFilter && (
-                  <button
-                    onClick={() => setShowCreateModal(true)}
-                    className="mt-5 bg-primary-600 hover:bg-primary-700 text-white px-5 py-2.5 rounded-xl text-xs font-bold shadow-md shadow-primary-600/20"
-                  >
-                    + Create First Restaurant
-                  </button>
-                )}
-              </div>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse text-xs sm:text-sm">
-                  <thead>
-                    <tr className="bg-slate-50/70 border-b border-slate-100 text-slate-400 uppercase text-[11px] font-bold tracking-wider">
-                      <th className="py-4 px-6">Restaurant</th>
-                      <th className="py-4 px-6">Address & Contact</th>
-                      <th className="py-4 px-6">Catalog Breakdown</th>
-                      <th className="py-4 px-6">QR Status</th>
-                      <th className="py-4 px-6 text-right">Actions</th>
+              <div className="block w-full overflow-x-auto">
+                <table className="items-center w-full bg-transparent border-collapse text-xs">
+                  <thead className="thead-light">
+                    <tr>
+                      <th className="px-5 bg-slate-50 text-slate-500 align-middle border border-solid border-slate-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+                        Category
+                      </th>
+                      <th className="px-5 bg-slate-50 text-slate-500 align-middle border border-solid border-slate-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+                        Items
+                      </th>
+                      <th className="px-5 bg-slate-50 text-slate-500 align-middle border border-solid border-slate-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left min-w-140-px">
+                        Share
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
-                    {filteredRestaurants.map((restaurant) => (
-                      <tr
-                        key={restaurant.id}
-                        className="hover:bg-slate-50/80 transition-colors group"
-                      >
-                        {/* Restaurant Name & Avatar */}
-                        <td className="py-4 px-6">
-                          <div className="flex items-center gap-3">
-                            {restaurant.logo ? (
-                              <img
-                                src={restaurant.logo}
-                                alt={restaurant.name}
-                                className="w-11 h-11 rounded-2xl object-cover border border-slate-200 shrink-0 shadow-xs"
-                              />
-                            ) : (
-                              <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-primary-600 to-amber-500 text-white flex items-center justify-center font-bold text-base shrink-0 shadow-xs">
-                                {restaurant.name.charAt(0).toUpperCase()}
-                              </div>
-                            )}
-                            <div>
-                              <div className="flex items-center gap-2">
-                                <span className="font-bold text-slate-900 group-hover:text-primary-600 transition-colors">
-                                  {restaurant.name}
-                                </span>
-                                {restaurant.isActive && (
-                                  <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
-                                )}
-                              </div>
-                              <span className="text-xs text-slate-400 font-mono">
-                                /{restaurant.slug}
-                              </span>
-                            </div>
+                    <tr>
+                      <th className="border-t-0 px-5 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left font-bold text-slate-800">
+                        Main Courses
+                      </th>
+                      <td className="border-t-0 px-5 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-slate-600">
+                        1,480
+                      </td>
+                      <td className="border-t-0 px-5 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                        <div className="flex items-center gap-2">
+                          <span className="mr-2 font-bold text-slate-700">60%</span>
+                          <div className="relative w-full bg-slate-100 rounded-full h-2">
+                            <div className="bg-red-500 h-2 rounded-full" style={{ width: "60%" }}></div>
                           </div>
-                        </td>
-
-                        {/* Address & Phone */}
-                        <td className="py-4 px-6 text-slate-600">
-                          <p className="truncate max-w-[200px]">
-                            {restaurant.address || "No address specified"}
-                          </p>
-                          <p className="text-xs text-slate-400 font-mono mt-0.5">
-                            {restaurant.phone || "No phone"}
-                          </p>
-                        </td>
-
-                        {/* Catalog Stats */}
-                        <td className="py-4 px-6">
-                          <div className="flex items-center gap-2">
-                            <span className="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 font-bold text-xs border border-blue-100">
-                              {restaurant._count?.categories || 0} Categories
-                            </span>
-                            <span className="px-2.5 py-1 rounded-lg bg-purple-50 text-purple-700 font-bold text-xs border border-purple-100">
-                              {restaurant._count?.qrCodes || 0} QRs
-                            </span>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th className="border-t-0 px-5 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left font-bold text-slate-800">
+                        Appetizers & Starters
+                      </th>
+                      <td className="border-t-0 px-5 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-slate-600">
+                        5,480
+                      </td>
+                      <td className="border-t-0 px-5 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                        <div className="flex items-center gap-2">
+                          <span className="mr-2 font-bold text-slate-700">70%</span>
+                          <div className="relative w-full bg-slate-100 rounded-full h-2">
+                            <div className="bg-emerald-500 h-2 rounded-full" style={{ width: "70%" }}></div>
                           </div>
-                        </td>
-
-                        {/* Status Badges */}
-                        <td className="py-4 px-6">
-                          {userRole === "ADMIN" ? (
-                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800">
-                              ★ Admin Mode
-                            </span>
-                          ) : restaurant.isQrPaid ? (
-                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">
-                              ✓ QR Paid (1,300 ETB)
-                            </span>
-                          ) : (
-                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-800">
-                              Pending Telebirr
-                            </span>
-                          )}
-                        </td>
-
-                        {/* Actions */}
-                        <td className="py-4 px-6 text-right">
-                          <div className="flex items-center justify-end gap-2">
-                            <Link
-                              href={`/dashboard/restaurants/${restaurant.id}`}
-                              className="px-3.5 py-1.5 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-bold text-xs shadow-xs transition"
-                            >
-                              Manage Menu →
-                            </Link>
-                            <Link
-                              href={`/menu/${restaurant.slug}`}
-                              target="_blank"
-                              className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition"
-                            >
-                              Preview ↗
-                            </Link>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th className="border-t-0 px-5 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left font-bold text-slate-800">
+                        Beverages & Juices
+                      </th>
+                      <td className="border-t-0 px-5 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-slate-600">
+                        4,807
+                      </td>
+                      <td className="border-t-0 px-5 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                        <div className="flex items-center gap-2">
+                          <span className="mr-2 font-bold text-slate-700">80%</span>
+                          <div className="relative w-full bg-slate-100 rounded-full h-2">
+                            <div className="bg-purple-500 h-2 rounded-full" style={{ width: "80%" }}></div>
                           </div>
-                        </td>
-                      </tr>
-                    ))}
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th className="border-t-0 px-5 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left font-bold text-slate-800">
+                        Desserts & Sweets
+                      </th>
+                      <td className="border-t-0 px-5 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-slate-600">
+                        3,678
+                      </td>
+                      <td className="border-t-0 px-5 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                        <div className="flex items-center gap-2">
+                          <span className="mr-2 font-bold text-slate-700">75%</span>
+                          <div className="relative w-full bg-slate-100 rounded-full h-2">
+                            <div className="bg-sky-500 h-2 rounded-full" style={{ width: "75%" }}></div>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th className="border-t-0 px-5 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left font-bold text-slate-800">
+                        Traditional Combos
+                      </th>
+                      <td className="border-t-0 px-5 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-slate-600">
+                        2,645
+                      </td>
+                      <td className="border-t-0 px-5 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                        <div className="flex items-center gap-2">
+                          <span className="mr-2 font-bold text-slate-700">30%</span>
+                          <div className="relative w-full bg-slate-100 rounded-full h-2">
+                            <div className="bg-orange-500 h-2 rounded-full" style={{ width: "30%" }}></div>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
-            )}
+            </div>
           </div>
 
-          {/* 6. RECENT ACTIVITY TIMELINE (TailwindAdmin Style) */}
-          <div className="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-xs">
-            <h3 className="text-base font-black text-slate-900 tracking-tight mb-4 flex items-center gap-2">
+          {/* ROW 3: SYSTEM INFRASTRUCTURE / RECENT LOGS */}
+          <div className="relative flex flex-col min-w-0 break-words bg-white w-full shadow-lg rounded-xl p-5 mb-8">
+            <h4 className="font-bold text-sm text-slate-700 uppercase tracking-wider mb-4 flex items-center gap-2">
               <span>⏱️</span>
-              <span>Recent Activity & System Logs</span>
-            </h3>
-
-            <div className="space-y-4">
-              <div className="flex items-start gap-3">
-                <div className="w-3 h-3 rounded-full bg-emerald-500 ring-4 ring-emerald-100 mt-1 shrink-0" />
-                <div className="flex-1">
-                  <p className="text-xs font-bold text-slate-900">
-                    Hostinger MySQL Database Connection Established
-                  </p>
-                  <p className="text-[11px] text-slate-400">
-                    srv651.hstgr.io:3306 • Synchronized schema across production
-                  </p>
+              <span>Hostinger MySQL & DigitalMenu Cloud Engine</span>
+            </h4>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+              <div className="p-4 rounded-lg bg-slate-50 border border-slate-100 flex items-start gap-3">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 mt-1 shrink-0 animate-pulse"></span>
+                <div>
+                  <p className="font-bold text-slate-800">Hostinger MySQL Synced</p>
+                  <p className="text-[11px] text-slate-400 mt-0.5">srv651.hstgr.io:3306 live cluster</p>
                 </div>
-                <span className="text-[10px] font-mono text-slate-400">Live</span>
               </div>
-
-              <div className="flex items-start gap-3">
-                <div className="w-3 h-3 rounded-full bg-primary-500 ring-4 ring-primary-100 mt-1 shrink-0" />
-                <div className="flex-1">
-                  <p className="text-xs font-bold text-slate-900">
-                    Official Brand Identity Active
-                  </p>
-                  <p className="text-[11px] text-slate-400">
-                    D-monogram smartphone logo with camera & notch rendered across all surfaces
-                  </p>
+              <div className="p-4 rounded-lg bg-slate-50 border border-slate-100 flex items-start gap-3">
+                <span className="w-2.5 h-2.5 rounded-full bg-sky-500 mt-1 shrink-0"></span>
+                <div>
+                  <p className="font-bold text-slate-800">Contactless QR Poster Generator</p>
+                  <p className="text-[11px] text-slate-400 mt-0.5">High-res vector print ready in ETB</p>
                 </div>
-                <span className="text-[10px] font-mono text-slate-400">Branded</span>
               </div>
-
-              <div className="flex items-start gap-3">
-                <div className="w-3 h-3 rounded-full bg-sky-500 ring-4 ring-sky-100 mt-1 shrink-0" />
-                <div className="flex-1">
-                  <p className="text-xs font-bold text-slate-900">
-                    Telebirr Contactless A4 Poster Generator Ready
-                  </p>
-                  <p className="text-[11px] text-slate-400">
-                    Table-specific QR print posters with custom color palette in ETB
-                  </p>
+              <div className="p-4 rounded-lg bg-slate-50 border border-slate-100 flex items-start gap-3">
+                <span className="w-2.5 h-2.5 rounded-full bg-purple-500 mt-1 shrink-0"></span>
+                <div>
+                  <p className="font-bold text-slate-800">Notus React Architecture</p>
+                  <p className="text-[11px] text-slate-400 mt-0.5">Tailwind responsive dashboard theme</p>
                 </div>
-                <span className="text-[10px] font-mono text-slate-400">Ready</span>
               </div>
             </div>
           </div>
-        </main>
 
-        {/* Dashboard Footer */}
-        <footer className="p-6 border-t border-slate-200/80 bg-white text-center text-xs text-slate-400">
-          DigitalMenu by DevVoltz • TailwindAdmin Modern Architecture • All Rights Reserved © {new Date().getFullYear()}
-        </footer>
+          {/* NOTUS FOOTER */}
+          <footer className="block py-4 border-t border-slate-200">
+            <div className="container mx-auto px-4">
+              <div className="flex flex-wrap items-center md:justify-between justify-center">
+                <div className="w-full md:w-4/12 px-4">
+                  <div className="text-xs text-slate-500 font-semibold py-1 text-center md:text-left">
+                    Copyright © {new Date().getFullYear()} Digital Menu by DevVoltz | Distributed on Notus Theme
+                  </div>
+                </div>
+                <div className="w-full md:w-8/12 px-4">
+                  <ul className="flex flex-wrap list-none md:justify-end justify-center text-xs">
+                    <li>
+                      <Link href="/" className="text-slate-600 hover:text-slate-800 font-semibold block py-1 px-3">
+                        Landing Page
+                      </Link>
+                    </li>
+                    <li>
+                      <button
+                        onClick={() => setShowCreateModal(true)}
+                        className="text-slate-600 hover:text-slate-800 font-semibold block py-1 px-3"
+                      >
+                        Add New Menu
+                      </button>
+                    </li>
+                    <li>
+                      <a
+                        href="https://preview.themewagon.com/Notus-React/#/admin/dashboard"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-slate-600 hover:text-slate-800 font-semibold block py-1 px-3"
+                      >
+                        Notus Theme
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </footer>
+        </div>
       </div>
 
-      {/* CREATE RESTAURANT MODAL */}
+      {/* CREATE MENU MODAL (PHONE-RESPONSIVE NOTUS STYLED) */}
       {showCreateModal && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-3xl p-6 sm:p-8 w-full max-w-md shadow-2xl border border-slate-100 animate-in fade-in zoom-in-95 duration-200">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-black text-slate-900 tracking-tight">
-                Add New Restaurant
-              </h3>
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="create-menu-modal-title"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setShowCreateModal(false);
+          }}
+          className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-3 sm:p-4 overflow-y-auto"
+        >
+          <div className="bg-white rounded-xl w-full max-w-md shadow-2xl border border-slate-100 flex flex-col max-h-[92dvh] sm:max-h-[88vh] animate-in fade-in zoom-in-95 duration-200 overflow-hidden my-auto">
+            {/* Header */}
+            <div className="px-5 py-4 sm:px-6 sm:py-5 border-b border-slate-100 flex items-center justify-between shrink-0 bg-white">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <div className="w-9 h-9 rounded-full bg-sky-50 text-sky-600 flex items-center justify-center text-base shrink-0 font-bold border border-sky-100">
+                  📋
+                </div>
+                <div className="min-w-0">
+                  <h3
+                    id="create-menu-modal-title"
+                    className="text-base sm:text-lg font-bold text-slate-800 tracking-tight truncate uppercase"
+                  >
+                    Add New Menu
+                  </h3>
+                  <p className="text-[11px] text-slate-400 truncate">
+                    Set up your dining catalog & table QR code
+                  </p>
+                </div>
+              </div>
               <button
+                type="button"
                 onClick={() => setShowCreateModal(false)}
-                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center text-sm font-bold"
+                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-500 flex items-center justify-center text-sm font-bold transition shrink-0 ml-2"
+                aria-label="Close modal"
               >
                 ✕
               </button>
             </div>
 
-            <p className="text-xs text-slate-500 mb-6">
-              Create your restaurant catalog to begin designing table QR posters and adding delicious menu items.
-            </p>
+            {/* Scrollable Form Body */}
+            <form onSubmit={handleCreateRestaurant} className="flex flex-col flex-1 min-h-0 overflow-hidden">
+              <div className="p-4 sm:p-6 overflow-y-auto space-y-3.5 sm:space-y-4 flex-1 overscroll-contain">
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">
+                    Menu / Restaurant Name <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Addis Gourmet Burger Menu"
+                    value={newRestaurant.name}
+                    onChange={(e) =>
+                      setNewRestaurant({ ...newRestaurant, name: e.target.value })
+                    }
+                    className="w-full px-3.5 py-2.5 sm:px-4 sm:py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-base sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-colors"
+                  />
+                </div>
 
-            <form onSubmit={handleCreateRestaurant} className="space-y-4">
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
-                  Restaurant Name <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. Addis Gourmet Burger"
-                  value={newRestaurant.name}
-                  onChange={(e) =>
-                    setNewRestaurant({ ...newRestaurant, name: e.target.value })
-                  }
-                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
-                />
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">
+                    Physical Address <span className="text-slate-400 font-normal lowercase">(optional)</span>
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Bole Road, Addis Ababa"
+                    value={newRestaurant.address}
+                    onChange={(e) =>
+                      setNewRestaurant({ ...newRestaurant, address: e.target.value })
+                    }
+                    className="w-full px-3.5 py-2.5 sm:px-4 sm:py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-base sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-colors"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">
+                    Phone Number <span className="text-slate-400 font-normal lowercase">(optional)</span>
+                  </label>
+                  <input
+                    type="tel"
+                    inputMode="tel"
+                    placeholder="e.g. 0911234567"
+                    value={newRestaurant.phone}
+                    onChange={(e) =>
+                      setNewRestaurant({ ...newRestaurant, phone: e.target.value })
+                    }
+                    className="w-full px-3.5 py-2.5 sm:px-4 sm:py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-base sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-colors"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">
+                    Description / Cuisine <span className="text-slate-400 font-normal lowercase">(optional)</span>
+                  </label>
+                  <textarea
+                    rows={2}
+                    placeholder="e.g. Traditional & Western fusion cuisine"
+                    value={newRestaurant.description}
+                    onChange={(e) =>
+                      setNewRestaurant({ ...newRestaurant, description: e.target.value })
+                    }
+                    className="w-full px-3.5 py-2 sm:px-4 sm:py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-base sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-colors resize-none"
+                  />
+                </div>
               </div>
 
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
-                  Physical Address
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. Bole Road, Addis Ababa"
-                  value={newRestaurant.address}
-                  onChange={(e) =>
-                    setNewRestaurant({ ...newRestaurant, address: e.target.value })
-                  }
-                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
-                  Phone Number
-                </label>
-                <input
-                  type="tel"
-                  placeholder="e.g. 0911234567"
-                  value={newRestaurant.phone}
-                  onChange={(e) =>
-                    setNewRestaurant({ ...newRestaurant, phone: e.target.value })
-                  }
-                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
-                  Description / Cuisine
-                </label>
-                <textarea
-                  rows={2}
-                  placeholder="e.g. Traditional & Western fusion cuisine"
-                  value={newRestaurant.description}
-                  onChange={(e) =>
-                    setNewRestaurant({ ...newRestaurant, description: e.target.value })
-                  }
-                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
-                />
-              </div>
-
-              <div className="pt-2 flex gap-3">
+              {/* Action Buttons (Sticky at bottom of modal) */}
+              <div className="p-4 sm:p-5 border-t border-slate-100 bg-slate-50 sm:bg-white flex items-center gap-3 shrink-0">
                 <button
                   type="button"
                   onClick={() => setShowCreateModal(false)}
-                  className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-3 rounded-xl text-xs font-bold transition"
+                  className="flex-1 bg-white sm:bg-slate-100 hover:bg-slate-200 active:scale-[0.98] border border-slate-200 sm:border-transparent text-slate-700 py-2.5 rounded-lg text-xs sm:text-sm font-bold uppercase transition"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 bg-primary-600 hover:bg-primary-700 text-white py-3 rounded-xl text-xs font-bold shadow-md shadow-primary-600/20 transition"
+                  className="flex-1 bg-sky-600 hover:bg-sky-700 active:scale-[0.98] text-white py-2.5 rounded-lg text-xs sm:text-sm font-bold uppercase shadow-md shadow-sky-600/20 transition"
                 >
-                  Create Restaurant
+                  Add New Menu
                 </button>
               </div>
             </form>
