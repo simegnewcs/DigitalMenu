@@ -1040,36 +1040,38 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* ROW 3: SYSTEM INFRASTRUCTURE / RECENT LOGS */}
-          <div className="relative flex flex-col min-w-0 break-words bg-white w-full shadow-lg rounded-xl p-5 mb-8">
-            <h4 className="font-bold text-sm text-slate-700 uppercase tracking-wider mb-4 flex items-center gap-2">
-              <span>⏱️</span>
-              <span>Hostinger MySQL & DigitalMenu Cloud Engine</span>
-            </h4>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-              <div className="p-4 rounded-lg bg-slate-50 border border-slate-100 flex items-start gap-3">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 mt-1 shrink-0 animate-pulse"></span>
-                <div>
-                  <p className="font-bold text-slate-800">Hostinger MySQL Synced</p>
-                  <p className="text-[11px] text-slate-400 mt-0.5">srv651.hstgr.io:3306 live cluster</p>
+          {/* ROW 3: SYSTEM INFRASTRUCTURE / RECENT LOGS (ADMIN ONLY) */}
+          {userRole === "ADMIN" && (
+            <div className="relative flex flex-col min-w-0 break-words bg-white w-full shadow-lg rounded-xl p-5 mb-8">
+              <h4 className="font-bold text-sm text-slate-700 uppercase tracking-wider mb-4 flex items-center gap-2">
+                <span>⏱️</span>
+                <span>Hostinger MySQL & DigitalMenu Cloud Engine</span>
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                <div className="p-4 rounded-lg bg-slate-50 border border-slate-100 flex items-start gap-3">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 mt-1 shrink-0 animate-pulse"></span>
+                  <div>
+                    <p className="font-bold text-slate-800">Hostinger MySQL Synced</p>
+                    <p className="text-[11px] text-slate-400 mt-0.5">srv651.hstgr.io:3306 live cluster</p>
+                  </div>
                 </div>
-              </div>
-              <div className="p-4 rounded-lg bg-slate-50 border border-slate-100 flex items-start gap-3">
-                <span className="w-2.5 h-2.5 rounded-full bg-sky-500 mt-1 shrink-0"></span>
-                <div>
-                  <p className="font-bold text-slate-800">Contactless QR Poster Generator</p>
-                  <p className="text-[11px] text-slate-400 mt-0.5">High-res vector print ready in ETB</p>
+                <div className="p-4 rounded-lg bg-slate-50 border border-slate-100 flex items-start gap-3">
+                  <span className="w-2.5 h-2.5 rounded-full bg-sky-500 mt-1 shrink-0"></span>
+                  <div>
+                    <p className="font-bold text-slate-800">Contactless QR Poster Generator</p>
+                    <p className="text-[11px] text-slate-400 mt-0.5">High-res vector print ready in ETB</p>
+                  </div>
                 </div>
-              </div>
-              <div className="p-4 rounded-lg bg-slate-50 border border-slate-100 flex items-start gap-3">
-                <span className="w-2.5 h-2.5 rounded-full bg-purple-500 mt-1 shrink-0"></span>
-                <div>
-                  <p className="font-bold text-slate-800">Notus React Architecture</p>
-                  <p className="text-[11px] text-slate-400 mt-0.5">Tailwind responsive dashboard theme</p>
+                <div className="p-4 rounded-lg bg-slate-50 border border-slate-100 flex items-start gap-3">
+                  <span className="w-2.5 h-2.5 rounded-full bg-purple-500 mt-1 shrink-0"></span>
+                  <div>
+                    <p className="font-bold text-slate-800">Notus React Architecture</p>
+                    <p className="text-[11px] text-slate-400 mt-0.5">Tailwind responsive dashboard theme</p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          )}
 
           {/* NOTUS FOOTER */}
           <footer className="block py-4 border-t border-slate-200">
