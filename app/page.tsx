@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { signOut } from "next-auth/react";
 import toast from "react-hot-toast";
+import SectionDivider from "@/components/SectionDivider";
 
 interface UserProfile {
   id?: string;
@@ -53,7 +54,7 @@ export default function Home() {
           setIsLoggedIn(true);
         }
       }
-    } catch (e) {}
+    } catch (e) { }
 
     // 2. Validate with active NextAuth session
     fetch("/api/auth/session")
@@ -67,7 +68,7 @@ export default function Home() {
               "digitalmenu_user",
               JSON.stringify({ ...session.user, isLoggedIn: true })
             );
-          } catch (e) {}
+          } catch (e) { }
         } else {
           if (!localStorage.getItem("digitalmenu_user")) {
             setCurrentUser(null);
@@ -75,7 +76,7 @@ export default function Home() {
           }
         }
       })
-      .catch(() => {})
+      .catch(() => { })
       .finally(() => {
         setAuthLoaded(true);
       });
@@ -85,7 +86,7 @@ export default function Home() {
     try {
       localStorage.removeItem("digitalmenu_user");
       localStorage.clear();
-    } catch (e) {}
+    } catch (e) { }
     setCurrentUser(null);
     setIsLoggedIn(false);
     toast.success("Logged out successfully");
@@ -212,7 +213,7 @@ export default function Home() {
           <div className="flex items-center gap-4 text-[11px] sm:text-xs tracking-wider">
             <span>✨ Contactless QR Dining Solution for Restaurants, Cafes & Lounges</span>
             <span className="hidden md:inline text-[#ff98b4]">•</span>
-            <span className="hidden md:inline">Synced with Live Hostinger Cloud Engine</span>
+            <span className="hidden md:inline"></span>
           </div>
           <div className="flex items-center gap-4 text-[11px] sm:text-xs">
             <span className="flex items-center gap-1">
@@ -220,7 +221,7 @@ export default function Home() {
             </span>
             <span>•</span>
             <span className="flex items-center gap-1">
-              <span className="text-[#ff98b4]">📞</span> +251 91 234 5678
+              <span className="text-[#ff98b4]">📞</span> +251940192676
             </span>
           </div>
         </div>
@@ -232,12 +233,17 @@ export default function Home() {
       <nav className="bg-white/95 backdrop-blur-md sticky top-0 z-50 border-b border-[#ff98b4]/20 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
-            {/* Logo with purple/pink floral beauty motif */}
+            {/* Brand Logo with official logo image */}
             <Link href="/" className="flex items-center gap-3 group">
-              <div className="w-11 h-11 rounded-full bg-gradient-to-tr from-[#7f44c9] to-[#ff98b4] p-0.5 shadow-md shadow-[#7f44c9]/25 group-hover:scale-105 transition-transform flex items-center justify-center">
-                <div className="w-full h-full bg-white rounded-full flex items-center justify-center">
-                  <span className="text-xl">🍽️</span>
-                </div>
+              <div className="w-12 h-12 rounded-2xl bg-white p-1 shadow-md shadow-[#7f44c9]/15 border border-[#ff98b4]/30 group-hover:scale-105 transition-transform flex items-center justify-center overflow-hidden shrink-0">
+                <Image
+                  src="/logo.png"
+                  alt="DigitalMenu Brand Logo"
+                  width={48}
+                  height={48}
+                  className="w-full h-full object-contain"
+                  priority
+                />
               </div>
               <div className="flex flex-col">
                 <span className="text-2xl font-bold tracking-tight text-[#7f44c9] leading-none">
@@ -450,7 +456,7 @@ export default function Home() {
       {/* ========================================================= */}
       {/* HERO SECTION (REV-SLIDER BEAUTY SALON 2 TYPOGRAPHY & LAYOUT) */}
       {/* ========================================================= */}
-      <section className="relative overflow-hidden pt-12 pb-24 lg:pt-20 lg:pb-32 bg-gradient-to-b from-[#fff6f9] via-white to-[#faf5ff]">
+      <section className="relative overflow-hidden pt-12 pb-28 lg:pt-20 lg:pb-36 bg-gradient-to-b from-[#fff6f9] via-white to-[#faf5ff]">
         {/* Soft decorative background circles & SVG glow */}
         <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-r from-[#ff98b4]/15 to-[#7f44c9]/10 rounded-full blur-3xl pointer-events-none"></div>
 
@@ -529,7 +535,7 @@ export default function Home() {
               <div className="relative mx-auto max-w-md lg:max-w-none">
                 {/* Decorative border frame with #ff98b4 accent */}
                 <div className="absolute -inset-3 bg-gradient-to-tr from-[#7f44c9] to-[#ff98b4] rounded-3xl opacity-30 blur-lg transform rotate-2"></div>
-                
+
                 <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-white">
                   <img
                     src="/hero_qr_dining.jpg"
@@ -558,12 +564,18 @@ export default function Home() {
             </div>
           </div>
         </div>
+
+        {/* Section 1 End Clip Path Divider */}
+        <SectionDivider variant="slant-right" fillColor="#ffffff" />
       </section>
 
       {/* ========================================================= */}
       {/* SECTION 2: ABOUT US ("_ about us _ / Your beauty is our duty") */}
       {/* ========================================================= */}
-      <section id="about-section" className="py-20 lg:py-28 bg-white border-t border-purple-50 scroll-mt-20">
+      <section
+        id="about-section"
+        className="relative py-20 pb-28 lg:py-28 lg:pb-36 bg-white scroll-mt-20 overflow-hidden"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             {/* Left Image with template offset frame */}
@@ -636,6 +648,9 @@ export default function Home() {
             </div>
           </div>
         </div>
+
+        {/* Section 2 End Clip Path Divider */}
+        <SectionDivider variant="slant-left" fillColor="#faf5ff" />
       </section>
 
       {/* ========================================================= */}
@@ -643,7 +658,7 @@ export default function Home() {
       {/* ========================================================= */}
       <section
         id="services-section"
-        className="py-20 lg:py-28 bg-[#faf5ff] border-y border-[#ff98b4]/20 scroll-mt-20"
+        className="relative py-20 pb-28 lg:py-28 lg:pb-36 bg-[#faf5ff] scroll-mt-20 overflow-hidden"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
@@ -736,6 +751,9 @@ export default function Home() {
             </div>
           </div>
         </div>
+
+        {/* Section 3 End Clip Path Divider */}
+        <SectionDivider variant="asymmetric" fillColor="#ffffff" />
       </section>
 
       {/* ========================================================= */}
@@ -743,7 +761,7 @@ export default function Home() {
       {/* ========================================================= */}
       <section
         id="gallery-section"
-        className="py-20 lg:py-28 bg-white scroll-mt-20"
+        className="relative py-20 pb-28 lg:py-28 lg:pb-36 bg-white scroll-mt-20 overflow-hidden"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-12">
@@ -764,41 +782,37 @@ export default function Home() {
             <div className="mt-8 flex flex-wrap items-center justify-center gap-2 text-xs font-sans">
               <button
                 onClick={() => setActiveCategory("all")}
-                className={`px-5 py-2 rounded-full font-bold transition-all ${
-                  activeCategory === "all"
-                    ? "bg-[#7f44c9] text-white shadow-md shadow-[#7f44c9]/25"
-                    : "bg-purple-50 text-slate-600 hover:bg-purple-100"
-                }`}
+                className={`px-5 py-2 rounded-full font-bold transition-all ${activeCategory === "all"
+                  ? "bg-[#7f44c9] text-white shadow-md shadow-[#7f44c9]/25"
+                  : "bg-purple-50 text-slate-600 hover:bg-purple-100"
+                  }`}
               >
                 All Dishes
               </button>
               <button
                 onClick={() => setActiveCategory("main")}
-                className={`px-5 py-2 rounded-full font-bold transition-all ${
-                  activeCategory === "main"
-                    ? "bg-[#7f44c9] text-white shadow-md shadow-[#7f44c9]/25"
-                    : "bg-purple-50 text-slate-600 hover:bg-purple-100"
-                }`}
+                className={`px-5 py-2 rounded-full font-bold transition-all ${activeCategory === "main"
+                  ? "bg-[#7f44c9] text-white shadow-md shadow-[#7f44c9]/25"
+                  : "bg-purple-50 text-slate-600 hover:bg-purple-100"
+                  }`}
               >
                 Gourmet Mains
               </button>
               <button
                 onClick={() => setActiveCategory("traditional")}
-                className={`px-5 py-2 rounded-full font-bold transition-all ${
-                  activeCategory === "traditional"
-                    ? "bg-[#7f44c9] text-white shadow-md shadow-[#7f44c9]/25"
-                    : "bg-purple-50 text-slate-600 hover:bg-purple-100"
-                }`}
+                className={`px-5 py-2 rounded-full font-bold transition-all ${activeCategory === "traditional"
+                  ? "bg-[#7f44c9] text-white shadow-md shadow-[#7f44c9]/25"
+                  : "bg-purple-50 text-slate-600 hover:bg-purple-100"
+                  }`}
               >
                 Traditional Ethiopian
               </button>
               <button
                 onClick={() => setActiveCategory("beverages")}
-                className={`px-5 py-2 rounded-full font-bold transition-all ${
-                  activeCategory === "beverages"
-                    ? "bg-[#7f44c9] text-white shadow-md shadow-[#7f44c9]/25"
-                    : "bg-purple-50 text-slate-600 hover:bg-purple-100"
-                }`}
+                className={`px-5 py-2 rounded-full font-bold transition-all ${activeCategory === "beverages"
+                  ? "bg-[#7f44c9] text-white shadow-md shadow-[#7f44c9]/25"
+                  : "bg-purple-50 text-slate-600 hover:bg-purple-100"
+                  }`}
               >
                 Coffee & Beverages
               </button>
@@ -853,6 +867,9 @@ export default function Home() {
             </Link>
           </div>
         </div>
+
+        {/* Section 4 End Clip Path Divider */}
+        <SectionDivider variant="slant-left" fillColor="#faf5ff" />
       </section>
 
       {/* ========================================================= */}
@@ -860,7 +877,7 @@ export default function Home() {
       {/* ========================================================= */}
       <section
         id="pricing-section"
-        className="py-20 lg:py-28 bg-[#faf5ff] border-y border-[#ff98b4]/20 scroll-mt-20"
+        className="relative py-20 pb-36 lg:py-28 lg:pb-44 bg-[#faf5ff] scroll-mt-20 overflow-hidden"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
@@ -1012,12 +1029,18 @@ export default function Home() {
             </div>
           </div>
         </div>
+
+        {/* Section 5 End Clip Path Divider */}
+        <SectionDivider variant="slant-right" fillColor="#ffffff" />
       </section>
 
       {/* ========================================================= */}
       {/* SECTION 6: OUR TEAM ("_ our team _ / Where experience matters") */}
       {/* ========================================================= */}
-      <section id="team-section" className="py-20 lg:py-28 bg-white scroll-mt-20">
+      <section
+        id="team-section"
+        className="relative py-20 pb-28 lg:py-28 lg:pb-36 bg-white scroll-mt-20 overflow-hidden"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <div className="inline-flex items-center justify-center gap-2 mb-3">
@@ -1070,6 +1093,9 @@ export default function Home() {
             ))}
           </div>
         </div>
+
+        {/* Section 6 End Clip Path Divider */}
+        <SectionDivider variant="wave" fillColor="#faf5ff" />
       </section>
 
       {/* ========================================================= */}
@@ -1077,7 +1103,7 @@ export default function Home() {
       {/* ========================================================= */}
       <section
         id="faq-section"
-        className="py-20 lg:py-28 bg-[#faf5ff] border-t border-[#ff98b4]/20 scroll-mt-20"
+        className="relative py-20 pb-28 lg:py-28 lg:pb-36 bg-[#faf5ff] scroll-mt-20 overflow-hidden"
       >
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-16">
@@ -1100,11 +1126,10 @@ export default function Home() {
               return (
                 <div
                   key={idx}
-                  className={`bg-white rounded-2xl border transition-all duration-200 overflow-hidden ${
-                    isOpen
-                      ? "border-[#7f44c9] shadow-md ring-2 ring-[#7f44c9]/10"
-                      : "border-purple-100 shadow-sm hover:border-[#ff98b4]"
-                  }`}
+                  className={`bg-white rounded-2xl border transition-all duration-200 overflow-hidden ${isOpen
+                    ? "border-[#7f44c9] shadow-md ring-2 ring-[#7f44c9]/10"
+                    : "border-purple-100 shadow-sm hover:border-[#ff98b4]"
+                    }`}
                 >
                   <button
                     onClick={() => setOpenFaqIndex(isOpen ? null : idx)}
@@ -1120,11 +1145,10 @@ export default function Home() {
                       </span>
                     </div>
                     <span
-                      className={`w-8 h-8 rounded-full flex items-center justify-center transition-transform duration-200 shrink-0 ${
-                        isOpen
-                          ? "bg-[#7f44c9] text-white rotate-180"
-                          : "bg-purple-50 text-[#7f44c9]"
-                      }`}
+                      className={`w-8 h-8 rounded-full flex items-center justify-center transition-transform duration-200 shrink-0 ${isOpen
+                        ? "bg-[#7f44c9] text-white rotate-180"
+                        : "bg-purple-50 text-[#7f44c9]"
+                        }`}
                     >
                       ↓
                     </span>
@@ -1140,12 +1164,15 @@ export default function Home() {
             })}
           </div>
         </div>
+
+        {/* Section 7 End Clip Path Divider */}
+        <SectionDivider variant="chevron" fillColor="#7f44c9" />
       </section>
 
       {/* ========================================================= */}
       {/* SECTION 8: CALL TO ACTION BANNER */}
       {/* ========================================================= */}
-      <section className="py-20 bg-gradient-to-r from-[#7f44c9] via-[#6e30b8] to-[#9255e2] text-white text-center relative overflow-hidden">
+      <section className="relative py-20 pb-28 lg:py-24 lg:pb-36 bg-gradient-to-r from-[#7f44c9] via-[#6e30b8] to-[#9255e2] text-white text-center overflow-hidden">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <span className="text-xs uppercase font-bold tracking-widest text-[#ff98b4] font-sans">
             Start Free Today
@@ -1171,19 +1198,33 @@ export default function Home() {
             </button>
           </div>
         </div>
+
+        {/* Section 8 End Clip Path Divider */}
+        <SectionDivider
+          variant="slant-right"
+          fillColor="#1c0f2b"
+          blackBorderColor="#0a0a0a"
+          redBorderColor="#ff2d55"
+        />
       </section>
 
       {/* ========================================================= */}
       {/* FOOTER (DEEP LUXURY PURPLE PALETTE) */}
       {/* ========================================================= */}
-      <footer className="bg-[#1c0f2b] text-slate-400 py-16 border-t border-purple-900/50">
+      <footer className="bg-[#1c0f2b] text-slate-400 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
             {/* Col 1: Brand */}
             <div className="md:col-span-2">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-[#7f44c9] to-[#ff98b4] flex items-center justify-center text-white font-bold text-sm">
-                  🍽️
+                <div className="w-10 h-10 rounded-2xl bg-white p-1 shadow-md border border-purple-800/40 flex items-center justify-center overflow-hidden shrink-0">
+                  <Image
+                    src="/logo.png"
+                    alt="DigitalMenu Brand Logo"
+                    width={40}
+                    height={40}
+                    className="w-full h-full object-contain"
+                  />
                 </div>
                 <span className="text-2xl font-bold text-white tracking-tight">
                   Digital<span className="text-[#ff98b4]">Menu</span>
@@ -1193,7 +1234,7 @@ export default function Home() {
                 The premier contactless QR menu management platform for Ethiopian and global dining establishments. Seamless ordering, instant cloud synchronization, and elegant hospitality design.
               </p>
               <p className="text-xs text-[#ff98b4]">
-                Synced with Hostinger MySQL Live Cluster: <span className="text-slate-300">srv651.hstgr.io:3306</span>
+                Brand Identity: <span className="text-slate-300">DigitalMenu™ Contactless Platform</span>
               </p>
             </div>
 

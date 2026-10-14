@@ -197,8 +197,14 @@ export default function DashboardPage() {
               className="md:block text-left text-slate-700 inline-block whitespace-nowrap text-base uppercase font-bold tracking-wider hover:text-sky-600 transition-colors"
             >
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-lg bg-sky-600 text-white flex items-center justify-center font-bold text-sm shadow-md shadow-sky-600/30">
-                  D
+                <div className="w-9 h-9 rounded-xl bg-white p-0.5 border border-slate-200 shadow-sm flex items-center justify-center overflow-hidden shrink-0">
+                  <Image
+                    src="/logo.png"
+                    alt="DigitalMenu"
+                    width={36}
+                    height={36}
+                    className="w-full h-full object-contain"
+                  />
                 </div>
                 <span>Digital Menu</span>
               </div>

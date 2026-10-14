@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import NextImage from "next/image";
 import toast from "react-hot-toast";
 import QRCode from "qrcode";
 
@@ -591,6 +592,22 @@ export default function RestaurantManagePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center gap-2">
             <div className="flex items-center space-x-2 sm:space-x-3 min-w-0">
+              <Link
+                href="/"
+                className="flex items-center gap-2 group shrink-0"
+                title="DigitalMenu Home"
+              >
+                <div className="w-8 h-8 rounded-lg bg-white p-0.5 border border-slate-200 shadow-xs flex items-center justify-center overflow-hidden hover:scale-105 transition-transform">
+                  <NextImage
+                    src="/logo.png"
+                    alt="DigitalMenu"
+                    width={32}
+                    height={32}
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+              </Link>
+
               <Link
                 href="/dashboard"
                 className="inline-flex items-center gap-1 text-xs font-bold text-gray-700 hover:text-primary-600 bg-gray-100 hover:bg-gray-200 px-2.5 py-1.5 rounded-xl transition-all border border-gray-200 shrink-0"

@@ -662,6 +662,25 @@ export default function MenuView({
             </button>
           </div>
         )}
+
+        {/* Footer Brand Credit */}
+        <div className="pt-10 pb-8 text-center">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200/80 shadow-xs hover:border-slate-300 text-slate-500 hover:text-slate-800 transition"
+          >
+            <Image
+              src="/logo.png"
+              alt="DigitalMenu"
+              width={20}
+              height={20}
+              className="w-5 h-5 object-contain rounded-md"
+            />
+            <span className="text-[11px] font-medium">
+              Powered by <strong className="text-slate-700">DigitalMenu</strong>
+            </span>
+          </Link>
+        </div>
       </main>
 
       {/* Floating Bottom Tray Bar (Appears when items are selected) */}
