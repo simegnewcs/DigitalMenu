@@ -17,8 +17,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className="font-serif antialiased">
+    <html lang="en" className="scroll-smooth">
+      <body className="font-sans antialiased bg-[#faf8fc] text-slate-800">
         {children}
         <Toaster position="top-right" />
       </body>

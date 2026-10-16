@@ -9,9 +9,9 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"Times New Roman"', 'Times', 'serif'],
-        serif: ['"Times New Roman"', 'Times', 'serif'],
-        mono: ['"Times New Roman"', 'Times', 'serif'],
+        sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+        serif: ['"Playfair Display"', 'Georgia', '"Times New Roman"', 'serif'],
+        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
       },
       colors: {
         primary: {
