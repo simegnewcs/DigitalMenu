@@ -41,7 +41,7 @@ export default function Home() {
   // =========================================================================
   // INTERACTIVE HERO MENU CREATION STUDIO STATE
   // =========================================================================
-  const [studioTab, setStudioTab] = useState<"builder" | "qr" | "diner">("builder");
+  const [studioTab, setStudioTab] = useState<"builder" | "qr" | "diner">("diner");
   const [activeStudioCategory, setActiveStudioCategory] = useState<"mains" | "traditional" | "drinks" | "desserts">("mains");
   const [selectedDemoDishId, setSelectedDemoDishId] = useState<string>("m1");
   const [demoDishes, setDemoDishes] = useState<DemoDish[]>([
@@ -447,106 +447,58 @@ export default function Home() {
       {/* ========================================================= */}
       <section
         id="studio-demo"
-        className="relative pt-10 pb-24 lg:pt-16 lg:pb-32 overflow-hidden bg-gradient-to-b from-[#fbf8ff] via-white to-[#faf5ff]"
+        className="relative pt-6 pb-20 lg:pt-10 lg:pb-28 overflow-hidden bg-gradient-to-b from-[#fbf8ff] via-white to-[#faf5ff]"
       >
         {/* Soft background ambient gradient glows */}
-        <div className="absolute top-12 left-1/4 -translate-x-1/2 w-[650px] h-[450px] bg-gradient-to-br from-[#7f44c9]/12 to-[#ff6384]/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div className="absolute top-36 right-10 w-[550px] h-[400px] bg-gradient-to-bl from-purple-400/10 to-indigo-400/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div className="absolute top-10 left-1/4 -translate-x-1/2 w-[600px] h-[400px] bg-gradient-to-br from-[#7f44c9]/12 to-[#ff6384]/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div className="absolute top-28 right-10 w-[500px] h-[350px] bg-gradient-to-bl from-purple-400/10 to-indigo-400/10 rounded-full blur-3xl pointer-events-none"></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
             {/* ------------------------------------------------ */}
-            {/* HERO LEFT COLUMN: The Platform Value Proposition */}
+            {/* HERO LEFT COLUMN: First Impression & Value Prop  */}
             {/* ------------------------------------------------ */}
             <div className="lg:col-span-6 text-center lg:text-left">
               {/* Category Pill Tag */}
-              <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-purple-100/80 border border-purple-200/80 text-[#6c2ebd] text-xs font-bold mb-6 shadow-sm">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/95 backdrop-blur-xs border border-purple-200/80 text-[#6c2ebd] text-xs font-bold mb-4 shadow-xs">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span>The #1 Digital Menu & QR Creation Platform</span>
+                <span className="inline-flex items-center gap-1 font-semibold text-slate-800">
+                  <span className="w-1.5 h-3 bg-[#078930] rounded-xs"></span>
+                  <span className="w-1.5 h-3 bg-[#fcdd09] rounded-xs"></span>
+                  <span className="w-1.5 h-3 bg-[#da121a] rounded-xs"></span>
+                  <span>Ethiopia&apos;s #1 Smart QR Dining Platform</span>
+                </span>
                 <span className="text-[#ff6384] font-black">•</span>
-                <span className="text-slate-600 font-medium">3-Min Setup</span>
+                <span className="text-purple-700 font-semibold">3-Min Setup</span>
               </div>
 
               {/* Bold Main Headline */}
-              <h1 className="text-4xl sm:text-5xl lg:text-[3.4rem] font-extrabold text-slate-900 tracking-tight leading-[1.12] mb-6">
-                Create, Launch & Manage Your Restaurant&apos;s{" "}
+              <h1 className="text-3xl sm:text-4xl lg:text-[3.1rem] font-black text-slate-900 tracking-tight leading-[1.14] mb-4">
+                Delight Guests With Instant{" "}
                 <span className="bg-gradient-to-r from-[#6c2ebd] via-[#8538ea] to-[#ff6384] bg-clip-text text-transparent">
-                  QR Digital Menu
+                  Smart QR Menus
                 </span>
               </h1>
 
               {/* Clear Platform Subtitle */}
-              <p className="text-base sm:text-lg text-slate-600 leading-relaxed max-w-xl mx-auto lg:mx-0 mb-8">
-                Say goodbye to expensive reprints and sticky paper menus. Add your dishes, set prices in Ethiopian Birr (ETB), generate print-ready table QR codes, and let guests browse & order instantly on their smartphone cameras.
+              <p className="text-sm sm:text-base text-slate-600 leading-relaxed max-w-xl mx-auto lg:mx-0 mb-6 font-normal">
+                Replace costly reprints and sticky paper menus. Diners aim their phone camera to browse vivid photo menus and order in seconds. Update prices in Ethiopian Birr (ETB) and stock in real time.
               </p>
 
-              {/* 3-Step Interactive Pills that switch demo perspective */}
-              <div className="mb-8 p-3 bg-white/90 backdrop-blur-sm rounded-2xl border border-purple-100 shadow-sm max-w-xl mx-auto lg:mx-0">
-                <p className="text-[11px] uppercase tracking-wider font-bold text-slate-400 mb-2">
-                  See How Simply You Create & Launch:
-                </p>
-                <div className="grid grid-cols-3 gap-2 text-xs">
-                  <button
-                    onClick={() => {
-                      setStudioTab("builder");
-                      notifySync("Showing Menu Builder: Add items & set prices");
-                    }}
-                    className={`py-2 px-2.5 rounded-xl font-bold transition-all text-center flex flex-col items-center justify-center gap-0.5 ${
-                      studioTab === "builder"
-                        ? "bg-[#6c2ebd] text-white shadow-md shadow-[#6c2ebd]/20"
-                        : "bg-purple-50/60 text-slate-700 hover:bg-purple-100/60"
-                    }`}
-                  >
-                    <span className="text-[10px] opacity-80">Step 1</span>
-                    <span className="truncate w-full">① Build Menu</span>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      setStudioTab("qr");
-                      notifySync("Showing QR Studio: Instant table poster generator");
-                    }}
-                    className={`py-2 px-2.5 rounded-xl font-bold transition-all text-center flex flex-col items-center justify-center gap-0.5 ${
-                      studioTab === "qr"
-                        ? "bg-[#6c2ebd] text-white shadow-md shadow-[#6c2ebd]/20"
-                        : "bg-purple-50/60 text-slate-700 hover:bg-purple-100/60"
-                    }`}
-                  >
-                    <span className="text-[10px] opacity-80">Step 2</span>
-                    <span className="truncate w-full">② Get Table QRs</span>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      setStudioTab("diner");
-                      notifySync("Showing Diner Phone: Instant camera view");
-                    }}
-                    className={`py-2 px-2.5 rounded-xl font-bold transition-all text-center flex flex-col items-center justify-center gap-0.5 ${
-                      studioTab === "diner"
-                        ? "bg-[#6c2ebd] text-white shadow-md shadow-[#6c2ebd]/20"
-                        : "bg-purple-50/60 text-slate-700 hover:bg-purple-100/60"
-                    }`}
-                  >
-                    <span className="text-[10px] opacity-80">Step 3</span>
-                    <span className="truncate w-full">③ Diners Scan</span>
-                  </button>
-                </div>
-              </div>
-
               {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 mb-6">
                 {isLoggedIn ? (
                   <Link
                     href="/dashboard"
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-full text-white bg-[#6c2ebd] hover:bg-[#581c87] text-sm uppercase tracking-wider font-extrabold shadow-xl shadow-[#6c2ebd]/30 transition-all border-b-4 border-[#ff6384] transform hover:-translate-y-0.5"
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full text-white bg-gradient-to-r from-[#6c2ebd] to-[#8035e4] hover:from-[#581c87] hover:to-[#6c2ebd] text-xs uppercase tracking-wider font-extrabold shadow-xl shadow-[#6c2ebd]/25 transition-all border-b-2 border-[#ff6384] transform hover:-translate-y-0.5"
                   >
-                    <span>Open Your Dashboard</span>
+                    <span>Open Restaurant Dashboard</span>
                     <span>→</span>
                   </Link>
                 ) : (
                   <Link
                     href="/login?mode=register"
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-full text-white bg-[#6c2ebd] hover:bg-[#581c87] text-sm uppercase tracking-wider font-extrabold shadow-xl shadow-[#6c2ebd]/30 transition-all border-b-4 border-[#ff6384] transform hover:-translate-y-0.5"
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full text-white bg-gradient-to-r from-[#6c2ebd] to-[#8035e4] hover:from-[#581c87] hover:to-[#6c2ebd] text-xs uppercase tracking-wider font-extrabold shadow-xl shadow-[#6c2ebd]/25 transition-all border-b-2 border-[#ff6384] transform hover:-translate-y-0.5"
                   >
                     <span>Create Your Menu — Free</span>
                     <span>→</span>
@@ -554,110 +506,278 @@ export default function Home() {
                 )}
 
                 <button
-                  onClick={() => scrollTo("how-it-works")}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full text-[#6c2ebd] bg-white hover:bg-purple-50 border-2 border-purple-200 shadow-md shadow-purple-500/5 text-sm uppercase tracking-wider font-bold transition-all"
+                  onClick={() => {
+                    setStudioTab("diner");
+                    scrollTo("studio-demo");
+                  }}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full text-[#6c2ebd] bg-white hover:bg-purple-50 border border-purple-200/90 shadow-xs text-xs uppercase tracking-wider font-bold transition-all"
                 >
-                  <span>Explore 3 Steps</span>
-                  <span>↓</span>
+                  <span>📱 Test Live Phone Demo</span>
                 </button>
               </div>
 
-              {/* Trust Badges Bar */}
-              <div className="mt-9 pt-6 border-t border-purple-200/60 flex flex-wrap items-center justify-center lg:justify-start gap-y-3 gap-x-6 text-xs text-slate-600 font-semibold">
-                <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-                  <span>0.2s Camera QR Scan</span>
+              {/* Social Proof Row with Real Photos */}
+              <div className="flex items-center justify-center lg:justify-start gap-3.5 mb-6">
+                <div className="flex -space-x-2 overflow-hidden">
+                  <div className="w-8 h-8 rounded-full border-2 border-white shadow-xs overflow-hidden">
+                    <img
+                      src="/team_chef.jpg"
+                      alt="Chef"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="w-8 h-8 rounded-full border-2 border-white shadow-xs overflow-hidden">
+                    <img
+                      src="/team_hospitality.jpg"
+                      alt="Manager"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="w-8 h-8 rounded-full border-2 border-white shadow-xs overflow-hidden">
+                    <img
+                      src="/team_architect.jpg"
+                      alt="Restaurateur"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-[#ff6384]"></span>
-                  <span>100% No App Download</span>
+                <div className="text-left">
+                  <div className="flex items-center text-amber-500 text-xs">
+                    ★★★★★ <span className="ml-1.5 font-bold text-slate-800">4.9/5</span>
+                  </div>
+                  <p className="text-[11px] text-slate-500 font-medium">
+                    Trusted by 120+ restaurants & cafés in Addis Ababa
+                  </p>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-[#6c2ebd]"></span>
-                  <span>Instant ETB Price Sync</span>
+              </div>
+
+              {/* 4 Feature Badges */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] text-slate-600 font-semibold pt-4 border-t border-purple-100">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-emerald-500 font-bold">✓</span>
+                  <span>0.2s Camera Scan</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
-                  <span>A4 Vector Posters</span>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-emerald-500 font-bold">✓</span>
+                  <span>Zero App Download</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-emerald-500 font-bold">✓</span>
+                  <span>Instant ETB Sync</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-emerald-500 font-bold">✓</span>
+                  <span>Print-Ready Posters</span>
                 </div>
               </div>
             </div>
 
             {/* ------------------------------------------------ */}
-            {/* HERO RIGHT COLUMN: Interactive Creation Platform */}
+            {/* HERO RIGHT COLUMN: Interactive Visual Showcase   */}
             {/* ------------------------------------------------ */}
             <div className="lg:col-span-6 relative">
-              {/* Outer Glow container */}
               <div className="relative mx-auto max-w-lg lg:max-w-none">
-                <div className="absolute -inset-2 bg-gradient-to-tr from-[#6c2ebd] via-[#ff6384] to-indigo-600 rounded-3xl opacity-20 blur-xl"></div>
+                {/* Glow behind the card */}
+                <div className="absolute -inset-2 bg-gradient-to-tr from-[#6c2ebd]/20 via-[#ff6384]/15 to-indigo-600/15 rounded-3xl blur-xl"></div>
 
-                {/* Main Interactive Studio Card */}
+                {/* Main Interactive Showcase Container */}
                 <div className="relative bg-white rounded-3xl shadow-2xl border-2 border-purple-100 overflow-hidden">
-                  {/* Studio Window Chrome Bar */}
-                  <div className="bg-slate-900 text-white px-5 py-3.5 flex items-center justify-between border-b border-slate-800">
+                  {/* Top Window Bar */}
+                  <div className="bg-slate-900 text-white px-5 py-3 flex items-center justify-between border-b border-slate-800">
                     <div className="flex items-center gap-2">
-                      <span className="w-3 h-3 rounded-full bg-rose-500"></span>
-                      <span className="w-3 h-3 rounded-full bg-amber-500"></span>
-                      <span className="w-3 h-3 rounded-full bg-emerald-500"></span>
+                      <span className="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+                      <span className="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
                       <span className="text-xs font-semibold text-slate-300 ml-2 font-mono">
-                        DigitalMenu Studio › Bole Bistro
+                        DigitalMenu Studio › Bole Sky Bistro
                       </span>
                     </div>
-                    <div className="flex items-center gap-2 text-[11px] font-semibold text-emerald-400 bg-emerald-950/60 px-2.5 py-0.5 rounded-full border border-emerald-800/40">
+                    <div className="flex items-center gap-1.5 text-[10px] font-semibold text-emerald-400 bg-emerald-950/70 px-2.5 py-0.5 rounded-full border border-emerald-800/40">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
                       <span>Cloud Live</span>
                     </div>
                   </div>
 
                   {/* Studio Navigation Tabs */}
-                  <div className="flex items-center border-b border-purple-100 bg-[#faf8fc] px-4 pt-2">
+                  <div className="flex items-center border-b border-purple-100 bg-[#faf8fc] px-3 pt-2 text-xs">
                     <button
-                      onClick={() => setStudioTab("builder")}
-                      className={`flex-1 pb-3 text-xs font-bold border-b-2 transition-all flex items-center justify-center gap-1.5 ${
-                        studioTab === "builder"
-                          ? "border-[#6c2ebd] text-[#6c2ebd]"
-                          : "border-transparent text-slate-500 hover:text-slate-800"
-                      }`}
-                    >
-                      <span>🛠️ 1. Menu Builder</span>
-                    </button>
-
-                    <button
-                      onClick={() => setStudioTab("qr")}
-                      className={`flex-1 pb-3 text-xs font-bold border-b-2 transition-all flex items-center justify-center gap-1.5 ${
-                        studioTab === "qr"
-                          ? "border-[#6c2ebd] text-[#6c2ebd]"
-                          : "border-transparent text-slate-500 hover:text-slate-800"
-                      }`}
-                    >
-                      <span>🏷️ 2. QR Generator</span>
-                    </button>
-
-                    <button
-                      onClick={() => setStudioTab("diner")}
-                      className={`flex-1 pb-3 text-xs font-bold border-b-2 transition-all flex items-center justify-center gap-1.5 ${
+                      onClick={() => {
+                        setStudioTab("diner");
+                        notifySync("Switched to Live Diner Phone View!");
+                      }}
+                      className={`flex-1 pb-2.5 font-bold border-b-2 transition-all flex items-center justify-center gap-1.5 ${
                         studioTab === "diner"
                           ? "border-[#6c2ebd] text-[#6c2ebd]"
                           : "border-transparent text-slate-500 hover:text-slate-800"
                       }`}
                     >
-                      <span>📱 3. Diner Mobile View</span>
+                      <span>📱 1. Diner Phone Menu</span>
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        setStudioTab("builder");
+                        notifySync("Switched to Owner Menu Builder!");
+                      }}
+                      className={`flex-1 pb-2.5 font-bold border-b-2 transition-all flex items-center justify-center gap-1.5 ${
+                        studioTab === "builder"
+                          ? "border-[#6c2ebd] text-[#6c2ebd]"
+                          : "border-transparent text-slate-500 hover:text-slate-800"
+                      }`}
+                    >
+                      <span>🛠️ 2. Owner Studio</span>
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        setStudioTab("qr");
+                        notifySync("Switched to Table QR Poster Generator!");
+                      }}
+                      className={`flex-1 pb-2.5 font-bold border-b-2 transition-all flex items-center justify-center gap-1.5 ${
+                        studioTab === "qr"
+                          ? "border-[#6c2ebd] text-[#6c2ebd]"
+                          : "border-transparent text-slate-500 hover:text-slate-800"
+                      }`}
+                    >
+                      <span>🏷️ 3. Table QR Poster</span>
                     </button>
                   </div>
 
-                  {/* ------------------------------------------------ */}
-                  {/* TAB 1: MENU BUILDER VIEW */}
-                  {/* ------------------------------------------------ */}
+                  {/* TAB 1: LIVE DINER SMARTPHONE EXPERIENCE (Default on First Contact) */}
+                  {studioTab === "diner" && (
+                    <div className="p-4 sm:p-5 bg-gradient-to-b from-[#faf8fc] to-white">
+                      {/* Top Visual Dining Scene Banner */}
+                      <div className="relative h-24 sm:h-28 rounded-2xl overflow-hidden mb-3 border border-purple-100 shadow-sm group">
+                        <img
+                          src="/hero_qr_dining.jpg"
+                          alt="Diner scanning QR code at restaurant table"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/35 to-transparent flex items-end p-3 justify-between">
+                          <div>
+                            <span className="text-[10px] font-extrabold text-[#ff98b4] uppercase tracking-wider block">
+                              Table 04 • Contactless Dining
+                            </span>
+                            <p className="text-xs sm:text-sm font-black text-white">
+                              Bole Sky Lounge & Bistro
+                            </p>
+                          </div>
+                          <span className="text-[10px] font-bold text-white bg-[#6c2ebd] px-2 py-0.5 rounded-full shadow-xs">
+                            📷 Camera Scanned
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Interactive Category Filter Bar */}
+                      <div className="flex items-center gap-1.5 mb-3 overflow-x-auto pb-1 text-xs font-bold scrollbar-none">
+                        {(
+                          [
+                            { key: "mains", label: "🥩 Mains" },
+                            { key: "traditional", label: "🥘 Ethiopian" },
+                            { key: "drinks", label: "☕ Drinks" },
+                            { key: "desserts", label: "🍰 Desserts" },
+                          ] as const
+                        ).map((cat) => (
+                          <button
+                            key={cat.key}
+                            onClick={() => {
+                              setActiveStudioCategory(cat.key);
+                              const match = demoDishes.find((d) => d.category === cat.key);
+                              if (match) setSelectedDemoDishId(match.id);
+                            }}
+                            className={`py-1.5 px-3 rounded-full text-center whitespace-nowrap transition-all ${
+                              activeStudioCategory === cat.key
+                                ? "bg-[#6c2ebd] text-white shadow-xs"
+                                : "bg-purple-50 text-slate-600 hover:bg-purple-100"
+                            }`}
+                          >
+                            {cat.label}
+                          </button>
+                        ))}
+                      </div>
+
+                      {/* Dishes List with Real Food Photos & ETB Pricing */}
+                      <div className="space-y-2 max-h-[220px] overflow-y-auto pr-1">
+                        {demoDishes
+                          .filter(
+                            (dish) =>
+                              activeStudioCategory === "mains" ||
+                              dish.category === activeStudioCategory ||
+                              dish.id === selectedDemoDishId
+                          )
+                          .map((dish) => (
+                            <div
+                              key={dish.id}
+                              className="p-2.5 rounded-2xl bg-white border border-purple-100/90 flex items-center justify-between gap-3 shadow-xs hover:border-[#6c2ebd] transition-all"
+                            >
+                              <div className="w-13 h-13 rounded-xl overflow-hidden shrink-0 border border-purple-100 bg-slate-100 shadow-xs">
+                                <img
+                                  src={dish.image}
+                                  alt={dish.title}
+                                  className="w-full h-full object-cover"
+                                />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-1.5">
+                                  <span className="text-[9px] font-extrabold uppercase px-1.5 py-0.2 rounded-full bg-purple-100 text-[#6c2ebd]">
+                                    {dish.tag}
+                                  </span>
+                                  {dish.inStock ? (
+                                    <span className="text-[9px] font-bold text-emerald-600">✓ In Stock</span>
+                                  ) : (
+                                    <span className="text-[9px] font-bold text-rose-500">✕ Sold Out</span>
+                                  )}
+                                </div>
+                                <h5 className="font-extrabold text-slate-900 text-xs truncate mt-0.5">
+                                  {dish.title}
+                                </h5>
+                                <span className="text-xs font-black text-[#6c2ebd]">
+                                  {dish.price} ETB
+                                </span>
+                              </div>
+                              <button
+                                onClick={() => handleAddToDinerTray(dish)}
+                                disabled={!dish.inStock}
+                                className={`px-3 py-1.5 rounded-xl text-[11px] font-bold transition-all shrink-0 shadow-xs ${
+                                  dish.inStock
+                                    ? "bg-[#6c2ebd] text-white hover:bg-[#581c87] active:scale-95"
+                                    : "bg-slate-200 text-slate-400 cursor-not-allowed"
+                                }`}
+                              >
+                                {dish.inStock ? "+ Add" : "Sold Out"}
+                              </button>
+                            </div>
+                          ))}
+                      </div>
+
+                      {/* Diner Tray Summary Drawer */}
+                      <div className="mt-3 p-3 rounded-2xl bg-gradient-to-r from-purple-950 via-[#4c1d95] to-[#6c2ebd] text-white flex items-center justify-between shadow-md">
+                        <div>
+                          <p className="text-[10px] uppercase font-bold text-[#ff98b4]">Diner Personal Tray</p>
+                          <p className="text-xs font-black">
+                            {dinerTray.length} items • {trayTotal} ETB
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => toast.success("Order ready! Waiter notified for Table 04.")}
+                          className="px-3.5 py-1.5 rounded-full bg-[#ff6384] hover:bg-[#ff4d73] text-white text-[11px] font-extrabold shadow-md transition-all active:scale-95"
+                        >
+                          Review Order →
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* TAB 2: MENU BUILDER VIEW */}
                   {studioTab === "builder" && (
-                    <div className="p-5 sm:p-6 space-y-4">
-                      {/* Category Selection Bar */}
+                    <div className="p-4 sm:p-5 space-y-3.5 bg-gradient-to-b from-[#faf8fc] to-white">
                       <div>
                         <div className="flex items-center justify-between mb-2">
                           <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
                             Choose Category to Edit:
                           </label>
                           <span className="text-[10px] text-[#6c2ebd] font-bold">
-                            Interactive Sandbox
+                            Live Dish Configurator
                           </span>
                         </div>
                         <div className="grid grid-cols-4 gap-1.5 text-xs font-bold">
@@ -689,44 +809,41 @@ export default function Home() {
                       </div>
 
                       {/* Active Dish Editor Box */}
-                      <div className="p-4 rounded-2xl bg-gradient-to-br from-purple-50/70 to-pink-50/40 border border-purple-200/70 space-y-3">
-                        <div className="flex items-start justify-between gap-3">
-                          <div className="flex items-center gap-3">
-                            <div className="w-14 h-14 rounded-xl overflow-hidden shrink-0 shadow-sm border border-purple-200 bg-white">
-                              <img
-                                src={currentDish.image}
-                                alt={currentDish.title}
-                                className="w-full h-full object-cover"
-                              />
+                      <div className="p-3.5 rounded-2xl bg-gradient-to-br from-purple-50/70 to-pink-50/40 border border-purple-200/70 space-y-3">
+                        <div className="flex items-center gap-3">
+                          <div className="w-13 h-13 rounded-xl overflow-hidden shrink-0 shadow-sm border border-purple-200 bg-white">
+                            <img
+                              src={currentDish.image}
+                              alt={currentDish.title}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                          <div>
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-[#6c2ebd] text-white">
+                                {currentDish.tag}
+                              </span>
+                              <span className="text-[9px] font-bold text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded-full">
+                                {currentDish.inStock ? "✓ In Stock" : "✕ Out of Stock"}
+                              </span>
                             </div>
-                            <div>
-                              <div className="flex items-center gap-1.5">
-                                <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-[#6c2ebd] text-white">
-                                  {currentDish.tag}
-                                </span>
-                                <span className="text-[10px] font-bold text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded-full">
-                                  {currentDish.inStock ? "✓ In Stock" : "✕ Out of Stock"}
-                                </span>
-                              </div>
-                              <h4 className="font-extrabold text-slate-900 text-sm mt-1">
-                                {currentDish.title}
-                              </h4>
-                              <p className="text-[11px] text-slate-500 line-clamp-1">
-                                {currentDish.description}
-                              </p>
-                            </div>
+                            <h4 className="font-extrabold text-slate-900 text-xs mt-1">
+                              {currentDish.title}
+                            </h4>
+                            <p className="text-[10px] text-slate-500 line-clamp-1">
+                              {currentDish.description}
+                            </p>
                           </div>
                         </div>
 
                         {/* Interactive Price & Stock Controls */}
-                        <div className="pt-2 border-t border-purple-200/60 grid grid-cols-2 gap-3 items-center">
-                          {/* Price in ETB control */}
-                          <div className="bg-white p-2 rounded-xl border border-purple-200/80 shadow-sm">
+                        <div className="pt-2 border-t border-purple-200/60 grid grid-cols-2 gap-2.5 items-center">
+                          <div className="bg-white p-2 rounded-xl border border-purple-200/80 shadow-xs">
                             <span className="text-[10px] font-bold text-slate-400 block uppercase">
                               Dish Price (ETB):
                             </span>
-                            <div className="flex items-center justify-between mt-1">
-                              <span className="text-base font-black text-[#6c2ebd]">
+                            <div className="flex items-center justify-between mt-0.5">
+                              <span className="text-sm font-black text-[#6c2ebd]">
                                 {currentDish.price} ETB
                               </span>
                               <div className="flex items-center gap-1">
@@ -748,7 +865,6 @@ export default function Home() {
                             </div>
                           </div>
 
-                          {/* Stock Status Toggle button */}
                           <button
                             onClick={handleToggleStock}
                             className={`p-2 rounded-xl border text-left transition-all ${
@@ -760,7 +876,7 @@ export default function Home() {
                             <span className="text-[10px] font-bold block uppercase opacity-80">
                               Table Stock Toggle:
                             </span>
-                            <span className="text-xs font-extrabold flex items-center gap-1.5 mt-1">
+                            <span className="text-xs font-extrabold flex items-center gap-1 mt-0.5">
                               <span
                                 className={`w-2 h-2 rounded-full ${
                                   currentDish.inStock ? "bg-emerald-500" : "bg-rose-500"
@@ -773,19 +889,19 @@ export default function Home() {
                       </div>
 
                       {/* Live Sync Notification Banner */}
-                      <div className="p-3 rounded-xl bg-purple-900 text-white flex items-center justify-between text-xs shadow-md">
+                      <div className="p-2.5 rounded-xl bg-purple-900 text-white flex items-center justify-between text-xs shadow-sm">
                         <div className="flex items-center gap-2">
                           <span className="text-base">⚡</span>
                           <div>
-                            <p className="font-bold">Instant Real-Time Cloud Sync</p>
-                            <p className="text-[11px] text-purple-200">
-                              Any guest scanning Table 1 to 24 sees updates in 0.1s.
+                            <p className="font-bold text-xs">Instant Real-Time Cloud Sync</p>
+                            <p className="text-[10px] text-purple-200">
+                              Guests scanning Table 1 to 24 see updates in 0.1s.
                             </p>
                           </div>
                         </div>
                         <button
                           onClick={() => setStudioTab("diner")}
-                          className="px-3 py-1.5 rounded-lg bg-[#ff6384] hover:bg-[#ff4d73] text-white font-bold text-[11px] transition-colors shrink-0"
+                          className="px-2.5 py-1.5 rounded-lg bg-[#ff6384] hover:bg-[#ff4d73] text-white font-bold text-[10px] transition-colors shrink-0"
                         >
                           View Phone →
                         </button>
@@ -793,17 +909,15 @@ export default function Home() {
                     </div>
                   )}
 
-                  {/* ------------------------------------------------ */}
-                  {/* TAB 2: TABLE QR POSTER GENERATOR */}
-                  {/* ------------------------------------------------ */}
+                  {/* TAB 3: TABLE QR POSTER GENERATOR */}
                   {studioTab === "qr" && (
-                    <div className="p-5 sm:p-6 space-y-4">
+                    <div className="p-4 sm:p-5 space-y-3.5 bg-gradient-to-b from-[#faf8fc] to-white">
                       <div className="flex items-center justify-between">
                         <div>
                           <label className="text-xs font-bold text-slate-700">
                             Select Dining Table:
                           </label>
-                          <p className="text-[11px] text-slate-400">
+                          <p className="text-[10px] text-slate-400">
                             Generate dedicated QR codes per table
                           </p>
                         </div>
@@ -827,30 +941,29 @@ export default function Home() {
                         </div>
                       </div>
 
-                      {/* Printable A4 Table Tent Frame Mockup */}
-                      <div className="p-5 rounded-2xl bg-gradient-to-b from-white to-purple-50 border-2 border-purple-200 shadow-inner flex flex-col items-center text-center">
-                        <div className="flex items-center gap-2 mb-2">
-                          <div className="w-6 h-6 rounded-lg bg-[#6c2ebd] p-0.5 flex items-center justify-center">
+                      {/* Printable Table Tent Frame Mockup */}
+                      <div className="p-4 rounded-2xl bg-gradient-to-b from-white to-purple-50 border-2 border-purple-200 shadow-inner flex flex-col items-center text-center">
+                        <div className="flex items-center gap-2 mb-1.5">
+                          <div className="w-5 h-5 rounded-md bg-[#6c2ebd] p-0.5 flex items-center justify-center">
                             <Image
                               src="/logo.png"
                               alt="Logo"
-                              width={20}
-                              height={20}
+                              width={18}
+                              height={18}
                               className="object-contain"
                             />
                           </div>
-                          <span className="font-extrabold text-sm text-[#6c2ebd]">
+                          <span className="font-extrabold text-xs text-[#6c2ebd]">
                             Bole Garden Bistro
                           </span>
                         </div>
 
-                        <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#ff6384] bg-pink-100 px-3 py-0.5 rounded-full mb-3">
+                        <span className="text-[9px] font-extrabold uppercase tracking-widest text-[#ff6384] bg-pink-100 px-2.5 py-0.5 rounded-full mb-2">
                           {selectedTable} • Contactless Dining
                         </span>
 
                         {/* Visual QR Code Generator */}
-                        <div className="w-36 h-36 p-3 bg-white rounded-2xl shadow-md border-2 border-slate-900/10 flex flex-col items-center justify-center relative group">
-                          {/* Authentic SVG QR pattern representation */}
+                        <div className="w-32 h-32 p-2.5 bg-white rounded-2xl shadow-md border-2 border-slate-900/10 flex flex-col items-center justify-center relative group">
                           <svg className="w-full h-full text-slate-900" viewBox="0 0 100 100" fill="currentColor">
                             <rect x="5" y="5" width="25" height="25" rx="3" fill="#1e1b4b" />
                             <rect x="10" y="10" width="15" height="15" fill="white" />
@@ -864,7 +977,6 @@ export default function Home() {
                             <rect x="10" y="75" width="15" height="15" fill="white" />
                             <rect x="13" y="78" width="9" height="9" fill="#6c2ebd" />
 
-                            {/* Dense data modules */}
                             <rect x="36" y="10" width="8" height="8" fill="#1e1b4b" />
                             <rect x="48" y="10" width="14" height="6" fill="#1e1b4b" />
                             <rect x="36" y="24" width="26" height="6" fill="#6c2ebd" />
@@ -882,30 +994,30 @@ export default function Home() {
                           </svg>
 
                           <div className="absolute inset-0 bg-[#6c2ebd]/90 rounded-2xl flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-white p-2">
-                            <span className="text-xl">📷</span>
-                            <span className="text-[10px] font-bold mt-1">Aim Phone Camera</span>
+                            <span className="text-lg">📷</span>
+                            <span className="text-[9px] font-bold mt-0.5">Aim Phone Camera</span>
                           </div>
                         </div>
 
-                        <p className="text-xs font-bold text-slate-800 mt-3">
+                        <p className="text-xs font-bold text-slate-800 mt-2">
                           Point Smartphone Camera to Open Menu
                         </p>
-                        <p className="text-[11px] text-slate-500">
+                        <p className="text-[10px] text-slate-500">
                           Instant high-speed mobile browser catalog • No apps needed
                         </p>
                       </div>
 
                       {/* Download CTA Bar */}
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-2">
                         <button
                           onClick={() => toast.success(`Downloaded high-res A4 poster for ${selectedTable}!`)}
-                          className="flex-1 py-3 px-4 rounded-xl bg-[#6c2ebd] hover:bg-[#581c87] text-white font-bold text-xs uppercase tracking-wider shadow-md transition-all flex items-center justify-center gap-2"
+                          className="flex-1 py-2.5 px-3 rounded-xl bg-[#6c2ebd] hover:bg-[#581c87] text-white font-bold text-xs uppercase tracking-wider shadow-sm transition-all flex items-center justify-center gap-1.5"
                         >
                           <span>📥 Download A4 Poster (PDF)</span>
                         </button>
                         <button
                           onClick={() => setStudioTab("diner")}
-                          className="py-3 px-4 rounded-xl bg-purple-100 hover:bg-purple-200 text-[#6c2ebd] font-bold text-xs transition-colors"
+                          className="py-2.5 px-3 rounded-xl bg-purple-100 hover:bg-purple-200 text-[#6c2ebd] font-bold text-xs transition-colors"
                         >
                           Simulate Scan ➔
                         </button>
@@ -913,116 +1025,25 @@ export default function Home() {
                     </div>
                   )}
 
-                  {/* ------------------------------------------------ */}
-                  {/* TAB 3: LIVE DINER SMARTPHONE VIEW */}
-                  {/* ------------------------------------------------ */}
-                  {studioTab === "diner" && (
-                    <div className="p-5 sm:p-6 bg-slate-100/70">
-                      {/* Realistic Smartphone Shell */}
-                      <div className="max-w-[340px] mx-auto bg-white rounded-[2.5rem] shadow-xl border-4 border-slate-900 overflow-hidden relative">
-                        {/* Smartphone Speaker notch */}
-                        <div className="bg-slate-900 h-5 w-32 mx-auto rounded-b-xl flex items-center justify-center mb-1">
-                          <span className="w-10 h-1 rounded-full bg-slate-700"></span>
-                        </div>
-
-                        {/* Diner App Header */}
-                        <div className="px-4 py-2 border-b border-slate-100 flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <div className="w-7 h-7 rounded-lg bg-[#6c2ebd] p-0.5 flex items-center justify-center">
-                              <Image
-                                src="/logo.png"
-                                alt="Logo"
-                                width={20}
-                                height={20}
-                                className="object-contain"
-                              />
-                            </div>
-                            <div>
-                              <p className="text-xs font-black text-slate-900 leading-none">Bole Garden</p>
-                              <p className="text-[9px] font-bold text-emerald-600">Table 04 • Verified</p>
-                            </div>
-                          </div>
-                          <span className="text-[10px] font-bold text-slate-400">🇪🇹 ETB</span>
-                        </div>
-
-                        {/* Diner Menu Feed */}
-                        <div className="p-3 space-y-2.5 max-h-[290px] overflow-y-auto">
-                          {demoDishes.map((dish) => (
-                            <div
-                              key={dish.id}
-                              className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between gap-2.5 hover:bg-purple-50/50 transition-colors"
-                            >
-                              <div className="w-12 h-12 rounded-lg overflow-hidden shrink-0 border border-slate-200 bg-white">
-                                <img
-                                  src={dish.image}
-                                  alt={dish.title}
-                                  className="w-full h-full object-cover"
-                                />
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <h5 className="font-bold text-slate-900 text-xs truncate">
-                                  {dish.title}
-                                </h5>
-                                <p className="text-[10px] text-slate-500 truncate">
-                                  {dish.description}
-                                </p>
-                                <span className="text-xs font-black text-[#6c2ebd]">
-                                  {dish.price} ETB
-                                </span>
-                              </div>
-                              <button
-                                onClick={() => handleAddToDinerTray(dish)}
-                                disabled={!dish.inStock}
-                                className={`px-2.5 py-1.5 rounded-lg text-[10px] font-bold transition-all shrink-0 ${
-                                  dish.inStock
-                                    ? "bg-[#6c2ebd] text-white hover:bg-[#581c87]"
-                                    : "bg-slate-200 text-slate-400 cursor-not-allowed"
-                                }`}
-                              >
-                                {dish.inStock ? "+ Add" : "Sold Out"}
-                              </button>
-                            </div>
-                          ))}
-                        </div>
-
-                        {/* Diner Floating Tray Drawer */}
-                        <div className="p-3 bg-purple-900 text-white flex items-center justify-between border-t border-purple-800">
-                          <div>
-                            <p className="text-[10px] uppercase font-bold text-[#ff6384]">Diner Tray</p>
-                            <p className="text-xs font-black">
-                              {dinerTray.length} items • {trayTotal} ETB
-                            </p>
-                          </div>
-                          <button
-                            onClick={() => toast.success("Order ready! Waiter notified for Table 04.")}
-                            className="px-3.5 py-1.5 rounded-full bg-[#ff6384] hover:bg-[#ff4d73] text-white text-[11px] font-bold shadow-md transition-all"
-                          >
-                            Review Order →
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Studio Bottom Bar Help Notice */}
-                  <div className="bg-purple-50/60 px-5 py-2.5 border-t border-purple-100 flex items-center justify-between text-[11px] text-slate-500 font-medium">
+                  {/* Studio Bottom Bar Info */}
+                  <div className="bg-purple-50/70 px-4 py-2 border-t border-purple-100 flex items-center justify-between text-[11px] text-slate-500 font-medium">
                     <span className="flex items-center gap-1.5">
                       <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                      Interactive Demo: Click categories, prices, or tabs to test!
+                      Interactive Demo: Click categories, dishes or tabs to test!
                     </span>
-                    <span className="font-bold text-[#6c2ebd]">DigitalMenu™ Engine</span>
+                    <span className="font-bold text-[#6c2ebd]">DigitalMenu™ Platform</span>
                   </div>
                 </div>
 
-                {/* Micro floating live sync badges */}
+                {/* Floating Live Sync Toast */}
                 <div
-                  className={`absolute -bottom-4 -left-4 bg-white/95 backdrop-blur-md px-4 py-2.5 rounded-2xl shadow-xl border border-purple-200 flex items-center gap-3 transition-all duration-300 ${
+                  className={`absolute -bottom-3 -left-3 bg-white/95 backdrop-blur-md px-3.5 py-2 rounded-2xl shadow-xl border border-purple-200 flex items-center gap-2.5 transition-all duration-300 ${
                     syncToastVisible ? "scale-105 ring-2 ring-emerald-500" : ""
                   }`}
                 >
-                  <span className="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></span>
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
                   <div>
-                    <p className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
+                    <p className="text-[9px] font-extrabold uppercase tracking-wider text-slate-400">
                       Live Table Sync
                     </p>
                     <p className="text-xs font-bold text-[#6c2ebd]">
@@ -1031,17 +1052,18 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div className="absolute -top-4 -right-4 bg-slate-900 text-white px-4 py-2 rounded-2xl shadow-xl border border-purple-400/30 flex items-center gap-2.5">
-                  <div className="w-5 h-3.5 rounded-sm overflow-hidden flex flex-col shadow-xs border border-white/20 shrink-0">
+                {/* Floating Currency Badge */}
+                <div className="absolute -top-3 -right-3 bg-slate-900 text-white px-3.5 py-1.5 rounded-2xl shadow-xl border border-purple-400/30 flex items-center gap-2">
+                  <div className="w-4 h-3 rounded-xs overflow-hidden flex flex-col shadow-xs border border-white/20 shrink-0">
                     <div className="h-1/3 bg-[#078930]"></div>
                     <div className="h-1/3 bg-[#fcdd09] flex items-center justify-center">
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#0f47af]"></div>
+                      <div className="w-1 h-1 rounded-full bg-[#0f47af]"></div>
                     </div>
                     <div className="h-1/3 bg-[#da121a]"></div>
                   </div>
                   <div>
-                    <p className="text-[9px] uppercase font-bold text-[#ff6384]">Currency Ready</p>
-                    <p className="text-xs font-bold text-white">Ethiopian Birr (ETB)</p>
+                    <p className="text-[8px] uppercase font-bold text-[#ff6384]">Currency Ready</p>
+                    <p className="text-[11px] font-bold text-white">Ethiopian Birr (ETB)</p>
                   </div>
                 </div>
               </div>

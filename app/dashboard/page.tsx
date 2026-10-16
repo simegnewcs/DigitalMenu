@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { signOut } from "next-auth/react";
 import toast from "react-hot-toast";
+import DeleteConfirmModal from "@/components/DeleteConfirmModal";
 
 interface Restaurant {
   id: string;
@@ -42,6 +43,16 @@ export default function DashboardPage() {
   const [searchFilter, setSearchFilter] = useState("");
   const [activeNavTab, setActiveNavTab] = useState<"overview" | "restaurants" | "qrcodes" | "billing">("overview");
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const [deleteModal, setDeleteModal] = useState<{
+    isOpen: boolean;
+    id: string;
+    name: string;
+  }>({
+    isOpen: false,
+    id: "",
+    name: "",
+  });
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const [newRestaurant, setNewRestaurant] = useState({
     name: "",
@@ -147,6 +158,35 @@ export default function DashboardPage() {
     } catch (e) {}
     toast.success("Logged out successfully");
     await signOut({ callbackUrl: "/" });
+  };
+
+  const confirmDeleteRestaurant = (restaurant: Restaurant) => {
+    setDeleteModal({
+      isOpen: true,
+      id: restaurant.id,
+      name: restaurant.name,
+    });
+  };
+
+  const handleExecuteDelete = async () => {
+    if (!deleteModal.id) return;
+    setIsDeleting(true);
+    try {
+      const res = await fetch(`/api/restaurants/${deleteModal.id}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        toast.success(`Restaurant "${deleteModal.name}" deleted successfully`);
+        setDeleteModal({ isOpen: false, id: "", name: "" });
+        fetchRestaurants();
+      } else {
+        toast.error("Failed to delete restaurant");
+      }
+    } catch (e) {
+      toast.error("An error occurred during deletion");
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   // Filtered restaurants for search
@@ -915,6 +955,13 @@ export default function DashboardPage() {
                               >
                                 Preview ↗
                               </Link>
+                              <button
+                                onClick={() => confirmDeleteRestaurant(restaurant)}
+                                className="px-2.5 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white border border-rose-200 font-bold text-xs transition flex items-center gap-1 shadow-xs"
+                                title={`Delete ${restaurant.name}`}
+                              >
+                                <span>🗑️</span>
+                              </button>
                             </div>
                           </td>
                         </tr>
@@ -1247,6 +1294,22 @@ export default function DashboardPage() {
           </div>
         </div>
       )}
+
+      {/* CUSTOMIZED STYLED DELETE CONFIRMATION POPUP */}
+      <DeleteConfirmModal
+        isOpen={deleteModal.isOpen}
+        title="Delete Entire Restaurant Menu?"
+        itemName={deleteModal.name}
+        message={`Are you sure you want to delete "${deleteModal.name}"? All associated categories, menu items, and QR codes will be permanently erased. This action cannot be undone.`}
+        confirmText="Yes, Delete Restaurant"
+        isDeleting={isDeleting}
+        onConfirm={handleExecuteDelete}
+        onCancel={() => {
+          if (!isDeleting) {
+            setDeleteModal((prev) => ({ ...prev, isOpen: false }));
+          }
+        }}
+      />
     </div>
   );
 }

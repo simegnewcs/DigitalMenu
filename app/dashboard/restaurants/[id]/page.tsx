@@ -6,6 +6,7 @@ import Link from "next/link";
 import NextImage from "next/image";
 import toast from "react-hot-toast";
 import QRCode from "qrcode";
+import DeleteConfirmModal from "@/components/DeleteConfirmModal";
 
 interface MenuItem {
   id: string;
@@ -112,6 +113,24 @@ export default function RestaurantManagePage() {
   const [tableNumber, setTableNumber] = useState("");
   const [generatedQR, setGeneratedQR] = useState<QRCodeData | null>(null);
   const [qrBgColor, setQrBgColor] = useState<string>("#111827");
+
+  // Customized delete confirmation modal state
+  const [deleteModal, setDeleteModal] = useState<{
+    isOpen: boolean;
+    type: "category" | "item" | "qr" | "restaurant";
+    id: string;
+    name: string;
+    title: string;
+    message: string;
+  }>({
+    isOpen: false,
+    type: "item",
+    id: "",
+    name: "",
+    title: "",
+    message: "",
+  });
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const restaurantId = params.id as string;
 
@@ -255,21 +274,97 @@ export default function RestaurantManagePage() {
     }
   };
 
-  const handleDeleteCategory = async (categoryId: string) => {
-    if (!confirm("Are you sure? All items in this category will also be deleted."))
-      return;
+  // Customized Delete Confirmation Handlers
+  const confirmDeleteCategory = (category: Category) => {
+    setDeleteModal({
+      isOpen: true,
+      type: "category",
+      id: category.id,
+      name: category.name,
+      title: "Delete Category?",
+      message: `Are you sure you want to delete "${category.name}"? All ${category.menuItems.length} menu item(s) in this category will also be permanently deleted.`,
+    });
+  };
+
+  const confirmDeleteItem = (item: MenuItem) => {
+    setDeleteModal({
+      isOpen: true,
+      type: "item",
+      id: item.id,
+      name: item.name,
+      title: "Delete Menu Item?",
+      message: `Are you sure you want to delete "${item.name}"? It will be removed from your digital menu immediately.`,
+    });
+  };
+
+  const confirmDeleteQR = (qr: QRCodeData) => {
+    setDeleteModal({
+      isOpen: true,
+      type: "qr",
+      id: qr.id,
+      name: qr.tableNumber ? `Table #${qr.tableNumber}` : "Main Entrance QR",
+      title: "Delete QR Code?",
+      message: `Are you sure you want to delete this QR code? Any physical table cards using this code will no longer link to the menu.`,
+    });
+  };
+
+  const confirmDeleteRestaurant = () => {
+    if (!restaurant) return;
+    setDeleteModal({
+      isOpen: true,
+      type: "restaurant",
+      id: restaurant.id,
+      name: restaurant.name,
+      title: "Delete Entire Restaurant Menu?",
+      message: `Are you sure you want to delete "${restaurant.name}"? All categories, dishes, and QR codes will be permanently erased. This action cannot be undone.`,
+    });
+  };
+
+  const handleExecuteDelete = async () => {
+    if (!deleteModal.id) return;
+    setIsDeleting(true);
     try {
-      const res = await fetch(`/api/categories/${categoryId}`, {
-        method: "DELETE",
-      });
-      if (res.ok) {
-        toast.success("Category deleted");
-        fetchRestaurant();
-      } else {
-        toast.error("Failed to delete category");
+      if (deleteModal.type === "category") {
+        const res = await fetch(`/api/categories/${deleteModal.id}`, { method: "DELETE" });
+        if (res.ok) {
+          toast.success(`Category "${deleteModal.name}" deleted`);
+          setDeleteModal((prev) => ({ ...prev, isOpen: false }));
+          fetchRestaurant();
+        } else {
+          toast.error("Failed to delete category");
+        }
+      } else if (deleteModal.type === "item") {
+        const res = await fetch(`/api/menu-items/${deleteModal.id}`, { method: "DELETE" });
+        if (res.ok) {
+          toast.success(`Item "${deleteModal.name}" deleted`);
+          setDeleteModal((prev) => ({ ...prev, isOpen: false }));
+          fetchRestaurant();
+        } else {
+          toast.error("Failed to delete item");
+        }
+      } else if (deleteModal.type === "qr") {
+        const res = await fetch(`/api/qr-codes/${deleteModal.id}`, { method: "DELETE" });
+        if (res.ok) {
+          toast.success("QR code deleted");
+          setDeleteModal((prev) => ({ ...prev, isOpen: false }));
+          fetchRestaurant();
+        } else {
+          toast.error("Failed to delete QR code");
+        }
+      } else if (deleteModal.type === "restaurant") {
+        const res = await fetch(`/api/restaurants/${deleteModal.id}`, { method: "DELETE" });
+        if (res.ok) {
+          toast.success(`Restaurant "${deleteModal.name}" deleted successfully`);
+          setDeleteModal((prev) => ({ ...prev, isOpen: false }));
+          router.push("/dashboard");
+        } else {
+          toast.error("Failed to delete restaurant");
+        }
       }
     } catch (error) {
-      toast.error("Something went wrong");
+      toast.error("An error occurred during deletion");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -339,21 +434,6 @@ export default function RestaurantManagePage() {
     }
   };
 
-  const handleDeleteItem = async (itemId: string) => {
-    if (!confirm("Delete this menu item?")) return;
-    try {
-      const res = await fetch(`/api/menu-items/${itemId}`, {
-        method: "DELETE",
-      });
-      if (res.ok) {
-        toast.success("Item deleted");
-        fetchRestaurant();
-      }
-    } catch (error) {
-      toast.error("Failed to delete item");
-    }
-  };
-
   // QR Code handlers
   const handleGenerateQR = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -385,19 +465,6 @@ export default function RestaurantManagePage() {
       }
     } catch (error) {
       toast.error("Failed to generate QR");
-    }
-  };
-
-  const handleDeleteQR = async (qrId: string) => {
-    if (!confirm("Delete this QR code?")) return;
-    try {
-      const res = await fetch(`/api/qr-codes/${qrId}`, { method: "DELETE" });
-      if (res.ok) {
-        toast.success("QR code deleted");
-        fetchRestaurant();
-      }
-    } catch (error) {
-      toast.error("Failed to delete QR");
     }
   };
 
@@ -653,6 +720,14 @@ export default function RestaurantManagePage() {
                 <span className="hidden sm:inline"> Menu</span>
                 <span>↗</span>
               </Link>
+              <button
+                onClick={confirmDeleteRestaurant}
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-rose-600 hover:text-white hover:bg-rose-600 bg-rose-50 px-3 py-2 rounded-xl transition-all border border-rose-200 shadow-xs shrink-0"
+                title="Delete this entire restaurant menu"
+              >
+                <span>🗑️</span>
+                <span className="hidden sm:inline">Delete Menu</span>
+              </button>
             </div>
           </div>
         </div>
@@ -771,10 +846,12 @@ export default function RestaurantManagePage() {
                         Edit
                       </button>
                       <button
-                        onClick={() => handleDeleteCategory(category.id)}
-                        className="text-red-600 hover:text-red-700 p-1.5 text-xs font-medium rounded hover:bg-red-50"
+                        onClick={() => confirmDeleteCategory(category)}
+                        className="text-red-600 hover:text-red-700 p-1.5 text-xs font-medium rounded hover:bg-red-50 flex items-center gap-1"
+                        title="Delete category"
                       >
-                        Delete
+                        <span>🗑️</span>
+                        <span>Delete</span>
                       </button>
                     </div>
                   </div>
@@ -845,10 +922,12 @@ export default function RestaurantManagePage() {
                             Edit
                           </button>
                           <button
-                            onClick={() => handleDeleteItem(item.id)}
-                            className="text-red-500 hover:text-red-700 text-xs px-2.5 py-1 rounded hover:bg-red-50"
+                            onClick={() => confirmDeleteItem(item)}
+                            className="text-red-500 hover:text-red-700 text-xs px-2.5 py-1 rounded hover:bg-red-50 flex items-center gap-1"
+                            title="Delete item"
                           >
-                            Delete
+                            <span>🗑️</span>
+                            <span>Delete</span>
                           </button>
                         </div>
                       </div>
@@ -1179,10 +1258,12 @@ export default function RestaurantManagePage() {
                       <span>A4</span>
                     </button>
                     <button
-                      onClick={() => handleDeleteQR(qr.id)}
-                      className="px-3 py-2 bg-gray-100 hover:bg-red-50 text-gray-600 hover:text-red-600 rounded-xl text-xs font-semibold transition-colors"
+                      onClick={() => confirmDeleteQR(qr)}
+                      className="px-3 py-2 bg-gray-100 hover:bg-red-50 text-gray-600 hover:text-red-600 rounded-xl text-xs font-semibold transition-colors flex items-center gap-1"
+                      title="Delete QR code"
                     >
-                      Delete
+                      <span>🗑️</span>
+                      <span>Delete</span>
                     </button>
                   </div>
                 </div>
@@ -1637,6 +1718,22 @@ export default function RestaurantManagePage() {
           </div>
         </div>
       )}
+
+      {/* CUSTOMIZED STYLED DELETE CONFIRMATION POPUP */}
+      <DeleteConfirmModal
+        isOpen={deleteModal.isOpen}
+        title={deleteModal.title}
+        itemName={deleteModal.name}
+        message={deleteModal.message}
+        confirmText={deleteModal.type === "restaurant" ? "Yes, Delete Restaurant" : "Delete Permanently"}
+        isDeleting={isDeleting}
+        onConfirm={handleExecuteDelete}
+        onCancel={() => {
+          if (!isDeleting) {
+            setDeleteModal((prev) => ({ ...prev, isOpen: false }));
+          }
+        }}
+      />
     </div>
   );
 }
