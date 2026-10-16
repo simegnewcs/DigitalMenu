@@ -6,6 +6,7 @@ import Image from "next/image";
 import { signOut } from "next-auth/react";
 import toast from "react-hot-toast";
 import DeleteConfirmModal from "@/components/DeleteConfirmModal";
+import CreateMenuModal from "@/components/CreateMenuModal";
 
 interface Restaurant {
   id: string;
@@ -53,13 +54,6 @@ export default function DashboardPage() {
     name: "",
   });
   const [isDeleting, setIsDeleting] = useState(false);
-
-  const [newRestaurant, setNewRestaurant] = useState({
-    name: "",
-    address: "",
-    phone: "",
-    description: "",
-  });
 
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
   const [userRole, setUserRole] = useState<"ADMIN" | "OWNER">("OWNER");
@@ -122,42 +116,13 @@ export default function DashboardPage() {
     }
   };
 
-  const handleCreateRestaurant = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newRestaurant.name.trim()) {
-      toast.error("Menu name is required");
-      return;
-    }
-
-    try {
-      const res = await fetch("/api/restaurants", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newRestaurant),
-      });
-
-      if (res.ok) {
-        const created = await res.json();
-        toast.success(`Menu "${created.name}" created successfully!`);
-        setShowCreateModal(false);
-        setNewRestaurant({ name: "", address: "", phone: "", description: "" });
-        fetchRestaurants();
-      } else {
-        const err = await res.json();
-        toast.error(err.error || "Failed to create menu");
-      }
-    } catch (error) {
-      toast.error("Error creating menu");
-    }
-  };
-
   const handleLogout = async () => {
     try {
       localStorage.removeItem("digitalmenu_user");
       localStorage.clear();
     } catch (e) {}
-    toast.success("Logged out successfully");
-    await signOut({ callbackUrl: "/" });
+    const redirectTarget = typeof window !== "undefined" ? `${window.location.origin}/` : "/";
+    await signOut({ callbackUrl: redirectTarget });
   };
 
   const confirmDeleteRestaurant = (restaurant: Restaurant) => {
@@ -1168,132 +1133,14 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* CREATE MENU MODAL (PHONE-RESPONSIVE NOTUS STYLED) */}
-      {showCreateModal && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="create-menu-modal-title"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) setShowCreateModal(false);
-          }}
-          className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-3 sm:p-4 overflow-y-auto"
-        >
-          <div className="bg-white rounded-xl w-full max-w-md shadow-2xl border border-slate-100 flex flex-col max-h-[92dvh] sm:max-h-[88vh] animate-in fade-in zoom-in-95 duration-200 overflow-hidden my-auto">
-            {/* Header */}
-            <div className="px-5 py-4 sm:px-6 sm:py-5 border-b border-slate-100 flex items-center justify-between shrink-0 bg-white">
-              <div className="flex items-center gap-2.5 min-w-0">
-                <div className="w-9 h-9 rounded-full bg-sky-50 text-sky-600 flex items-center justify-center text-base shrink-0 font-bold border border-sky-100">
-                  📋
-                </div>
-                <div className="min-w-0">
-                  <h3
-                    id="create-menu-modal-title"
-                    className="text-base sm:text-lg font-bold text-slate-800 tracking-tight truncate uppercase"
-                  >
-                    Add New Menu
-                  </h3>
-                  <p className="text-[11px] text-slate-400 truncate">
-                    Set up your dining catalog & table QR code
-                  </p>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => setShowCreateModal(false)}
-                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-500 flex items-center justify-center text-sm font-bold transition shrink-0 ml-2"
-                aria-label="Close modal"
-              >
-                ✕
-              </button>
-            </div>
-
-            {/* Scrollable Form Body */}
-            <form onSubmit={handleCreateRestaurant} className="flex flex-col flex-1 min-h-0 overflow-hidden">
-              <div className="p-4 sm:p-6 overflow-y-auto space-y-3.5 sm:space-y-4 flex-1 overscroll-contain">
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">
-                    Menu / Restaurant Name <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g. Addis Gourmet Burger Menu"
-                    value={newRestaurant.name}
-                    onChange={(e) =>
-                      setNewRestaurant({ ...newRestaurant, name: e.target.value })
-                    }
-                    className="w-full px-3.5 py-2.5 sm:px-4 sm:py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-base sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-colors"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">
-                    Physical Address <span className="text-slate-400 font-normal lowercase">(optional)</span>
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Bole Road, Addis Ababa"
-                    value={newRestaurant.address}
-                    onChange={(e) =>
-                      setNewRestaurant({ ...newRestaurant, address: e.target.value })
-                    }
-                    className="w-full px-3.5 py-2.5 sm:px-4 sm:py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-base sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-colors"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">
-                    Phone Number <span className="text-slate-400 font-normal lowercase">(optional)</span>
-                  </label>
-                  <input
-                    type="tel"
-                    inputMode="tel"
-                    placeholder="e.g. 0911234567"
-                    value={newRestaurant.phone}
-                    onChange={(e) =>
-                      setNewRestaurant({ ...newRestaurant, phone: e.target.value })
-                    }
-                    className="w-full px-3.5 py-2.5 sm:px-4 sm:py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-base sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-colors"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">
-                    Description / Cuisine <span className="text-slate-400 font-normal lowercase">(optional)</span>
-                  </label>
-                  <textarea
-                    rows={2}
-                    placeholder="e.g. Traditional & Western fusion cuisine"
-                    value={newRestaurant.description}
-                    onChange={(e) =>
-                      setNewRestaurant({ ...newRestaurant, description: e.target.value })
-                    }
-                    className="w-full px-3.5 py-2 sm:px-4 sm:py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-base sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-colors resize-none"
-                  />
-                </div>
-              </div>
-
-              {/* Action Buttons (Sticky at bottom of modal) */}
-              <div className="p-4 sm:p-5 border-t border-slate-100 bg-slate-50 sm:bg-white flex items-center gap-3 shrink-0">
-                <button
-                  type="button"
-                  onClick={() => setShowCreateModal(false)}
-                  className="flex-1 bg-white sm:bg-slate-100 hover:bg-slate-200 active:scale-[0.98] border border-slate-200 sm:border-transparent text-slate-700 py-2.5 rounded-lg text-xs sm:text-sm font-bold uppercase transition"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="flex-1 bg-sky-600 hover:bg-sky-700 active:scale-[0.98] text-white py-2.5 rounded-lg text-xs sm:text-sm font-bold uppercase shadow-md shadow-sky-600/20 transition"
-                >
-                  Add New Menu
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      {/* 2-STEP CREATE MENU MODAL (PRICING PACKAGE SELECTION FIRST, THEN MENU DETAILS) */}
+      <CreateMenuModal
+        isOpen={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        onSuccess={() => {
+          fetchRestaurants();
+        }}
+      />
 
       {/* CUSTOMIZED STYLED DELETE CONFIRMATION POPUP */}
       <DeleteConfirmModal

@@ -99,7 +99,10 @@ export async function POST(request: NextRequest) {
       ? `${restaurant.slug}-table-${tableNumber}-${Date.now()}`
       : `${restaurant.slug}-${Date.now()}`;
 
-    const menuUrl = generateQRCodeUrl(restaurant.slug, tableNumber);
+    const host = request.headers.get("x-forwarded-host") || request.headers.get("host");
+    const protocol = request.headers.get("x-forwarded-proto") || (host?.includes("localhost") ? "http" : "https");
+    const currentOrigin = host ? `${protocol}://${host}` : undefined;
+    const menuUrl = generateQRCodeUrl(restaurant.slug, tableNumber, currentOrigin);
     
     // Generate QR code as data URL
     const qrImageUrl = await QRCode.toDataURL(menuUrl, {

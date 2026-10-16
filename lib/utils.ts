@@ -16,8 +16,16 @@ export function formatCurrency(amount: number): string {
   return `ETB ${Number(amount).toFixed(2)}`;
 }
 
-export function generateQRCodeUrl(slug: string, tableNumber?: number): string {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+export function getBaseUrl(customBase?: string): string {
+  if (customBase) return customBase;
+  if (typeof window !== 'undefined') {
+    return window.location.origin;
+  }
+  return process.env.NEXT_PUBLIC_APP_URL || process.env.AUTH_URL || 'http://localhost:3000';
+}
+
+export function generateQRCodeUrl(slug: string, tableNumber?: number, customBase?: string): string {
+  const baseUrl = getBaseUrl(customBase);
   if (tableNumber) {
     return `${baseUrl}/menu/${slug}?table=${tableNumber}`;
   }

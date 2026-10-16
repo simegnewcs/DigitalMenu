@@ -24,27 +24,17 @@ export default auth((req) => {
     return NextResponse.next();
   }
 
+  const host = req.headers.get("x-forwarded-host") || req.headers.get("host") || "localhost:3000";
+  const proto = req.headers.get("x-forwarded-proto") || (host.includes("localhost") || host.includes("127.0.0.1") ? "http" : "https");
+  const origin = `${proto}://${host}`;
+
   if (!isLoggedIn) {
-    const loginUrl = new URL("/login", req.nextUrl);
-    const host = req.headers.get("host");
-    if (host) {
-      loginUrl.host = host;
-      if (host.includes("localhost") || host.includes("127.0.0.1")) {
-        loginUrl.protocol = "http:";
-      }
-    }
+    const loginUrl = new URL("/login", origin);
     return NextResponse.redirect(loginUrl);
   }
 
   if (isAdminRoute && userRole !== "ADMIN") {
-    const dashUrl = new URL("/dashboard", req.nextUrl);
-    const host = req.headers.get("host");
-    if (host) {
-      dashUrl.host = host;
-      if (host.includes("localhost") || host.includes("127.0.0.1")) {
-        dashUrl.protocol = "http:";
-      }
-    }
+    const dashUrl = new URL("/dashboard", origin);
     return NextResponse.redirect(dashUrl);
   }
 
