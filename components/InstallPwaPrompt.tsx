@@ -9,11 +9,13 @@ interface BeforeInstallPromptEvent extends Event {
 }
 
 export default function InstallPwaPrompt({
-  restaurantName = "BGS Chicken Restaurant",
+  restaurantName = "DigitalMenu",
   variant = "banner",
+  className,
 }: {
   restaurantName?: string;
   variant?: "banner" | "button" | "modal";
+  className?: string;
 }) {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isInstallable, setIsInstallable] = useState(false);
@@ -26,7 +28,7 @@ export default function InstallPwaPrompt({
   useEffect(() => {
     setMounted(true);
 
-    // 1. Check if already installed / running as PWA
+    // 1. Check if already installed / running as PWA standalone mode
     const checkStandalone = () => {
       const isWindowStandalone = window.matchMedia("(display-mode: standalone)").matches;
       // @ts-expect-error iOS Safari navigator.standalone check
@@ -54,13 +56,16 @@ export default function InstallPwaPrompt({
 
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
 
-    // 4. iOS Safari Detection
+    // 4. Device & Browser Detection (iOS Safari or mobile devices)
     const userAgent = window.navigator.userAgent.toLowerCase();
     const isIosDevice = /iphone|ipad|ipod/.test(userAgent);
-    const isSafari = /safari/.test(userAgent) && !/chrome|crios|firefox|fxios/.test(userAgent);
+    const isMobile = /android|iphone|ipad|ipod|mobile/.test(userAgent);
 
-    if (isIosDevice && !checkStandalone()) {
+    if (isIosDevice) {
       setIsIOS(true);
+    }
+
+    if (isMobile) {
       setIsInstallable(true);
     }
 
@@ -86,6 +91,7 @@ export default function InstallPwaPrompt({
     }
 
     if (!deferredPrompt) {
+      // If native browser prompt is not buffered yet or not supported, show guide
       setShowIosGuide(true);
       return;
     }
@@ -100,6 +106,7 @@ export default function InstallPwaPrompt({
       setDeferredPrompt(null);
     } catch (err) {
       console.error("Install prompt error:", err);
+      setShowIosGuide(true);
     }
   };
 
@@ -120,42 +127,47 @@ export default function InstallPwaPrompt({
       onClick={() => setShowIosGuide(false)}
     >
       <div
-        className="bg-[#021C0E] border-t sm:border border-[#00E564]/50 rounded-t-[32px] sm:rounded-[32px] w-full max-w-md p-6 relative shadow-[0_0_80px_rgba(0,0,0,0.9)] text-white animate-in slide-in-from-bottom"
+        className="bg-[#120824] border-t sm:border border-purple-500/50 rounded-t-[32px] sm:rounded-[32px] w-full max-w-md p-6 relative shadow-[0_0_80px_rgba(0,0,0,0.9)] text-white animate-in slide-in-from-bottom"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
         <button
           onClick={() => setShowIosGuide(false)}
-          className="absolute top-4 right-4 w-8 h-8 rounded-full bg-[#062E19] text-emerald-300 hover:text-white flex items-center justify-center font-bold text-sm border border-[#0E542F]"
+          className="absolute top-4 right-4 w-8 h-8 rounded-full bg-[#241142] text-purple-300 hover:text-white flex items-center justify-center font-bold text-sm border border-purple-500/40"
+          aria-label="Close"
         >
           ✕
         </button>
 
         <div className="flex items-center gap-3 mb-4">
-          <div className="w-12 h-12 rounded-2xl bg-[#00E564] text-black text-2xl flex items-center justify-center shadow-lg font-black shrink-0">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#00E564] to-emerald-600 text-black text-2xl flex items-center justify-center shadow-lg font-black shrink-0">
             📱
           </div>
           <div>
             <h3 className="text-base font-black text-white">
-              Install as Mobile App
+              Install {restaurantName} App
             </h3>
-            <p className="text-xs text-emerald-300/80">
+            <p className="text-xs text-purple-200/80">
               Enjoy fullscreen native app dining without app store downloads
             </p>
           </div>
         </div>
 
-        <div className="space-y-3.5 my-5 bg-[#042413] p-4 rounded-2xl border border-[#0E542F]">
+        <div className="space-y-3.5 my-5 bg-[#1b0c33] p-4 rounded-2xl border border-purple-500/30">
           <div className="flex items-start gap-3">
             <span className="w-6 h-6 rounded-full bg-[#00E564] text-black font-black text-xs flex items-center justify-center shrink-0 mt-0.5">
               1
             </span>
-            <p className="text-xs text-emerald-100 leading-relaxed">
+            <p className="text-xs text-purple-100 leading-relaxed">
               Tap the <strong className="text-[#00E564]">Share</strong> icon{" "}
-              <span className="inline-block px-1.5 py-0.5 bg-[#062E19] border border-emerald-600 rounded text-sm">
+              <span className="inline-block px-1.5 py-0.5 bg-[#2a134e] border border-purple-400/50 rounded text-sm">
                 ⎋
               </span>{" "}
-              at the bottom or top of your browser toolbar.
+              (Safari/iOS) or <strong className="text-[#00E564]">Menu</strong> icon{" "}
+              <span className="inline-block px-1.5 py-0.5 bg-[#2a134e] border border-purple-400/50 rounded text-sm">
+                ⋮
+              </span>{" "}
+              (Chrome/Android) on your browser toolbar.
             </p>
           </div>
 
@@ -163,13 +175,13 @@ export default function InstallPwaPrompt({
             <span className="w-6 h-6 rounded-full bg-[#00E564] text-black font-black text-xs flex items-center justify-center shrink-0 mt-0.5">
               2
             </span>
-            <p className="text-xs text-emerald-100 leading-relaxed">
+            <p className="text-xs text-purple-100 leading-relaxed">
               Scroll down and tap{" "}
-              <strong className="text-[#00E564]">&quot;Add to Home Screen&quot;</strong>{" "}
-              <span className="inline-block px-1.5 py-0.5 bg-[#062E19] border border-emerald-600 rounded text-sm">
+              <strong className="text-white">&quot;Add to Home Screen&quot;</strong>{" "}
+              <span className="inline-block px-1.5 py-0.5 bg-[#2a134e] border border-purple-400/50 rounded text-sm">
                 ⊞
-              </span>
-              .
+              </span>{" "}
+              or <strong className="text-white">&quot;Install App&quot;</strong>.
             </p>
           </div>
 
@@ -177,18 +189,19 @@ export default function InstallPwaPrompt({
             <span className="w-6 h-6 rounded-full bg-[#00E564] text-black font-black text-xs flex items-center justify-center shrink-0 mt-0.5">
               3
             </span>
-            <p className="text-xs text-emerald-100 leading-relaxed">
-              Tap <strong className="text-white">&quot;Add&quot;</strong> in the top right.
-              The app icon will appear instantly on your phone home screen!
+            <p className="text-xs text-purple-100 leading-relaxed">
+              Tap <strong className="text-[#00E564]">&quot;Add&quot;</strong> or{" "}
+              <strong className="text-[#00E564]">&quot;Install&quot;</strong>.
+              The {restaurantName} app icon will appear instantly on your phone home screen!
             </p>
           </div>
         </div>
 
         <button
           onClick={() => setShowIosGuide(false)}
-          className="w-full py-3.5 bg-[#00E564] hover:bg-[#00FF66] text-black font-black text-xs rounded-xl transition shadow-lg shadow-[#00E564]/20 cursor-pointer"
+          className="w-full py-3.5 bg-gradient-to-r from-[#00E564] to-emerald-500 hover:from-[#00FF66] hover:to-emerald-400 text-black font-black text-xs uppercase tracking-wider rounded-xl transition shadow-lg shadow-[#00E564]/20 cursor-pointer"
         >
-          Got it, close
+          Got it, Close
         </button>
       </div>
     </div>
@@ -198,10 +211,10 @@ export default function InstallPwaPrompt({
     <>
       {/* 1. DISMISSIBLE TOP MOBILE INSTALL BANNER */}
       {isInstallable && !isDismissed && variant === "banner" && (
-        <div className="relative z-30 mx-3 my-2 bg-gradient-to-r from-[#042A16] via-[#06381D] to-[#042A16] border border-[#00E564]/50 rounded-2xl p-3 shadow-xl text-white animate-in fade-in slide-in-from-top-2">
+        <div className="relative z-30 mx-3 my-2 bg-gradient-to-r from-[#17092e] via-[#240e45] to-[#17092e] border border-purple-400/40 rounded-2xl p-3 shadow-xl text-white animate-in fade-in slide-in-from-top-2">
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-9 h-9 rounded-xl bg-[#00E564] text-black font-black flex items-center justify-center shrink-0 shadow-md">
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#00E564] to-emerald-600 text-black font-black flex items-center justify-center shrink-0 shadow-md">
                 📱
               </div>
               <div className="min-w-0">
@@ -211,7 +224,7 @@ export default function InstallPwaPrompt({
                     PWA
                   </span>
                 </p>
-                <p className="text-[10px] text-emerald-300/80 truncate">
+                <p className="text-[10px] text-purple-200/80 truncate">
                   Add to home screen for 1-tap instant ordering & offline view
                 </p>
               </div>
@@ -220,14 +233,14 @@ export default function InstallPwaPrompt({
             <div className="flex items-center gap-1.5 shrink-0">
               <button
                 onClick={handleInstallClick}
-                className="px-3 py-1.5 bg-[#00E564] hover:bg-[#00FF66] active:scale-95 text-black font-black text-xs rounded-xl transition shadow-md flex items-center gap-1 cursor-pointer"
+                className="px-3.5 py-1.5 bg-gradient-to-r from-[#00E564] to-emerald-500 hover:from-[#00FF66] hover:to-emerald-400 active:scale-95 text-black font-black text-xs rounded-xl transition shadow-md flex items-center gap-1 cursor-pointer"
               >
                 <span>📲</span>
                 <span>Install</span>
               </button>
               <button
                 onClick={handleDismiss}
-                className="w-7 h-7 rounded-lg text-emerald-400 hover:text-white flex items-center justify-center text-xs"
+                className="w-7 h-7 rounded-lg text-purple-300 hover:text-white flex items-center justify-center text-xs"
                 title="Dismiss"
               >
                 ✕
@@ -237,15 +250,21 @@ export default function InstallPwaPrompt({
         </div>
       )}
 
-      {/* 2. INLINE BUTTON TRIGGER (Used in headers or bottom bars) */}
+      {/* 2. INLINE BUTTON TRIGGER (Used in navbar or mobile drawer) */}
       {variant === "button" && !isStandalone && (
         <button
           onClick={handleInstallClick}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#06381D] hover:bg-[#00E564] hover:text-black text-[#00E564] border border-[#00E564]/40 font-black text-xs rounded-xl transition shadow-sm active:scale-95 cursor-pointer"
+          className={
+            className ||
+            "inline-flex items-center gap-1.5 px-3.5 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs uppercase tracking-wider rounded-full shadow-sm hover:shadow-md transition-all active:scale-95 cursor-pointer"
+          }
           title="Install as Mobile App"
         >
           <span>📲</span>
           <span>Install App</span>
+          <span className="hidden xl:inline-block bg-white/20 text-[10px] font-black px-1.5 py-0.2 rounded-full">
+            PWA
+          </span>
         </button>
       )}
 

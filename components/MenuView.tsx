@@ -4,7 +4,6 @@ import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import toast from "react-hot-toast";
-import InstallPwaPrompt from "@/components/InstallPwaPrompt";
 
 export interface MenuItem {
   id: string;
@@ -485,11 +484,8 @@ export default function MenuView({
               </div>
             </div>
 
-            {/* Right Action Buttons: Install PWA, Cart Tray & Waiter Bell */}
-            <div className="flex items-center gap-2 shrink-0">
-              {/* Install PWA Button */}
-              <InstallPwaPrompt restaurantName={restaurant.name} variant="button" />
-
+            {/* Right Action Buttons: Cart Tray & Waiter Bell */}
+            <div className="flex items-center gap-2.5 shrink-0">
               {/* Cart / Tray Icon with Badge */}
               <button
                 onClick={() => setIsTrayOpen(true)}
@@ -550,9 +546,6 @@ export default function MenuView({
             </div>
           )}
         </header>
-
-        {/* Smart Mobile PWA Install Banner */}
-        <InstallPwaPrompt restaurantName={restaurant.name} variant="banner" />
 
         {/* 3. SEARCH & FILTER BAR */}
         <div className="relative z-10 px-5 pt-1 pb-4">

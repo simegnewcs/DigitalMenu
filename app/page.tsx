@@ -7,6 +7,7 @@ import { signOut } from "next-auth/react";
 import toast from "react-hot-toast";
 import SectionDivider from "@/components/SectionDivider";
 import Hero3DShowcase from "@/components/Hero3DShowcase";
+import InstallPwaPrompt from "@/components/InstallPwaPrompt";
 
 interface UserProfile {
   id?: string;
@@ -326,8 +327,9 @@ export default function Home() {
               </button>
             </div>
 
-            {/* Right Action: Clean Sign In (Create Menu Free hidden on top) */}
+            {/* Right Action: Clean Sign In & Install App */}
             <div className="hidden sm:flex items-center space-x-3">
+              <InstallPwaPrompt restaurantName="DigitalMenu" variant="button" />
               {isLoggedIn ? (
                 <>
                   <div className="flex items-center space-x-2 px-3 py-1.5 bg-purple-50 border border-purple-200/60 rounded-full text-xs">
@@ -415,6 +417,11 @@ export default function Home() {
             </button>
 
             <div className="pt-3 border-t border-slate-100 flex flex-col gap-2">
+              <InstallPwaPrompt
+                restaurantName="DigitalMenu"
+                variant="button"
+                className="w-full justify-center py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold text-xs uppercase tracking-wider rounded-full shadow-md flex items-center gap-2 cursor-pointer"
+              />
               {isLoggedIn ? (
                 <>
                   <Link
@@ -442,6 +449,11 @@ export default function Home() {
           </div>
         )}
       </nav>
+
+      {/* 2.1 DISMISSIBLE MOBILE INSTALL APP BANNER (HOME PAGE ONLY) */}
+      <div className="max-w-7xl mx-auto px-2 sm:px-4 pt-2">
+        <InstallPwaPrompt restaurantName="DigitalMenu" variant="banner" />
+      </div>
 
       {/* ========================================================= */}
       {/* 3. HERO SECTION: BRAND & CLEAR CREATING PLATFORM DEMO */}

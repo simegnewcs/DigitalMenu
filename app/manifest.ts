@@ -4,8 +4,8 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "DigitalMenu — Smart QR Dining & Mobile Food Menu",
     short_name: "DigitalMenu",
-    description: "Browse dishes, order from your table, and enjoy contactless dining at BGS Chicken Restaurant & partner venues.",
-    start_url: "/menu/bgs-chicken-restaurant",
+    description: "Browse dishes, order from your table, and enjoy contactless dining across digital menus and partner venues.",
+    start_url: "/",
     scope: "/",
     display: "standalone",
     orientation: "portrait",
