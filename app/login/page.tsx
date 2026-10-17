@@ -511,7 +511,7 @@ function AuthForm() {
         )}
 
         {/* Demo Credentials Section (Available for quick exploration) */}
-        <div className="mt-6 pt-5 border-t border-dashed border-gray-200">
+        {/* <div className="mt-6 pt-5 border-t border-dashed border-gray-200">
           <div className="flex items-center justify-between mb-2.5">
             <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
               <span>⚡</span> Quick Test Accounts
@@ -542,7 +542,7 @@ function AuthForm() {
               <div className="text-[11px] text-gray-500 truncate">admin@example.com</div>
             </button>
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* Back to Home */}
