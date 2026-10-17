@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
     // Default to provided slug or first available restaurant
     const targetSlug = slug || allRestaurants[0].slug;
 
-    const currentRestaurant = await prisma.restaurant.findUnique({
+    const currentRestaurant = await prisma.restaurant.findFirst({
       where: { slug: targetSlug, isActive: true },
       include: {
         categories: {

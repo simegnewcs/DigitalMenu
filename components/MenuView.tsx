@@ -59,6 +59,118 @@ interface MenuViewProps {
   tableNumber?: string | null;
 }
 
+// Curated high-resolution dish imagery for BGS menu items
+const DISH_IMAGE_FALLBACKS: Record<string, string> = {
+  // Chicken / Main
+  "Special Chicken Shawarma": "https://images.unsplash.com/photo-1529006557810-274b9b2fc783?w=600&auto=format&fit=crop&q=80",
+  "Normal Shawarma": "https://images.unsplash.com/photo-1561651823-34feb02250e4?w=600&auto=format&fit=crop&q=80",
+  "Family Style": "https://images.unsplash.com/photo-1544025162-d76694265947?w=600&auto=format&fit=crop&q=80",
+  "BGS Special": "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=600&auto=format&fit=crop&q=80",
+  "Full Roasted Chicken": "https://images.unsplash.com/photo-1598103442097-8b74394b95c6?w=600&auto=format&fit=crop&q=80",
+  "Half Roasted Chicken": "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=600&auto=format&fit=crop&q=80",
+  "Chicken Grill": "https://images.unsplash.com/photo-1532550907401-a500c9a57435?w=600&auto=format&fit=crop&q=80",
+  "Chicken Wings": "https://images.unsplash.com/photo-1567620832903-9fc6debc209f?w=600&auto=format&fit=crop&q=80",
+
+  // Main Dishes
+  "KAPSA": "https://images.unsplash.com/photo-1512058564366-18510be2db19?w=600&auto=format&fit=crop&q=80",
+  "Mofo": "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=600&auto=format&fit=crop&q=80",
+  "Akeda": "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=600&auto=format&fit=crop&q=80",
+  "Fassa": "https://images.unsplash.com/photo-1541832676-9b763b0239ab?w=600&auto=format&fit=crop&q=80",
+  "Grill Chicken Breast": "https://images.unsplash.com/photo-1600891964599-f61ba0e24092?w=600&auto=format&fit=crop&q=80",
+  "Fajita": "https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=600&auto=format&fit=crop&q=80",
+  "Chicken Shekla Tibse": "https://images.unsplash.com/photo-1544025162-d76694265947?w=600&auto=format&fit=crop&q=80",
+  "Roasted Chicken Leg": "https://images.unsplash.com/photo-1587593810167-a84920ea0781?w=600&auto=format&fit=crop&q=80",
+
+  // Fasting Menu
+  "BGS Fasting Salade": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&auto=format&fit=crop&q=80",
+  "BGS Veggy Wrap": "https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=600&auto=format&fit=crop&q=80",
+  "Cooked Vegetables": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80",
+  "Salad with Rice": "https://images.unsplash.com/photo-1543339308-43e59d6b73a6?w=600&auto=format&fit=crop&q=80",
+  "French Fries": "https://images.unsplash.com/photo-1576107232684-1279f3908594?w=600&auto=format&fit=crop&q=80",
+
+  // Mojito
+  "Special Mojito": "https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=600&auto=format&fit=crop&q=80",
+  "Lemon Mojito": "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=600&auto=format&fit=crop&q=80",
+  "Cinnamon Mojito": "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=600&auto=format&fit=crop&q=80",
+  "Strawberry Mojito": "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=600&auto=format&fit=crop&q=80",
+  "Pineapple Mojito": "https://images.unsplash.com/photo-1546171753-97d7676e4602?w=600&auto=format&fit=crop&q=80",
+  "Mint Mojito": "https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=600&auto=format&fit=crop&q=80",
+  "Coffee Mojito": "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600&auto=format&fit=crop&q=80",
+  "Ginger Mojito": "https://images.unsplash.com/photo-1536935338788-846bb9981813?w=600&auto=format&fit=crop&q=80",
+  "Mojito without Ice": "https://images.unsplash.com/photo-1556881286-fc6915169721?w=600&auto=format&fit=crop&q=80",
+
+  // Juices
+  "BGS Special Juice": "https://images.unsplash.com/photo-1553530666-ba11a7da3888?w=600&auto=format&fit=crop&q=80",
+  "Orange Juice": "https://images.unsplash.com/photo-1613478223719-2ab802602423?w=600&auto=format&fit=crop&q=80",
+  "Watermelon Juice": "https://images.unsplash.com/photo-1589733955941-5eeaf752f6dd?w=600&auto=format&fit=crop&q=80",
+  "Pineapple Juice": "https://images.unsplash.com/photo-1622597467836-f3285f2131b8?w=600&auto=format&fit=crop&q=80",
+  "Flaxseed Juice": "https://images.unsplash.com/photo-1505252585461-04db1eb84625?w=600&auto=format&fit=crop&q=80",
+  "Carrot Juice": "https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=600&auto=format&fit=crop&q=80",
+  "Strawberry Juice": "https://images.unsplash.com/photo-1497534446932-c925b458314e?w=600&auto=format&fit=crop&q=80",
+  "Temet Juice": "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600&auto=format&fit=crop&q=80",
+  "Fasting Special Juice": "https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?w=600&auto=format&fit=crop&q=80",
+
+  // Soft Drinks
+  "Soft Drink": "https://images.unsplash.com/photo-1554866585-cd94860890b7?w=600&auto=format&fit=crop&q=80",
+  "Ambo Water": "https://images.unsplash.com/photo-1560023907-5f339617ea30?w=600&auto=format&fit=crop&q=80",
+  "Bottled Water ½ Liter": "https://images.unsplash.com/photo-1548839140-29a749e1bc4e?w=600&auto=format&fit=crop&q=80",
+
+  // Extras
+  "Mayonnaise": "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=600&auto=format&fit=crop&q=80",
+  "Spice": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=600&auto=format&fit=crop&q=80",
+  "Pita": "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=600&auto=format&fit=crop&q=80",
+  "Ketchup": "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=600&auto=format&fit=crop&q=80",
+
+  // Takeaway
+  "Takeaway Box": "https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?w=600&auto=format&fit=crop&q=80",
+  "Takeaway Bag": "https://images.unsplash.com/photo-1544816155-12df9643f363?w=600&auto=format&fit=crop&q=80",
+  "Juice Cup": "https://images.unsplash.com/photo-1517256064527-09c73fc73e38?w=600&auto=format&fit=crop&q=80",
+};
+
+// Category Top Arc Icons & Images
+const CATEGORY_ASSETS: Record<string, { icon: string; image: string; short: string }> = {
+  "Chicken / Main": {
+    icon: "🍗",
+    image: "https://images.unsplash.com/photo-1598103442097-8b74394b95c6?w=200&auto=format&fit=crop&q=80",
+    short: "Chicken",
+  },
+  "Main Dishes": {
+    icon: "🍢",
+    image: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=200&auto=format&fit=crop&q=80",
+    short: "Mains",
+  },
+  "Fasting Menu": {
+    icon: "🥗",
+    image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=200&auto=format&fit=crop&q=80",
+    short: "Fasting",
+  },
+  "Mojito": {
+    icon: "🍹",
+    image: "https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=200&auto=format&fit=crop&q=80",
+    short: "Mojito",
+  },
+  "Juices": {
+    icon: "🧃",
+    image: "https://images.unsplash.com/photo-1553530666-ba11a7da3888?w=200&auto=format&fit=crop&q=80",
+    short: "Juices",
+  },
+  "Soft Drinks": {
+    icon: "🥤",
+    image: "https://images.unsplash.com/photo-1554866585-cd94860890b7?w=200&auto=format&fit=crop&q=80",
+    short: "Drinks",
+  },
+  "Extras": {
+    icon: "🍟",
+    image: "https://images.unsplash.com/photo-1576107232684-1279f3908594?w=200&auto=format&fit=crop&q=80",
+    short: "Extras",
+  },
+  "Takeaway": {
+    icon: "📦",
+    image: "https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?w=200&auto=format&fit=crop&q=80",
+    short: "Takeaway",
+  },
+};
+
 export default function MenuView({
   initialRestaurant,
   allRestaurants = [],
@@ -71,9 +183,17 @@ export default function MenuView({
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [filterPopularOnly, setFilterPopularOnly] = useState(false);
+  const [filterFavoritesOnly, setFilterFavoritesOnly] = useState(false);
+  const [showFilterModal, setShowFilterModal] = useState(false);
   const [tableNumber, setTableNumber] = useState<string | null>(initialTableNumber || null);
 
-  // Modal states
+  // Active Bottom Nav Tab
+  const [activeNavTab, setActiveNavTab] = useState<"home" | "orders" | "favorites" | "waiter">("home");
+
+  // Favorites state
+  const [favorites, setFavorites] = useState<string[]>([]);
+
+  // Modals
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
   const [itemModalQty, setItemModalQty] = useState(1);
   const [itemModalNotes, setItemModalNotes] = useState("");
@@ -84,18 +204,19 @@ export default function MenuView({
   // Tray / Cart State
   const [tray, setTray] = useState<TrayItem[]>([]);
 
-  // Load from local storage if available for current restaurant
+  // Load Tray from localStorage
   useEffect(() => {
     if (!restaurant?.id) return;
     try {
-      const saved = localStorage.getItem(`digitalmenu_tray_${restaurant.id}`);
-      if (saved) {
-        setTray(JSON.parse(saved));
-      }
+      const savedTray = localStorage.getItem(`digitalmenu_tray_${restaurant.id}`);
+      if (savedTray) setTray(JSON.parse(savedTray));
+
+      const savedFavs = localStorage.getItem(`digitalmenu_favs_${restaurant.id}`);
+      if (savedFavs) setFavorites(JSON.parse(savedFavs));
     } catch (e) {}
   }, [restaurant?.id]);
 
-  // Persist tray
+  // Persist Tray
   useEffect(() => {
     if (!restaurant?.id) return;
     try {
@@ -103,7 +224,15 @@ export default function MenuView({
     } catch (e) {}
   }, [tray, restaurant?.id]);
 
-  // Initial fetch if needed
+  // Persist Favorites
+  useEffect(() => {
+    if (!restaurant?.id) return;
+    try {
+      localStorage.setItem(`digitalmenu_favs_${restaurant.id}`, JSON.stringify(favorites));
+    } catch (e) {}
+  }, [favorites, restaurant?.id]);
+
+  // Fetch Menu if needed
   useEffect(() => {
     if (initialRestaurant) {
       setRestaurant(initialRestaurant);
@@ -135,7 +264,7 @@ export default function MenuView({
     fetchMenu();
   }, [slug, initialRestaurant]);
 
-  // Calculate totals
+  // Totals
   const totalTrayCount = useMemo(() => {
     return tray.reduce((sum, item) => sum + item.quantity, 0);
   }, [tray]);
@@ -160,7 +289,14 @@ export default function MenuView({
         return [...prev, { item, quantity, specialInstructions: notes }];
       }
     });
-    toast.success(`Added ${item.name} to order!`);
+    toast.success(`Added ${item.name} to order!`, {
+      style: {
+        background: "#062E19",
+        color: "#00E564",
+        border: "1px solid #0E542F",
+      },
+      icon: "🛒",
+    });
   };
 
   const updateTrayQty = (itemId: string, delta: number) => {
@@ -179,25 +315,41 @@ export default function MenuView({
 
   const clearTray = () => {
     setTray([]);
-    toast.success("Order cleared");
+    toast.success("Order tray cleared", {
+      style: { background: "#062E19", color: "#fff", border: "1px solid #0E542F" },
+    });
+  };
+
+  const toggleFavorite = (itemId: string, e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    setFavorites((prev) => {
+      const exists = prev.includes(itemId);
+      const next = exists ? prev.filter((id) => id !== itemId) : [...prev, itemId];
+      toast(exists ? "Removed from favorites" : "Added to favorites! ❤️", {
+        icon: exists ? "🤍" : "❤️",
+        style: { background: "#062E19", color: "#fff", border: "1px solid #0E542F" },
+      });
+      return next;
+    });
   };
 
   const handleCallWaiter = () => {
     setIsWaiterCalled(true);
     toast.success(
       tableNumber
-        ? `Waiter called for Table #${tableNumber}! Staff notified.`
-        : "Staff alerted! A team member will assist you shortly.",
-      { icon: "🔔", duration: 4000 }
+        ? `🔔 Staff notified for Table #${tableNumber}! A server is on the way.`
+        : "🔔 Staff notified! A team member will assist you shortly.",
+      {
+        duration: 5000,
+        style: {
+          background: "#062E19",
+          color: "#00E564",
+          border: "1px solid #00E564",
+          fontWeight: "bold",
+        },
+      }
     );
     setTimeout(() => setIsWaiterCalled(false), 5000);
-  };
-
-  const handleShare = () => {
-    if (typeof window !== "undefined") {
-      navigator.clipboard.writeText(window.location.href);
-      toast.success("Menu link copied to clipboard!");
-    }
   };
 
   // Filter items
@@ -210,6 +362,10 @@ export default function MenuView({
 
         if (filterPopularOnly) {
           items = items.filter((item) => item.isPopular);
+        }
+
+        if (filterFavoritesOnly) {
+          items = items.filter((item) => favorites.includes(item.id));
         }
 
         if (searchQuery.trim()) {
@@ -232,717 +388,880 @@ export default function MenuView({
         }
         return cat.menuItems.length > 0;
       });
-  }, [restaurant, searchQuery, activeCategory, filterPopularOnly]);
+  }, [restaurant, searchQuery, activeCategory, filterPopularOnly, filterFavoritesOnly, favorites]);
 
   const totalMenuItemsCount = useMemo(() => {
     if (!restaurant) return 0;
     return restaurant.categories.reduce((acc, cat) => acc + cat.menuItems.length, 0);
   }, [restaurant]);
 
-  // Loading skeleton
+  // Loading state
   if (loading) {
     return (
-      <div className="min-h-screen bg-neutral-50/70 text-slate-800">
-        <div className="max-w-4xl mx-auto px-4 py-8">
-          {/* Header skeleton */}
-          <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex items-center gap-4 animate-pulse">
-            <div className="w-20 h-20 bg-slate-200 rounded-2xl"></div>
-            <div className="space-y-3 flex-1">
-              <div className="h-6 bg-slate-200 rounded-md w-1/3"></div>
-              <div className="h-4 bg-slate-200 rounded-md w-2/3"></div>
-            </div>
-          </div>
-          {/* Categories skeleton */}
-          <div className="flex gap-2 my-6 overflow-hidden">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="h-10 w-28 bg-slate-200 rounded-full animate-pulse"></div>
-            ))}
-          </div>
-          {/* Cards skeleton */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="bg-white h-36 rounded-2xl border border-slate-100 p-4 flex gap-4 animate-pulse">
-                <div className="w-24 h-24 bg-slate-200 rounded-xl shrink-0"></div>
-                <div className="flex-1 space-y-2 py-1">
-                  <div className="h-4 bg-slate-200 rounded w-3/4"></div>
-                  <div className="h-3 bg-slate-200 rounded w-full"></div>
-                  <div className="h-4 bg-slate-200 rounded w-1/4 mt-4"></div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+      <div className="min-h-screen bg-[#02180B] text-white flex flex-col items-center justify-center p-4">
+        <div className="w-14 h-14 border-4 border-[#00E564] border-t-transparent rounded-full animate-spin"></div>
+        <p className="mt-4 font-bold text-sm tracking-wide text-emerald-400">Loading BGS Digital Menu...</p>
       </div>
     );
   }
 
-  // Not found
   if (!restaurant) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white rounded-3xl shadow-xl border border-slate-100 p-8 text-center">
-          <div className="w-20 h-20 bg-rose-50 text-rose-500 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl">
-            🍽️
-          </div>
-          <h2 className="text-2xl font-black text-slate-900 tracking-tight">No Active Menu Found</h2>
-          <p className="mt-2 text-slate-500 text-sm leading-relaxed">
-            There are currently no active restaurant menus available. Please contact restaurant administration.
-          </p>
-          <div className="mt-6 flex flex-col gap-2">
-            <Link
-              href="/"
-              className="w-full inline-flex items-center justify-center px-5 py-3 rounded-xl bg-slate-900 text-white font-semibold text-sm hover:bg-slate-800 transition"
-            >
-              Return to Homepage
-            </Link>
-            <Link
-              href="/login"
-              className="w-full inline-flex items-center justify-center px-5 py-3 rounded-xl bg-slate-100 text-slate-700 font-semibold text-sm hover:bg-slate-200 transition"
-            >
-              Restaurant Admin Login
-            </Link>
-          </div>
-        </div>
+      <div className="min-h-screen bg-[#02180B] text-white flex flex-col items-center justify-center p-6 text-center">
+        <span className="text-5xl mb-4">🍗</span>
+        <h2 className="text-2xl font-black text-white">Restaurant Not Found</h2>
+        <p className="text-sm text-emerald-300/70 mt-2 max-w-sm">
+          The requested menu could not be located. Please check the QR code or link.
+        </p>
+        <Link
+          href="/"
+          className="mt-6 px-6 py-3 bg-[#00E564] text-black font-extrabold rounded-2xl text-sm transition hover:scale-105"
+        >
+          Return Home
+        </Link>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50/60 text-slate-800 selection:bg-rose-500 selection:text-white pb-32">
-      {/* Top Banner & Header */}
-      <header className="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-slate-200/80 shadow-xs transition-all">
-        <div className="max-w-4xl mx-auto px-4 py-3 sm:py-4">
+    <div className="min-h-screen bg-[#011409] text-white selection:bg-[#00E564] selection:text-black">
+      {/* Outer Shell for Desktop & Native Mobile Container */}
+      <div className="max-w-md sm:max-w-lg md:max-w-xl mx-auto min-h-screen bg-[#021C0E] shadow-[0_0_80px_rgba(0,229,100,0.12)] relative flex flex-col pb-28 border-x border-[#07381D]/60">
+        
+        {/* Subtle Top Ambient Glow */}
+        <div className="absolute top-0 inset-x-0 h-72 bg-gradient-to-b from-[#00E564]/10 via-[#04331A]/30 to-transparent pointer-events-none -z-0"></div>
+
+        {/* 1. TOP STATUS BAR (Mobile-native aesthetic) */}
+        <div className="relative z-10 px-6 pt-3 pb-1 flex items-center justify-between text-xs font-semibold text-emerald-200/70 tracking-tight">
+          <span>9:41</span>
+          <div className="flex items-center gap-1.5 text-[11px]">
+            {/* Cellular signal */}
+            <div className="flex items-end gap-0.5 h-3">
+              <span className="w-0.5 h-1 bg-emerald-300 rounded-xs"></span>
+              <span className="w-0.5 h-1.5 bg-emerald-300 rounded-xs"></span>
+              <span className="w-0.5 h-2 bg-emerald-300 rounded-xs"></span>
+              <span className="w-0.5 h-3 bg-emerald-300 rounded-xs"></span>
+            </div>
+            {/* Wifi Icon */}
+            <svg className="w-3.5 h-3.5 text-emerald-300" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M17.778 8.222c-4.296-4.296-11.26-4.296-15.556 0A1 1 0 01.808 6.808c5.076-5.077 13.308-5.077 18.384 0a1 1 0 01-1.414 1.414zM14.95 11.05a7 7 0 00-9.9 0 1 1 0 01-1.414-1.414 9 9 0 0112.728 0 1 1 0 01-1.414 1.414zm-2.829 2.828a3 3 0 00-4.242 0 1 1 0 01-1.415-1.414 5 5 0 017.072 0 1 1 0 01-1.415 1.414zM10 16a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+            </svg>
+            {/* Battery Icon */}
+            <div className="w-5 h-2.5 rounded-xs border border-emerald-300/80 p-0.5 flex items-center">
+              <div className="w-3.5 h-1.5 bg-emerald-300 rounded-2xs"></div>
+            </div>
+          </div>
+        </div>
+
+        {/* 2. HEADER: Delivery Location / Table & Action Icons */}
+        <header className="relative z-10 px-5 pt-2 pb-3">
           <div className="flex items-center justify-between gap-3">
-            {/* Brand Logo & Name */}
+            {/* Delivery Location / Table Info */}
             <div className="flex items-center gap-3 min-w-0">
-              {restaurant.logo ? (
-                <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-2xl overflow-hidden border border-slate-200 shadow-sm shrink-0">
-                  <Image
-                    src={restaurant.logo}
-                    alt={restaurant.name}
-                    fill
-                    className="object-cover"
-                    sizes="56px"
-                  />
-                </div>
-              ) : (
-                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-tr from-rose-500 to-amber-500 text-white flex items-center justify-center text-xl font-black shadow-sm shrink-0">
-                  {restaurant.name.charAt(0)}
-                </div>
-              )}
+              {/* Delivery Courier / Cloche Avatar */}
+              <div
+                onClick={() => setIsRestaurantSwitcherOpen(!isRestaurantSwitcherOpen)}
+                className="w-11 h-11 rounded-2xl bg-[#07301B] border border-[#0E542F] p-1.5 flex items-center justify-center shrink-0 cursor-pointer shadow-md hover:border-[#00E564]/50 transition"
+              >
+                <span className="text-xl">🛵</span>
+              </div>
 
               <div className="min-w-0">
-                <div className="flex items-center gap-2">
-                  <h1 className="text-lg sm:text-xl font-black text-slate-900 truncate tracking-tight">
-                    {restaurant.name}
-                  </h1>
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/60 shrink-0">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                    Open
-                  </span>
+                <div
+                  onClick={() => setIsRestaurantSwitcherOpen(!isRestaurantSwitcherOpen)}
+                  className="flex items-center gap-1.5 cursor-pointer text-xs font-bold text-emerald-300 hover:text-white transition group"
+                >
+                  <span className="truncate">{tableNumber ? `Dining Table #${tableNumber}` : "Delivery location"}</span>
+                  <svg className="w-3.5 h-3.5 text-emerald-400 group-hover:translate-y-0.5 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 9l-7 7-7-7" />
+                  </svg>
                 </div>
-                <div className="flex items-center gap-2 text-xs text-slate-500 truncate mt-0.5">
-                  {tableNumber ? (
-                    <span className="inline-flex items-center gap-1 font-semibold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-md border border-rose-100">
-                      Table #{tableNumber}
-                    </span>
-                  ) : (
-                    <span>Digital Interactive Menu</span>
-                  )}
-                  {restaurant.address && (
-                    <span className="hidden sm:inline-block truncate">
-                      • {restaurant.address}
-                    </span>
-                  )}
+
+                <div className="flex items-center gap-1 text-[11px] text-emerald-100/70 truncate mt-0.5">
+                  <span className="text-rose-400 text-xs">📍</span>
+                  <span className="truncate">{restaurant.address || "5Kilo, Addis Ababa"}</span>
                 </div>
               </div>
             </div>
 
-            {/* Quick Actions */}
-            <div className="flex items-center gap-2 shrink-0">
-              {/* Call Waiter Button */}
+            {/* Right Action Buttons: Cart Tray & Waiter Bell */}
+            <div className="flex items-center gap-2.5 shrink-0">
+              {/* Cart / Tray Icon with Badge */}
+              <button
+                onClick={() => setIsTrayOpen(true)}
+                className="relative w-10 h-10 rounded-2xl bg-[#062E19] border border-[#0E542F] text-white flex items-center justify-center hover:border-[#00E564]/60 transition shadow-sm"
+                title="View Tray"
+              >
+                <svg className="w-5 h-5 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                {totalTrayCount > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 min-w-5 h-5 px-1 bg-[#00E564] text-black font-black text-[10px] rounded-full flex items-center justify-center shadow-md animate-bounce">
+                    {totalTrayCount}
+                  </span>
+                )}
+              </button>
+
+              {/* Waiter / Notification Bell with Badge */}
               <button
                 onClick={handleCallWaiter}
-                disabled={isWaiterCalled}
-                title="Call Waiter"
-                className={`p-2.5 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition ${
+                className={`relative w-10 h-10 rounded-2xl border flex items-center justify-center transition shadow-sm ${
                   isWaiterCalled
-                    ? "bg-amber-50 border-amber-300 text-amber-700 cursor-default"
-                    : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300"
+                    ? "bg-amber-500/20 border-amber-400 text-amber-300 animate-pulse"
+                    : "bg-[#062E19] border-[#0E542F] text-emerald-300 hover:border-[#00E564]/60"
                 }`}
+                title="Call Waiter"
               >
-                <span className="text-sm">🔔</span>
-                <span className="hidden md:inline">
-                  {isWaiterCalled ? "Staff Notified" : "Call Waiter"}
+                <span className="text-base">🔔</span>
+                <span className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-[#00E564] text-black font-black text-[10px] rounded-full flex items-center justify-center shadow-md">
+                  {tableNumber ? tableNumber : "✓"}
                 </span>
               </button>
-
-              {/* Share / QR Link */}
-              <button
-                onClick={handleShare}
-                title="Share Menu"
-                className="p-2.5 rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 text-xs font-semibold transition"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-                </svg>
-              </button>
-
-              {/* Restaurant Switcher (if multiple exist) */}
-              {restaurantsList.length > 1 && (
-                <div className="relative">
-                  <button
-                    onClick={() => setIsRestaurantSwitcherOpen(!isRestaurantSwitcherOpen)}
-                    className="p-2.5 rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 text-xs font-semibold flex items-center gap-1 transition"
-                  >
-                    <span>🏬</span>
-                    <span className="hidden sm:inline">Restaurants</span>
-                    <svg className="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </button>
-
-                  {isRestaurantSwitcherOpen && (
-                    <div className="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-slate-100 p-2 z-50">
-                      <div className="px-3 py-2 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                        Available Restaurants
-                      </div>
-                      <div className="space-y-1 max-h-56 overflow-y-auto">
-                        {restaurantsList.map((r) => (
-                          <Link
-                            key={r.id}
-                            href={`/menu/${r.slug}`}
-                            onClick={() => setIsRestaurantSwitcherOpen(false)}
-                            className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition ${
-                              r.slug === restaurant.slug
-                                ? "bg-rose-50 text-rose-700 font-bold"
-                                : "text-slate-700 hover:bg-slate-50"
-                            }`}
-                          >
-                            <span className="w-2 h-2 rounded-full bg-slate-300"></span>
-                            <span className="truncate flex-1">{r.name}</span>
-                            {r.slug === restaurant.slug && <span>✓</span>}
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
             </div>
           </div>
 
-          {/* Search Bar & Filter Controls */}
-          <div className="mt-3 sm:mt-4 flex flex-col sm:flex-row gap-2">
+          {/* Restaurant Switcher Dropdown */}
+          {isRestaurantSwitcherOpen && restaurantsList.length > 1 && (
+            <div className="mt-3 p-3 bg-[#062E19] border border-[#0E542F] rounded-2xl shadow-2xl animate-in fade-in slide-in-from-top-2">
+              <div className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider mb-2 px-1">
+                Switch Restaurant Menu
+              </div>
+              <div className="space-y-1 max-h-48 overflow-y-auto">
+                {restaurantsList.map((r) => (
+                  <Link
+                    key={r.id}
+                    href={`/menu/${r.slug}`}
+                    onClick={() => setIsRestaurantSwitcherOpen(false)}
+                    className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition ${
+                      r.slug === restaurant.slug
+                        ? "bg-[#00E564] text-black font-black"
+                        : "text-emerald-100/80 hover:bg-[#0A3D22]"
+                    }`}
+                  >
+                    <span className="truncate">{r.name}</span>
+                    {r.slug === restaurant.slug && <span>✓</span>}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+        </header>
+
+        {/* 3. SEARCH & FILTER BAR */}
+        <div className="relative z-10 px-5 pt-1 pb-4">
+          <div className="flex items-center gap-3">
+            {/* Search Pill Input */}
             <div className="relative flex-1">
-              <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+              <span className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-emerald-400/80">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </span>
               <input
                 type="text"
-                placeholder="Search dishes, drinks, ingredients..."
+                placeholder="Search menu..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-9 py-2.5 bg-slate-100/80 focus:bg-white text-sm rounded-xl border border-transparent focus:border-slate-300 focus:ring-3 focus:ring-rose-500/10 transition outline-none"
+                className="w-full pl-11 pr-10 py-3 bg-[#062E19] text-white placeholder-emerald-400/60 text-xs sm:text-sm font-medium rounded-2xl border border-[#0E542F] focus:border-[#00E564] focus:outline-none focus:ring-2 focus:ring-[#00E564]/20 transition shadow-inner"
               />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery("")}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 text-xs"
+                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-xs text-emerald-400 hover:text-white"
                 >
                   ✕
                 </button>
               )}
             </div>
 
-            {/* Popular Filter Pill */}
+            {/* Filter Slider Button */}
             <button
-              onClick={() => setFilterPopularOnly(!filterPopularOnly)}
-              className={`px-3.5 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition shrink-0 border ${
-                filterPopularOnly
-                  ? "bg-rose-600 border-rose-600 text-white shadow-sm"
-                  : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50"
+              onClick={() => setShowFilterModal(!showFilterModal)}
+              className={`w-12 h-12 rounded-2xl border flex items-center justify-center shrink-0 transition shadow-md ${
+                filterPopularOnly || filterFavoritesOnly || showFilterModal
+                  ? "bg-[#00E564] text-black border-[#00E564]"
+                  : "bg-[#062E19] text-emerald-300 border-[#0E542F] hover:border-[#00E564]/50"
               }`}
+              title="Filters"
             >
-              <span>🔥</span>
-              <span>Popular Picks</span>
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+              </svg>
             </button>
           </div>
 
-          {/* Categories Pill Navigation */}
-          {restaurant.categories.length > 0 && !searchQuery && (
-            <div className="mt-3 flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar scroll-smooth">
+          {/* Quick Filter Pill Chips Modal / Popup */}
+          {showFilterModal && (
+            <div className="mt-3 p-3 bg-[#062E19] border border-[#0E542F] rounded-2xl shadow-xl flex flex-wrap gap-2 animate-in fade-in slide-in-from-top-1">
               <button
-                onClick={() => setActiveCategory("all")}
-                className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all ${
-                  activeCategory === "all"
-                    ? "bg-slate-900 text-white shadow-sm"
-                    : "bg-white text-slate-600 hover:bg-slate-100 border border-slate-200/80"
+                onClick={() => {
+                  setFilterPopularOnly(false);
+                  setFilterFavoritesOnly(false);
+                  setActiveCategory("all");
+                  setShowFilterModal(false);
+                }}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition ${
+                  !filterPopularOnly && !filterFavoritesOnly && activeCategory === "all"
+                    ? "bg-[#00E564] text-black"
+                    : "bg-[#042212] text-emerald-200 border border-[#0E542F]"
                 }`}
               >
-                All Dishes ({totalMenuItemsCount})
+                All Items ({totalMenuItemsCount})
               </button>
 
-              {restaurant.categories.map((category) => (
-                <button
-                  key={category.id}
-                  onClick={() => setActiveCategory(category.id)}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 ${
-                    activeCategory === category.id
-                      ? "bg-rose-600 text-white shadow-sm shadow-rose-600/20"
-                      : "bg-white text-slate-600 hover:bg-slate-100 border border-slate-200/80"
-                  }`}
-                >
-                  <span>{category.name}</span>
-                  <span
-                    className={`text-[10px] px-1.5 py-0.2 rounded-full ${
-                      activeCategory === category.id
-                        ? "bg-rose-700 text-rose-100"
-                        : "bg-slate-100 text-slate-500"
-                    }`}
-                  >
-                    {category.menuItems.length}
-                  </span>
-                </button>
-              ))}
+              <button
+                onClick={() => {
+                  setFilterPopularOnly(!filterPopularOnly);
+                  setFilterFavoritesOnly(false);
+                }}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1 ${
+                  filterPopularOnly
+                    ? "bg-[#00E564] text-black"
+                    : "bg-[#042212] text-emerald-200 border border-[#0E542F]"
+                }`}
+              >
+                <span>🔥</span> Popular Specials
+              </button>
+
+              <button
+                onClick={() => {
+                  setFilterFavoritesOnly(!filterFavoritesOnly);
+                  setFilterPopularOnly(false);
+                }}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1 ${
+                  filterFavoritesOnly
+                    ? "bg-[#00E564] text-black"
+                    : "bg-[#042212] text-emerald-200 border border-[#0E542F]"
+                }`}
+              >
+                <span>❤️</span> Favorites ({favorites.length})
+              </button>
             </div>
           )}
         </div>
-      </header>
 
-      {/* Main Content Area */}
-      <main className="max-w-4xl mx-auto px-4 py-6">
-        {/* Restaurant Description or Notice */}
-        {restaurant.description && !searchQuery && activeCategory === "all" && (
-          <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-rose-50/60 via-amber-50/40 to-white border border-rose-100/60 text-xs text-slate-600 flex items-center gap-3">
-            <span className="text-2xl shrink-0">✨</span>
-            <p className="leading-relaxed">{restaurant.description}</p>
-          </div>
-        )}
+        {/* 4. CURVED ARC CATEGORY CAROUSEL (Signature Visual from Screenshot) */}
+        <div className="relative z-10 px-4 pt-1 pb-4">
+          {/* Subtle curved arc background */}
+          <div className="relative bg-gradient-to-b from-[#052C17] to-[#032011] rounded-3xl p-4 border border-[#0E542F]/80 shadow-xl overflow-hidden">
+            {/* Top Indicator Dots (•••) */}
+            <div className="flex items-center justify-center gap-1 mb-3">
+              <span className={`w-1.5 h-1.5 rounded-full transition-all ${activeCategory === "all" ? "w-4 bg-[#00E564]" : "bg-emerald-600/50"}`}></span>
+              <span className={`w-1.5 h-1.5 rounded-full transition-all ${activeCategory !== "all" ? "w-4 bg-[#00E564]" : "bg-emerald-600/50"}`}></span>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-600/50"></span>
+            </div>
 
-        {/* Categories & Dish Items */}
-        {filteredCategories.length > 0 ? (
-          <div className="space-y-8">
-            {filteredCategories.map((category) => (
-              <section key={category.id} className="space-y-4">
-                <div className="flex items-center justify-between border-b border-slate-200/80 pb-2">
-                  <div>
-                    <h2 className="text-lg font-black text-slate-900 tracking-tight flex items-center gap-2">
-                      <span>{category.name}</span>
-                      <span className="text-xs font-medium text-slate-400">
-                        ({category.menuItems.length})
-                      </span>
-                    </h2>
-                    {category.description && (
-                      <p className="text-xs text-slate-500 mt-0.5">{category.description}</p>
-                    )}
-                  </div>
+            {/* Horizontal Category Items List */}
+            <div className="flex items-center gap-3 sm:gap-4 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden pb-1">
+              {/* All Items Option */}
+              <button
+                onClick={() => setActiveCategory("all")}
+                className={`flex flex-col items-center shrink-0 transition group cursor-pointer ${
+                  activeCategory === "all" ? "scale-105" : "opacity-80 hover:opacity-100"
+                }`}
+              >
+                <div
+                  className={`w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center text-2xl transition shadow-lg relative overflow-hidden ${
+                    activeCategory === "all"
+                      ? "bg-[#00E564] text-black ring-3 ring-[#00E564]/40"
+                      : "bg-[#07381E] border border-[#0E542F] text-white"
+                  }`}
+                >
+                  <span>🍽️</span>
                 </div>
+                <span
+                  className={`mt-1.5 text-[11px] font-bold tracking-tight text-center ${
+                    activeCategory === "all" ? "text-[#00E564] font-black" : "text-emerald-200"
+                  }`}
+                >
+                  All
+                </span>
+              </button>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {category.menuItems.map((item) => {
-                    const inTray = tray.find((t) => t.item.id === item.id);
+              {/* Dynamic Categories */}
+              {restaurant.categories.map((cat) => {
+                const asset = CATEGORY_ASSETS[cat.name] || {
+                  icon: "🍲",
+                  image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200&auto=format&fit=crop&q=80",
+                  short: cat.name.split("/")[0].trim(),
+                };
+                const isActive = activeCategory === cat.id;
 
-                    return (
-                      <div
-                        key={item.id}
-                        onClick={() => {
-                          setSelectedItem(item);
-                          setItemModalQty(inTray ? inTray.quantity : 1);
-                          setItemModalNotes(inTray?.specialInstructions || "");
-                        }}
-                        className="group bg-white rounded-2xl p-4 border border-slate-200/80 hover:border-slate-300 hover:shadow-md transition cursor-pointer flex gap-4 relative overflow-hidden"
-                      >
-                        {/* Dish Details */}
-                        <div className="flex-1 min-w-0 flex flex-col justify-between">
-                          <div>
-                            <div className="flex items-start justify-between gap-2">
-                              <h3 className="font-bold text-slate-900 group-hover:text-rose-600 transition text-sm sm:text-base leading-snug">
-                                {item.name}
-                              </h3>
+                return (
+                  <button
+                    key={cat.id}
+                    onClick={() => setActiveCategory(cat.id)}
+                    className={`flex flex-col items-center shrink-0 transition group cursor-pointer ${
+                      isActive ? "scale-105" : "opacity-85 hover:opacity-100"
+                    }`}
+                  >
+                    <div
+                      className={`w-14 h-14 sm:w-16 sm:h-16 rounded-2xl relative overflow-hidden transition shadow-lg ${
+                        isActive
+                          ? "ring-3 ring-[#00E564] shadow-[#00E564]/30"
+                          : "border border-[#0E542F]/80"
+                      }`}
+                    >
+                      <Image
+                        src={asset.image}
+                        alt={cat.name}
+                        fill
+                        className="object-cover group-hover:scale-110 transition duration-300"
+                        sizes="64px"
+                      />
+                      <div className="absolute inset-0 bg-black/20"></div>
+                      <span className="absolute bottom-1 right-1 text-xs drop-shadow-md">{asset.icon}</span>
+                    </div>
+
+                    <span
+                      className={`mt-1.5 text-[11px] font-bold tracking-tight text-center max-w-[68px] truncate ${
+                        isActive ? "text-[#00E564] font-black" : "text-emerald-200"
+                      }`}
+                    >
+                      {asset.short}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* 5. "OUR ITEMS" SECTION HEADER */}
+        <div className="px-5 pt-3 pb-2 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <h2 className="text-base sm:text-lg font-black text-white tracking-tight">
+              {activeCategory === "all"
+                ? "Our Items"
+                : restaurant.categories.find((c) => c.id === activeCategory)?.name || "Our Items"}
+            </h2>
+            <span className="text-[11px] font-extrabold px-2 py-0.5 rounded-full bg-[#07381D] text-[#00E564] border border-[#0E542F]">
+              {filteredCategories.reduce((acc, c) => acc + c.menuItems.length, 0)}
+            </span>
+          </div>
+
+          {filterFavoritesOnly && (
+            <span className="text-xs font-bold text-rose-400 flex items-center gap-1">
+              <span>❤️</span> Favorites
+            </span>
+          )}
+        </div>
+
+        {/* 6. DISH CARDS GRID (Exact 2-Column Template from Screenshot!) */}
+        <main className="px-4 py-2 flex-1">
+          {filteredCategories.length > 0 ? (
+            <div className="space-y-6">
+              {filteredCategories.map((category) => (
+                <div key={category.id} className="space-y-3">
+                  {/* Category Subhead if "All" is active */}
+                  {activeCategory === "all" && (
+                    <div className="flex items-center justify-between border-b border-[#0E542F]/60 pb-1.5 pt-2">
+                      <h3 className="text-xs font-extrabold text-emerald-300 uppercase tracking-wider flex items-center gap-1.5">
+                        <span>{CATEGORY_ASSETS[category.name]?.icon || "🍽️"}</span>
+                        <span>{category.name}</span>
+                      </h3>
+                      <span className="text-[10px] text-emerald-400 font-mono">
+                        {category.menuItems.length} items
+                      </span>
+                    </div>
+                  )}
+
+                  {/* 2-Column Grid */}
+                  <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                    {category.menuItems.map((item) => {
+                      const inTray = tray.find((t) => t.item.id === item.id);
+                      const isFav = favorites.includes(item.id);
+                      const imageSrc =
+                        item.image ||
+                        DISH_IMAGE_FALLBACKS[item.name] ||
+                        "https://images.unsplash.com/photo-1544025162-d76694265947?w=600&auto=format&fit=crop&q=80";
+
+                      return (
+                        <div
+                          key={item.id}
+                          onClick={() => {
+                            setSelectedItem(item);
+                            setItemModalQty(inTray ? inTray.quantity : 1);
+                            setItemModalNotes(inTray?.specialInstructions || "");
+                          }}
+                          className="group bg-[#062E19] rounded-[24px] sm:rounded-[28px] overflow-hidden border border-[#0E542F]/70 shadow-xl hover:border-[#00E564]/50 transition duration-300 cursor-pointer flex flex-col justify-between relative hover:shadow-2xl"
+                        >
+                          {/* Top Food Image Container */}
+                          <div className="relative h-36 sm:h-44 w-full overflow-hidden bg-black/40">
+                            <Image
+                              src={imageSrc}
+                              alt={item.name}
+                              fill
+                              className="object-cover group-hover:scale-108 transition duration-500"
+                              sizes="(max-width: 640px) 180px, 240px"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30 pointer-events-none"></div>
+
+                            {/* Top Left Badge: Free Delivery / Popular */}
+                            <div className="absolute top-2.5 left-2.5 z-10">
+                              <span className="px-2 py-0.5 rounded-full bg-[#00E564] text-[#022812] font-black text-[9px] uppercase tracking-wider shadow-sm flex items-center gap-1">
+                                {item.isPopular ? "🔥 Popular" : "Free Delivery"}
+                              </span>
                             </div>
 
-                            {item.isPopular && (
-                              <div className="mt-1">
-                                <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200/70 px-2 py-0.5 rounded-full">
-                                  <span>🔥</span> Popular
-                                </span>
-                              </div>
-                            )}
-
-                            {item.description && (
-                              <p className="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed">
-                                {item.description}
-                              </p>
-                            )}
+                            {/* Top Right Heart Favorite Button */}
+                            <button
+                              type="button"
+                              onClick={(e) => toggleFavorite(item.id, e)}
+                              className={`absolute top-2.5 right-2.5 z-10 w-7 h-7 rounded-full backdrop-blur-md flex items-center justify-center text-xs transition hover:scale-110 active:scale-90 shadow-md ${
+                                isFav
+                                  ? "bg-rose-500 text-white"
+                                  : "bg-black/50 text-white/90 hover:text-rose-400"
+                              }`}
+                            >
+                              {isFav ? "❤️" : "🤍"}
+                            </button>
                           </div>
 
-                          <div className="mt-3 flex items-center justify-between">
-                            <span className="text-base font-black text-slate-900">
-                              ETB {Number(item.price).toFixed(2)}
-                            </span>
-
-                            {/* Add / Qty Control */}
-                            <div
-                              onClick={(e) => e.stopPropagation()}
-                              className="flex items-center gap-1"
-                            >
-                              {inTray ? (
-                                <div className="flex items-center gap-1 bg-slate-100 rounded-xl p-0.5 border border-slate-200">
-                                  <button
-                                    onClick={() => updateTrayQty(item.id, -1)}
-                                    className="w-7 h-7 rounded-lg bg-white text-slate-700 hover:bg-slate-200 font-bold flex items-center justify-center text-xs shadow-xs"
-                                  >
-                                    -
-                                  </button>
-                                  <span className="w-6 text-center text-xs font-bold text-slate-900">
-                                    {inTray.quantity}
-                                  </span>
-                                  <button
-                                    onClick={() => updateTrayQty(item.id, 1)}
-                                    className="w-7 h-7 rounded-lg bg-rose-600 text-white hover:bg-rose-700 font-bold flex items-center justify-center text-xs shadow-xs"
-                                  >
-                                    +
-                                  </button>
+                          {/* Signature Vibrant Neon Green Bottom Bar (Exactly like Screenshot) */}
+                          <div className="bg-[#00E564] text-black p-3 sm:p-3.5 relative">
+                            {/* Curved Cut / Accent Wave Top */}
+                            <div className="flex items-start justify-between gap-1">
+                              <div className="min-w-0 flex-1">
+                                <h4 className="font-black text-black text-xs sm:text-sm truncate leading-snug">
+                                  {item.name}
+                                </h4>
+                                <div className="flex items-center gap-1 text-[10px] text-[#034421] font-bold mt-0.5">
+                                  <span>⏱</span>
+                                  <span>15-30 min</span>
                                 </div>
-                              ) : (
-                                <button
-                                  onClick={() => addToTray(item, 1)}
-                                  className="px-3 py-1.5 bg-slate-900 hover:bg-rose-600 text-white rounded-xl text-xs font-bold transition flex items-center gap-1 shadow-xs"
-                                >
-                                  <span>+</span> Add
-                                </button>
-                              )}
+                              </div>
+                            </div>
+
+                            {/* Price & Add to Cart Circle Button */}
+                            <div className="mt-2.5 flex items-center justify-between">
+                              <div className="flex flex-col">
+                                <span className="text-[10px] font-bold text-[#034421] leading-none uppercase">ETB</span>
+                                <span className="text-sm sm:text-base font-black text-black leading-tight">
+                                  {Math.round(item.price)}
+                                </span>
+                              </div>
+
+                              {/* Cart Circle Button */}
+                              <div onClick={(e) => e.stopPropagation()}>
+                                {inTray ? (
+                                  <div className="flex items-center bg-[#022812] rounded-full p-0.5 shadow-md">
+                                    <button
+                                      onClick={() => updateTrayQty(item.id, -1)}
+                                      className="w-6 h-6 rounded-full text-[#00E564] hover:bg-black font-black flex items-center justify-center text-xs"
+                                    >
+                                      -
+                                    </button>
+                                    <span className="w-5 text-center text-xs font-black text-white">
+                                      {inTray.quantity}
+                                    </span>
+                                    <button
+                                      onClick={() => updateTrayQty(item.id, 1)}
+                                      className="w-6 h-6 rounded-full bg-[#00E564] text-black font-black flex items-center justify-center text-xs"
+                                    >
+                                      +
+                                    </button>
+                                  </div>
+                                ) : (
+                                  <button
+                                    onClick={() => addToTray(item, 1)}
+                                    className="w-8 h-8 rounded-full bg-[#022812] text-[#00E564] hover:bg-black hover:scale-110 active:scale-95 transition flex items-center justify-center shadow-md cursor-pointer"
+                                    title="Add to tray"
+                                  >
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                                    </svg>
+                                  </button>
+                                )}
+                              </div>
                             </div>
                           </div>
                         </div>
-
-                        {/* Dish Photo or Graphic */}
-                        {item.image ? (
-                          <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-xl overflow-hidden shrink-0 border border-slate-100">
-                            <Image
-                              src={item.image}
-                              alt={item.name}
-                              fill
-                              className="object-cover group-hover:scale-105 transition duration-300"
-                              sizes="(max-width: 640px) 96px, 112px"
-                            />
-                          </div>
-                        ) : (
-                          <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl bg-slate-50 border border-slate-100 flex flex-col items-center justify-center text-slate-300 group-hover:text-rose-400 group-hover:bg-rose-50/50 transition shrink-0">
-                            <span className="text-2xl">🍲</span>
-                            <span className="text-[10px] font-bold text-slate-400 mt-1">Fresh</span>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
+                  </div>
                 </div>
-              </section>
-            ))}
-          </div>
-        ) : (
-          <div className="bg-white rounded-3xl p-12 text-center border border-slate-200/80 my-8">
-            <span className="text-4xl">🔍</span>
-            <h3 className="text-lg font-bold text-slate-900 mt-3">No matching items found</h3>
-            <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
-              We couldn&apos;t find anything matching &quot;{searchQuery}&quot;. Try searching for another dish or clear filters.
-            </p>
-            <button
-              onClick={() => {
-                setSearchQuery("");
-                setActiveCategory("all");
-                setFilterPopularOnly(false);
-              }}
-              className="mt-4 px-4 py-2 bg-slate-900 text-white rounded-xl text-xs font-bold hover:bg-slate-800 transition"
-            >
-              Reset Filters
-            </button>
-          </div>
-        )}
-
-        {/* Footer Brand Credit */}
-        <div className="pt-10 pb-8 text-center">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200/80 shadow-xs hover:border-slate-300 text-slate-500 hover:text-slate-800 transition"
-          >
-            <Image
-              src="/logo.png"
-              alt="DigitalMenu"
-              width={20}
-              height={20}
-              className="w-5 h-5 object-contain rounded-md"
-            />
-            <span className="text-[11px] font-medium">
-              Powered by <strong className="text-slate-700">DigitalMenu</strong>
-            </span>
-          </Link>
-        </div>
-      </main>
-
-      {/* Floating Bottom Tray Bar (Appears when items are selected) */}
-      {totalTrayCount > 0 && (
-        <div className="fixed bottom-4 inset-x-0 z-40 px-4 max-w-lg mx-auto">
-          <div
-            onClick={() => setIsTrayOpen(true)}
-            className="bg-slate-950 text-white rounded-2xl p-3.5 shadow-2xl flex items-center justify-between cursor-pointer hover:bg-slate-900 transition transform hover:-translate-y-0.5 border border-slate-800"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-rose-600 flex items-center justify-center font-black text-sm">
-                {totalTrayCount}
-              </div>
-              <div>
-                <p className="text-xs text-slate-400 font-medium">Your Table Tray</p>
-                <p className="text-sm font-black tracking-tight">ETB {totalTrayPrice.toFixed(2)}</p>
-              </div>
+              ))}
             </div>
+          ) : (
+            <div className="bg-[#062E19] rounded-3xl p-8 text-center border border-[#0E542F] my-6">
+              <span className="text-4xl">🔍</span>
+              <h3 className="text-base font-black text-white mt-3">No dishes found</h3>
+              <p className="text-xs text-emerald-300/70 mt-1 max-w-xs mx-auto">
+                We couldn&apos;t find anything matching your filter. Tap below to reset.
+              </p>
+              <button
+                onClick={() => {
+                  setSearchQuery("");
+                  setActiveCategory("all");
+                  setFilterPopularOnly(false);
+                  setFilterFavoritesOnly(false);
+                }}
+                className="mt-4 px-5 py-2.5 bg-[#00E564] text-black font-black rounded-xl text-xs hover:bg-[#00FF66] transition shadow-md"
+              >
+                Reset Menu Filters
+              </button>
+            </div>
+          )}
 
-            <div className="flex items-center gap-2 text-xs font-bold bg-white/10 hover:bg-white/20 px-3.5 py-2 rounded-xl transition">
-              <span>View Order</span>
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+          {/* Footer Powered By Credit */}
+          <div className="pt-8 pb-4 text-center">
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#062E19] border border-[#0E542F] text-emerald-300 text-[11px] font-semibold hover:border-[#00E564] transition"
+            >
+              <Image src="/logo.png" alt="DigitalMenu" width={18} height={18} className="rounded-xs" />
+              <span>Powered by <strong className="text-white">DigitalMenu</strong></span>
+            </Link>
+          </div>
+        </main>
+
+        {/* 7. FLOATING BOTTOM NAVIGATION BAR (Exact 4-Icon Dock from Screenshot) */}
+        <nav className="fixed bottom-3 inset-x-3 max-w-md sm:max-w-lg mx-auto z-40 bg-[#042413]/95 backdrop-blur-xl border border-[#0E542F] rounded-[28px] py-2 px-4 shadow-[0_10px_35px_rgba(0,0,0,0.8)] flex items-center justify-around">
+          {/* 1. Home Button */}
+          <button
+            onClick={() => {
+              setActiveNavTab("home");
+              setActiveCategory("all");
+              setFilterFavoritesOnly(false);
+              setFilterPopularOnly(false);
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            className={`flex flex-col items-center gap-1 transition ${
+              activeNavTab === "home" && !filterFavoritesOnly ? "text-[#00E564]" : "text-emerald-300/60 hover:text-white"
+            }`}
+          >
+            <div className={`p-1 rounded-xl ${activeNavTab === "home" && !filterFavoritesOnly ? "bg-[#00E564]/10" : ""}`}>
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
               </svg>
             </div>
-          </div>
-        </div>
-      )}
+            <span className="text-[10px] font-bold">Home</span>
+          </button>
 
-      {/* Dish Detail Modal */}
-      {selectedItem && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4 animate-in fade-in">
-          <div
-            className="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-lg max-h-[90vh] overflow-y-auto p-6 relative shadow-2xl animate-in slide-in-from-bottom"
-            onClick={(e) => e.stopPropagation()}
+          {/* 2. My Order / Tray Button */}
+          <button
+            onClick={() => {
+              setActiveNavTab("orders");
+              setIsTrayOpen(true);
+            }}
+            className="flex flex-col items-center gap-1 relative text-emerald-300/60 hover:text-white transition"
           >
-            <button
-              onClick={() => setSelectedItem(null)}
-              className="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold flex items-center justify-center text-sm z-10"
-            >
-              ✕
-            </button>
+            <div className="relative p-1">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              {totalTrayCount > 0 && (
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#00E564] text-black font-black text-[9px] rounded-full flex items-center justify-center shadow-md">
+                  {totalTrayCount}
+                </span>
+              )}
+            </div>
+            <span className="text-[10px] font-bold">My Order</span>
+          </button>
 
-            {selectedItem.image ? (
-              <div className="relative w-full h-56 rounded-2xl overflow-hidden mb-4 border border-slate-100">
+          {/* 3. Favorites Button */}
+          <button
+            onClick={() => {
+              setActiveNavTab("favorites");
+              setFilterFavoritesOnly(true);
+              setFilterPopularOnly(false);
+              setActiveCategory("all");
+            }}
+            className={`flex flex-col items-center gap-1 relative transition ${
+              filterFavoritesOnly ? "text-[#00E564]" : "text-emerald-300/60 hover:text-white"
+            }`}
+          >
+            <div className={`p-1 rounded-xl relative ${filterFavoritesOnly ? "bg-[#00E564]/10" : ""}`}>
+              <svg className="w-5 h-5" fill={filterFavoritesOnly ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+              </svg>
+              {favorites.length > 0 && (
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 text-white font-black text-[9px] rounded-full flex items-center justify-center">
+                  {favorites.length}
+                </span>
+              )}
+            </div>
+            <span className="text-[10px] font-bold">Favorites</span>
+          </button>
+
+          {/* 4. Call Waiter / Table Info Button */}
+          <button
+            onClick={handleCallWaiter}
+            className={`flex flex-col items-center gap-1 transition ${
+              isWaiterCalled ? "text-amber-400 animate-pulse" : "text-emerald-300/60 hover:text-white"
+            }`}
+          >
+            <div className="p-1">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+              </svg>
+            </div>
+            <span className="text-[10px] font-bold">Call Waiter</span>
+          </button>
+        </nav>
+
+        {/* 8. DISH DETAIL BOTTOM SHEET MODAL */}
+        {selectedItem && (
+          <div
+            className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-end sm:items-center justify-center p-0 sm:p-4 animate-in fade-in"
+            onClick={() => setSelectedItem(null)}
+          >
+            <div
+              className="bg-[#032412] text-white rounded-t-[32px] sm:rounded-[32px] w-full max-w-lg max-h-[90vh] overflow-y-auto p-6 relative shadow-2xl border-t sm:border border-[#0E542F] animate-in slide-in-from-bottom"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => setSelectedItem(null)}
+                className="absolute top-4 right-4 w-9 h-9 rounded-full bg-[#062E19] text-emerald-300 hover:text-white hover:bg-[#0A3D22] font-bold flex items-center justify-center text-sm z-10 border border-[#0E542F]"
+              >
+                ✕
+              </button>
+
+              {/* Dish Photo */}
+              <div className="relative w-full h-56 rounded-2xl overflow-hidden mb-4 border border-[#0E542F]">
                 <Image
-                  src={selectedItem.image}
+                  src={
+                    selectedItem.image ||
+                    DISH_IMAGE_FALLBACKS[selectedItem.name] ||
+                    "https://images.unsplash.com/photo-1544025162-d76694265947?w=600&auto=format&fit=crop&q=80"
+                  }
                   alt={selectedItem.name}
                   fill
                   className="object-cover"
                 />
-              </div>
-            ) : (
-              <div className="w-full h-36 rounded-2xl bg-gradient-to-tr from-rose-50 to-amber-50 flex items-center justify-center text-4xl mb-4 border border-slate-100">
-                🍽️
-              </div>
-            )}
-
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <h3 className="text-xl font-black text-slate-900 tracking-tight">
-                  {selectedItem.name}
-                </h3>
-                {selectedItem.isPopular && (
-                  <span className="inline-flex items-center gap-1 text-[11px] font-bold bg-amber-50 text-amber-700 px-2 py-0.5 rounded-full mt-1 border border-amber-200/70">
-                    🔥 Chef&apos;s Popular Choice
+                <div className="absolute top-3 left-3 flex gap-2">
+                  <span className="px-2.5 py-1 rounded-full bg-[#00E564] text-black font-black text-[10px] uppercase tracking-wider">
+                    {selectedItem.isPopular ? "🔥 Popular Choice" : "Fresh Daily"}
                   </span>
-                )}
-              </div>
-              <span className="text-xl font-black text-rose-600">
-                ETB {Number(selectedItem.price).toFixed(2)}
-              </span>
-            </div>
-
-            {selectedItem.description && (
-              <p className="text-sm text-slate-600 mt-3 leading-relaxed">
-                {selectedItem.description}
-              </p>
-            )}
-
-            {/* Special Instructions Note */}
-            <div className="mt-5">
-              <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                Special Instructions (optional)
-              </label>
-              <textarea
-                value={itemModalNotes}
-                onChange={(e) => setItemModalNotes(e.target.value)}
-                placeholder="E.g., No spicy peppers, sauce on the side, extra napkins..."
-                rows={2}
-                className="w-full text-xs p-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-rose-500/20 outline-none"
-              />
-            </div>
-
-            {/* Quantity and Add Button */}
-            <div className="mt-6 flex items-center gap-3">
-              <div className="flex items-center bg-slate-100 rounded-2xl p-1 border border-slate-200">
-                <button
-                  onClick={() => setItemModalQty(Math.max(1, itemModalQty - 1))}
-                  className="w-9 h-9 rounded-xl bg-white text-slate-800 font-bold flex items-center justify-center text-sm shadow-xs"
-                >
-                  -
-                </button>
-                <span className="w-10 text-center font-black text-sm text-slate-900">
-                  {itemModalQty}
-                </span>
-                <button
-                  onClick={() => setItemModalQty(itemModalQty + 1)}
-                  className="w-9 h-9 rounded-xl bg-white text-slate-800 font-bold flex items-center justify-center text-sm shadow-xs"
-                >
-                  +
-                </button>
+                </div>
               </div>
 
-              <button
-                onClick={() => {
-                  addToTray(selectedItem, itemModalQty, itemModalNotes);
-                  setSelectedItem(null);
-                }}
-                className="flex-1 py-3 px-5 bg-rose-600 hover:bg-rose-700 text-white rounded-2xl font-bold text-sm shadow-lg shadow-rose-600/20 transition flex items-center justify-between"
-              >
-                <span>Add to Tray</span>
-                <span>ETB {(selectedItem.price * itemModalQty).toFixed(2)}</span>
-              </button>
+              {/* Title & Price */}
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <h3 className="text-xl font-black text-white tracking-tight">
+                    {selectedItem.name}
+                  </h3>
+                  <div className="flex items-center gap-2 mt-1 text-xs text-emerald-300/80">
+                    <span>⏱ 15-30 min prep</span>
+                    <span>•</span>
+                    <span>🔥 Freshly cooked</span>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <span className="text-xs uppercase font-bold text-emerald-400 block">Price</span>
+                  <span className="text-xl font-black text-[#00E564]">
+                    ETB {Number(selectedItem.price).toFixed(2)}
+                  </span>
+                </div>
+              </div>
+
+              {/* Description */}
+              {selectedItem.description && (
+                <p className="text-xs sm:text-sm text-emerald-100/80 mt-3 leading-relaxed bg-[#062E19]/60 p-3 rounded-2xl border border-[#0E542F]/50">
+                  {selectedItem.description}
+                </p>
+              )}
+
+              {/* Special Instructions Note */}
+              <div className="mt-4">
+                <label className="block text-xs font-bold text-emerald-300 mb-1.5">
+                  Special Kitchen Instructions (optional)
+                </label>
+                <textarea
+                  value={itemModalNotes}
+                  onChange={(e) => setItemModalNotes(e.target.value)}
+                  placeholder="E.g., Extra hot sauce, no mayonnaise, well-done fries..."
+                  rows={2}
+                  className="w-full text-xs p-3 bg-[#062E19] border border-[#0E542F] text-white rounded-xl focus:border-[#00E564] outline-none placeholder-emerald-400/50"
+                />
+              </div>
+
+              {/* Quantity Counter & Add Button */}
+              <div className="mt-5 flex items-center gap-3">
+                <div className="flex items-center bg-[#062E19] rounded-2xl p-1 border border-[#0E542F]">
+                  <button
+                    onClick={() => setItemModalQty(Math.max(1, itemModalQty - 1))}
+                    className="w-10 h-10 rounded-xl bg-[#042413] text-[#00E564] hover:bg-black font-black flex items-center justify-center text-base"
+                  >
+                    -
+                  </button>
+                  <span className="w-10 text-center font-black text-sm text-white">
+                    {itemModalQty}
+                  </span>
+                  <button
+                    onClick={() => setItemModalQty(itemModalQty + 1)}
+                    className="w-10 h-10 rounded-xl bg-[#00E564] text-black font-black flex items-center justify-center text-base"
+                  >
+                    +
+                  </button>
+                </div>
+
+                <button
+                  onClick={() => {
+                    addToTray(selectedItem, itemModalQty, itemModalNotes);
+                    setSelectedItem(null);
+                  }}
+                  className="flex-1 py-3.5 px-5 bg-[#00E564] hover:bg-[#00FF66] text-black font-black rounded-2xl text-sm transition flex items-center justify-between shadow-lg shadow-[#00E564]/20 cursor-pointer"
+                >
+                  <span>Add to Order</span>
+                  <span>ETB {(selectedItem.price * itemModalQty).toFixed(2)}</span>
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Tray Drawer / Order Review Slide-over */}
-      {isTrayOpen && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex justify-end animate-in fade-in">
+        {/* 9. SLIDE-OVER TRAY / CART DRAWER */}
+        {isTrayOpen && (
           <div
-            className="w-full max-w-md bg-white h-full flex flex-col p-6 shadow-2xl animate-in slide-in-from-right"
-            onClick={(e) => e.stopPropagation()}
+            className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex justify-end animate-in fade-in"
+            onClick={() => setIsTrayOpen(false)}
           >
-            <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-              <div>
-                <h3 className="text-lg font-black text-slate-900 tracking-tight">Your Table Order</h3>
-                <p className="text-xs text-slate-500">
-                  {tableNumber ? `Table #${tableNumber}` : "Dine-in Order Review"}
-                </p>
-              </div>
-              <button
-                onClick={() => setIsTrayOpen(false)}
-                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold flex items-center justify-center text-sm"
-              >
-                ✕
-              </button>
-            </div>
-
-            {/* Tray Items List */}
-            <div className="flex-1 overflow-y-auto py-4 space-y-3">
-              {tray.length === 0 ? (
-                <div className="h-full flex flex-col items-center justify-center text-center p-6 text-slate-400">
-                  <span className="text-4xl mb-2">🍽️</span>
-                  <p className="font-bold text-slate-700 text-sm">Your tray is empty</p>
-                  <p className="text-xs text-slate-400 mt-1">Tap &quot;+ Add&quot; on any dish to prepare your order</p>
+            <div
+              className="w-full max-w-md bg-[#021C0E] border-l border-[#0E542F] h-full flex flex-col p-6 shadow-2xl animate-in slide-in-from-right"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Drawer Header */}
+              <div className="flex items-center justify-between border-b border-[#0E542F] pb-4">
+                <div>
+                  <h3 className="text-lg font-black text-white tracking-tight flex items-center gap-2">
+                    <span>🛒</span>
+                    <span>Your Table Order</span>
+                  </h3>
+                  <p className="text-xs text-emerald-300/70">
+                    {tableNumber ? `Table #${tableNumber} • Contactless Dining` : "Dine-in & Takeaway Order"}
+                  </p>
                 </div>
-              ) : (
-                tray.map((entry) => (
-                  <div
-                    key={entry.item.id}
-                    className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 flex items-start justify-between gap-3"
-                  >
-                    <div className="flex-1 min-w-0">
-                      <h4 className="font-bold text-slate-900 text-sm">{entry.item.name}</h4>
-                      <p className="text-xs text-slate-500 font-semibold mt-0.5">
-                        ETB {entry.item.price.toFixed(2)} each
-                      </p>
-                      {entry.specialInstructions && (
-                        <p className="text-[11px] text-amber-800 bg-amber-50/80 px-2 py-0.5 rounded-md mt-1 border border-amber-200/50">
-                          Note: {entry.specialInstructions}
+                <button
+                  onClick={() => setIsTrayOpen(false)}
+                  className="w-8 h-8 rounded-full bg-[#062E19] text-emerald-300 hover:text-white font-bold flex items-center justify-center text-sm border border-[#0E542F]"
+                >
+                  ✕
+                </button>
+              </div>
+
+              {/* Items List */}
+              <div className="flex-1 overflow-y-auto py-4 space-y-3">
+                {tray.length === 0 ? (
+                  <div className="h-full flex flex-col items-center justify-center text-center p-6 text-emerald-300/50">
+                    <span className="text-5xl mb-3">🍗</span>
+                    <p className="font-bold text-white text-sm">Your order tray is empty</p>
+                    <p className="text-xs text-emerald-300/60 mt-1 max-w-xs">
+                      Tap the cart button on any delicious shawarma, chicken, or drink to begin.
+                    </p>
+                  </div>
+                ) : (
+                  tray.map((entry) => (
+                    <div
+                      key={entry.item.id}
+                      className="p-3.5 rounded-2xl bg-[#062E19] border border-[#0E542F] flex items-start justify-between gap-3 shadow-sm"
+                    >
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-black text-white text-sm truncate">{entry.item.name}</h4>
+                        <p className="text-xs text-[#00E564] font-bold mt-0.5">
+                          ETB {entry.item.price.toFixed(2)} each
                         </p>
-                      )}
-                    </div>
+                        {entry.specialInstructions && (
+                          <p className="text-[11px] text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded-md mt-1 border border-amber-500/20">
+                            Note: {entry.specialInstructions}
+                          </p>
+                        )}
+                      </div>
 
-                    <div className="flex flex-col items-end gap-1.5 shrink-0">
-                      <span className="text-sm font-black text-slate-900">
-                        ETB {(entry.item.price * entry.quantity).toFixed(2)}
-                      </span>
-
-                      <div className="flex items-center bg-white rounded-xl border border-slate-200 p-0.5">
-                        <button
-                          onClick={() => updateTrayQty(entry.item.id, -1)}
-                          className="w-6 h-6 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 text-xs font-bold flex items-center justify-center"
-                        >
-                          -
-                        </button>
-                        <span className="w-6 text-center text-xs font-bold text-slate-900">
-                          {entry.quantity}
+                      <div className="flex flex-col items-end gap-1.5 shrink-0">
+                        <span className="text-xs font-black text-white">
+                          ETB {(entry.item.price * entry.quantity).toFixed(2)}
                         </span>
-                        <button
-                          onClick={() => updateTrayQty(entry.item.id, 1)}
-                          className="w-6 h-6 rounded-lg bg-rose-600 text-white hover:bg-rose-700 text-xs font-bold flex items-center justify-center"
-                        >
-                          +
-                        </button>
+
+                        <div className="flex items-center bg-[#02180B] rounded-xl border border-[#0E542F] p-0.5">
+                          <button
+                            onClick={() => updateTrayQty(entry.item.id, -1)}
+                            className="w-6 h-6 rounded-lg text-[#00E564] hover:bg-[#062E19] text-xs font-black flex items-center justify-center"
+                          >
+                            -
+                          </button>
+                          <span className="w-6 text-center text-xs font-black text-white">
+                            {entry.quantity}
+                          </span>
+                          <button
+                            onClick={() => updateTrayQty(entry.item.id, 1)}
+                            className="w-6 h-6 rounded-lg bg-[#00E564] text-black text-xs font-black flex items-center justify-center"
+                          >
+                            +
+                          </button>
+                        </div>
                       </div>
                     </div>
+                  ))
+                )}
+              </div>
+
+              {/* Drawer Footer */}
+              {tray.length > 0 && (
+                <div className="border-t border-[#0E542F] pt-4 space-y-3">
+                  <div className="space-y-1.5 text-xs text-emerald-200/80">
+                    <div className="flex justify-between">
+                      <span>Subtotal ({totalTrayCount} items)</span>
+                      <span className="font-bold text-white">ETB {totalTrayPrice.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between text-emerald-400">
+                      <span>Service & VAT</span>
+                      <span className="font-semibold">Included</span>
+                    </div>
+                    <div className="flex justify-between text-sm font-black text-white pt-2 border-t border-[#0E542F]">
+                      <span>Total Amount</span>
+                      <span className="text-[#00E564] text-base">ETB {totalTrayPrice.toFixed(2)}</span>
+                    </div>
                   </div>
-                ))
+
+                  {/* Table Number Confirmation */}
+                  <div className="bg-[#062E19] p-3 rounded-2xl border border-[#0E542F] flex items-center justify-between text-xs">
+                    <span className="text-emerald-200 font-semibold">Table Number:</span>
+                    <input
+                      type="number"
+                      value={tableNumber || ""}
+                      onChange={(e) => setTableNumber(e.target.value)}
+                      placeholder="e.g. 5"
+                      className="w-20 px-2 py-1 text-center font-black bg-[#02180B] border border-[#0E542F] rounded-lg text-white text-xs focus:border-[#00E564] outline-none"
+                    />
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex gap-2">
+                    <button
+                      onClick={clearTray}
+                      className="px-4 py-3 bg-[#062E19] hover:bg-[#0A3D22] text-rose-400 text-xs font-bold rounded-2xl transition border border-[#0E542F]"
+                    >
+                      Clear
+                    </button>
+                    <button
+                      onClick={() => {
+                        toast.success(
+                          tableNumber
+                            ? `Order confirmed for Table #${tableNumber}! Staff notified.`
+                            : "Order ready! Please show this order screen to your server.",
+                          {
+                            duration: 5000,
+                            icon: "🛎️",
+                            style: { background: "#062E19", color: "#00E564", border: "1px solid #00E564" },
+                          }
+                        );
+                        setIsTrayOpen(false);
+                      }}
+                      className="flex-1 py-3 px-4 bg-[#00E564] hover:bg-[#00FF66] text-black text-xs font-black rounded-2xl transition shadow-lg shadow-[#00E564]/20 flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                      <span>🛎️ Confirm Order • ETB {totalTrayPrice.toFixed(0)}</span>
+                    </button>
+                  </div>
+                </div>
               )}
             </div>
-
-            {/* Tray Footer & Actions */}
-            {tray.length > 0 && (
-              <div className="border-t border-slate-100 pt-4 space-y-3">
-                <div className="space-y-1.5 text-xs">
-                  <div className="flex justify-between text-slate-500">
-                    <span>Subtotal</span>
-                    <span className="font-semibold text-slate-800">ETB {totalTrayPrice.toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between text-slate-500">
-                    <span>Estimated Tax / Service</span>
-                    <span className="font-semibold text-slate-800">Included</span>
-                  </div>
-                  <div className="flex justify-between text-sm font-black text-slate-900 pt-1.5 border-t border-slate-100">
-                    <span>Total</span>
-                    <span className="text-rose-600">ETB {totalTrayPrice.toFixed(2)}</span>
-                  </div>
-                </div>
-
-                {/* Table Number Confirmation */}
-                <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-100 flex items-center justify-between text-xs">
-                  <span className="text-slate-600 font-medium">Table Number:</span>
-                  <input
-                    type="number"
-                    value={tableNumber || ""}
-                    onChange={(e) => setTableNumber(e.target.value)}
-                    placeholder="E.g. 5"
-                    className="w-20 px-2 py-1 text-center font-bold bg-white border border-slate-200 rounded-lg text-slate-900 text-xs"
-                  />
-                </div>
-
-                <div className="flex gap-2">
-                  <button
-                    onClick={clearTray}
-                    className="px-4 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition"
-                  >
-                    Clear
-                  </button>
-                  <button
-                    onClick={() => {
-                      toast.success(
-                        tableNumber
-                          ? `Order confirmed for Table #${tableNumber}! Show your tray to your server.`
-                          : "Order tray ready! Show this summary to your server.",
-                        { duration: 5000, icon: "🛎️" }
-                      );
-                      setIsTrayOpen(false);
-                    }}
-                    className="flex-1 py-3 px-4 bg-slate-950 hover:bg-rose-600 text-white text-xs font-bold rounded-xl transition shadow-lg flex items-center justify-center gap-2"
-                  >
-                    <span>🛎️ Ready for Server</span>
-                  </button>
-                </div>
-              </div>
-            )}
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
