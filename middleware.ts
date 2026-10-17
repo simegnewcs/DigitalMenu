@@ -15,6 +15,8 @@ export default auth((req) => {
     nextUrl.pathname === "/menu" ||
     nextUrl.pathname.startsWith("/menu/") ||
     nextUrl.pathname.startsWith("/api/public/") ||
+    nextUrl.pathname.startsWith("/api/download-apk") ||
+    nextUrl.pathname.endsWith(".apk") ||
     nextUrl.pathname === "/login" ||
     nextUrl.pathname === "/register";
   const isAdminRoute = nextUrl.pathname.startsWith("/admin");
@@ -42,5 +44,5 @@ export default auth((req) => {
 });
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\\.(?:png|jpg|jpeg|gif|webp|svg|ico)$).*)"],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\\.(?:png|jpg|jpeg|gif|webp|svg|ico|apk)$).*)"],
 };
