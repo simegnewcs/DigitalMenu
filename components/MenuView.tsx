@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import toast from "react-hot-toast";
@@ -181,11 +181,23 @@ export default function MenuView({
   const [restaurantsList, setRestaurantsList] = useState<RestaurantSummary[]>(allRestaurants);
   const [loading, setLoading] = useState(!initialRestaurant);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [filterPopularOnly, setFilterPopularOnly] = useState(false);
   const [filterFavoritesOnly, setFilterFavoritesOnly] = useState(false);
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [tableNumber, setTableNumber] = useState<string | null>(initialTableNumber || null);
+
+  const toggleSearch = () => {
+    setIsSearchOpen((prev) => {
+      const next = !prev;
+      if (next) {
+        setTimeout(() => searchInputRef.current?.focus(), 150);
+      }
+      return next;
+    });
+  };
 
   // Active Bottom Nav Tab
   const [activeNavTab, setActiveNavTab] = useState<"home" | "orders" | "favorites" | "waiter">("home");
@@ -203,6 +215,20 @@ export default function MenuView({
 
   // Tray / Cart State
   const [tray, setTray] = useState<TrayItem[]>([]);
+
+  // Order Mode & Delivery State
+  const [orderMode, setOrderMode] = useState<"dine-in" | "delivery">("dine-in");
+  const [deliveryLocation, setDeliveryLocation] = useState<string>("5 Kilo");
+  const [deliveryPhone, setDeliveryPhone] = useState<string>("");
+  const [deliveryNotes, setDeliveryNotes] = useState<string>("");
+
+  // Payment Modal & Receipt State
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [receiptImage, setReceiptImage] = useState<string | null>(null);
+  const [paymentTxnRef, setPaymentTxnRef] = useState<string>("");
+  const [isSubmittingOrder, setIsSubmittingOrder] = useState(false);
+  const [orderConfirmed, setOrderConfirmed] = useState<any | null>(null);
+  const [copiedAccount, setCopiedAccount] = useState(false);
 
   // Load Tray from localStorage
   useEffect(() => {
@@ -352,6 +378,95 @@ export default function MenuView({
     setTimeout(() => setIsWaiterCalled(false), 5000);
   };
 
+  // Order Validation
+  const isOrderReadyToConfirm = useMemo(() => {
+    if (tray.length === 0) return false;
+    if (orderMode === "dine-in") {
+      return Boolean(tableNumber && String(tableNumber).trim().length > 0);
+    }
+    if (orderMode === "delivery") {
+      return Boolean(deliveryLocation && deliveryLocation.trim().length > 0);
+    }
+    return false;
+  }, [tray, orderMode, tableNumber, deliveryLocation]);
+
+  const handleCopyAccount = () => {
+    navigator.clipboard.writeText("0986131415");
+    setCopiedAccount(true);
+    toast.success("Account 0986131415 copied!", {
+      icon: "📋",
+      style: { background: "#062E19", color: "#00E564", border: "1px solid #00E564" },
+    });
+    setTimeout(() => setCopiedAccount(false), 3000);
+  };
+
+  const handleReceiptUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 12 * 1024 * 1024) {
+      toast.error("File is too large. Please select an image under 12MB.");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setReceiptImage(event.target?.result as string);
+      toast.success("Payment screenshot uploaded! ✓", {
+        style: { background: "#062E19", color: "#00E564", border: "1px solid #00E564" },
+      });
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleSubmitOrderWithReceipt = () => {
+    if (!receiptImage) {
+      toast.error("Please upload your payment screenshot before submitting.", {
+        icon: "⚠️",
+        style: { background: "#062E19", color: "#FFD700", border: "1px solid #FFD700" },
+      });
+      return;
+    }
+
+    setIsSubmittingOrder(true);
+    const orderId = `BGS-${Math.floor(1000 + Math.random() * 9000)}`;
+    const newOrder = {
+      id: orderId,
+      restaurantId: restaurant?.id,
+      restaurantName: restaurant?.name || "BGS Chicken Restaurant",
+      items: tray,
+      totalAmount: totalTrayPrice,
+      orderMode,
+      tableNumber: orderMode === "dine-in" ? tableNumber : null,
+      deliveryLocation: orderMode === "delivery" ? deliveryLocation : null,
+      deliveryPhone: orderMode === "delivery" ? deliveryPhone : null,
+      deliveryNotes: orderMode === "delivery" ? deliveryNotes : null,
+      paymentAccount: "0986131415",
+      receiptImage,
+      paymentTxnRef,
+      createdAt: new Date().toISOString(),
+      status: "pending_verification",
+    };
+
+    try {
+      const existing = JSON.parse(localStorage.getItem(`digitalmenu_orders_${restaurant?.id}`) || "[]");
+      localStorage.setItem(`digitalmenu_orders_${restaurant?.id}`, JSON.stringify([newOrder, ...existing]));
+    } catch (e) {}
+
+    setTimeout(() => {
+      setIsSubmittingOrder(false);
+      setOrderConfirmed(newOrder);
+      setIsPaymentModalOpen(false);
+      setIsTrayOpen(false);
+      setTray([]);
+      setReceiptImage(null);
+      setPaymentTxnRef("");
+      toast.success(`Order #${orderId} received! We are verifying your payment.`, {
+        duration: 6000,
+        icon: "🎉",
+        style: { background: "#062E19", color: "#00E564", border: "1px solid #00E564" },
+      });
+    }, 600);
+  };
+
   // Filter items
   const filteredCategories = useMemo(() => {
     if (!restaurant) return [];
@@ -431,61 +546,58 @@ export default function MenuView({
         {/* Subtle Top Ambient Glow */}
         <div className="absolute top-0 inset-x-0 h-72 bg-gradient-to-b from-[#00E564]/10 via-[#04331A]/30 to-transparent pointer-events-none -z-0"></div>
 
-        {/* 1. TOP STATUS BAR (Mobile-native aesthetic) */}
-        <div className="relative z-10 px-6 pt-3 pb-1 flex items-center justify-between text-xs font-semibold text-emerald-200/70 tracking-tight">
-          <span>9:41</span>
-          <div className="flex items-center gap-1.5 text-[11px]">
-            {/* Cellular signal */}
-            <div className="flex items-end gap-0.5 h-3">
-              <span className="w-0.5 h-1 bg-emerald-300 rounded-xs"></span>
-              <span className="w-0.5 h-1.5 bg-emerald-300 rounded-xs"></span>
-              <span className="w-0.5 h-2 bg-emerald-300 rounded-xs"></span>
-              <span className="w-0.5 h-3 bg-emerald-300 rounded-xs"></span>
-            </div>
-            {/* Wifi Icon */}
-            <svg className="w-3.5 h-3.5 text-emerald-300" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M17.778 8.222c-4.296-4.296-11.26-4.296-15.556 0A1 1 0 01.808 6.808c5.076-5.077 13.308-5.077 18.384 0a1 1 0 01-1.414 1.414zM14.95 11.05a7 7 0 00-9.9 0 1 1 0 01-1.414-1.414 9 9 0 0112.728 0 1 1 0 01-1.414 1.414zm-2.829 2.828a3 3 0 00-4.242 0 1 1 0 01-1.415-1.414 5 5 0 017.072 0 1 1 0 01-1.415 1.414zM10 16a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
-            </svg>
-            {/* Battery Icon */}
-            <div className="w-5 h-2.5 rounded-xs border border-emerald-300/80 p-0.5 flex items-center">
-              <div className="w-3.5 h-1.5 bg-emerald-300 rounded-2xs"></div>
-            </div>
-          </div>
-        </div>
-
-        {/* 2. HEADER: Delivery Location / Table & Action Icons */}
-        <header className="relative z-10 px-5 pt-2 pb-3">
-          <div className="flex items-center justify-between gap-3">
-            {/* Delivery Location / Table Info */}
-            <div className="flex items-center gap-3 min-w-0">
+        {/* HEADER: Delivery Location / Table & Action Icons */}
+        <header className="relative z-10 px-4 sm:px-5 pt-4 pb-3">
+          <div className="flex items-center justify-between gap-2 sm:gap-3">
+            {/* 1. Left: Delivery Location / Table Info */}
+            <div className="flex items-center gap-2 sm:gap-2.5 min-w-0 flex-1">
               {/* Delivery Courier / Cloche Avatar */}
               <div
                 onClick={() => setIsRestaurantSwitcherOpen(!isRestaurantSwitcherOpen)}
-                className="w-11 h-11 rounded-2xl bg-[#07301B] border border-[#0E542F] p-1.5 flex items-center justify-center shrink-0 cursor-pointer shadow-md hover:border-[#00E564]/50 transition"
+                className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-[#07301B] border border-[#0E542F] p-1 flex items-center justify-center shrink-0 cursor-pointer shadow-md hover:border-[#00E564]/50 transition"
               >
-                <span className="text-xl">🛵</span>
+                <span className="text-lg sm:text-xl">🛵</span>
               </div>
 
               <div className="min-w-0">
                 <div
                   onClick={() => setIsRestaurantSwitcherOpen(!isRestaurantSwitcherOpen)}
-                  className="flex items-center gap-1.5 cursor-pointer text-xs font-bold text-emerald-300 hover:text-white transition group"
+                  className="flex items-center gap-1 cursor-pointer text-xs font-bold text-emerald-300 hover:text-white transition group"
                 >
-                  <span className="truncate">{tableNumber ? `Dining Table #${tableNumber}` : "Delivery location"}</span>
-                  <svg className="w-3.5 h-3.5 text-emerald-400 group-hover:translate-y-0.5 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <span className="truncate">{tableNumber ? `Table #${tableNumber}` : "Delivery location"}</span>
+                  <svg className="w-3 h-3 text-emerald-400 group-hover:translate-y-0.5 transition shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 9l-7 7-7-7" />
                   </svg>
                 </div>
 
                 <div className="flex items-center gap-1 text-[11px] text-emerald-100/70 truncate mt-0.5">
-                  <span className="text-rose-400 text-xs">📍</span>
+                  <span className="text-rose-400 text-xs shrink-0">📍</span>
                   <span className="truncate">{restaurant.address || "5Kilo, Addis Ababa"}</span>
                 </div>
               </div>
             </div>
 
-            {/* Right Action Buttons: Cart Tray & Waiter Bell */}
-            <div className="flex items-center gap-2.5 shrink-0">
+            {/* 2. Center: Search Menu Toggle Button */}
+            <div className="flex items-center justify-center shrink-0">
+              <button
+                id="search-toggle-btn"
+                onClick={toggleSearch}
+                className={`flex items-center justify-center gap-1.5 px-3 py-2 rounded-2xl border transition shadow-sm ${
+                  isSearchOpen || searchQuery
+                    ? "bg-[#00E564] text-black border-[#00E564] shadow-[0_0_15px_rgba(0,229,100,0.3)] font-black"
+                    : "bg-[#062E19] border-[#0E542F] text-emerald-300 hover:border-[#00E564]/60 hover:text-white font-semibold"
+                }`}
+                title={isSearchOpen ? "Close search input" : "Search menu"}
+              >
+                <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <span className="text-xs tracking-tight">Search</span>
+              </button>
+            </div>
+
+            {/* 3. Right: Cart Tray & Waiter Bell */}
+            <div className="flex items-center gap-2 sm:gap-2.5 shrink-0 flex-1 justify-end">
               {/* Cart / Tray Icon with Badge */}
               <button
                 onClick={() => setIsTrayOpen(true)}
@@ -547,98 +659,114 @@ export default function MenuView({
           )}
         </header>
 
-        {/* 3. SEARCH & FILTER BAR */}
-        <div className="relative z-10 px-5 pt-1 pb-4">
-          <div className="flex items-center gap-3">
-            {/* Search Pill Input */}
-            <div className="relative flex-1">
-              <span className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-emerald-400/80">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        {/* 3. COLLAPSIBLE SEARCH & FILTER BAR (Hidden by default; revealed on clicking search icon) */}
+        {isSearchOpen && (
+          <div className="relative z-10 px-5 pt-1 pb-4 animate-in fade-in slide-in-from-top-2 duration-200">
+            <div className="flex items-center gap-2.5">
+              {/* Search Pill Input */}
+              <div className="relative flex-1">
+                <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-emerald-400/80">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </span>
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  placeholder="Search dishes or items..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-10 pr-9 py-2.5 bg-[#062E19] text-white placeholder-emerald-400/60 text-xs sm:text-sm font-medium rounded-2xl border border-[#0E542F] focus:border-[#00E564] focus:outline-none focus:ring-2 focus:ring-[#00E564]/20 transition shadow-inner"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery("")}
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-xs text-emerald-400 hover:text-white"
+                    title="Clear search query"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
+
+              {/* Filter Slider Button */}
+              <button
+                onClick={() => setShowFilterModal(!showFilterModal)}
+                className={`w-10 h-10 rounded-2xl border flex items-center justify-center shrink-0 transition shadow-md ${
+                  filterPopularOnly || filterFavoritesOnly || showFilterModal
+                    ? "bg-[#00E564] text-black border-[#00E564]"
+                    : "bg-[#062E19] text-emerald-300 border-[#0E542F] hover:border-[#00E564]/50"
+                }`}
+                title="Filters"
+              >
+                <svg className="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
                 </svg>
-              </span>
-              <input
-                type="text"
-                placeholder="Search menu..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-11 pr-10 py-3 bg-[#062E19] text-white placeholder-emerald-400/60 text-xs sm:text-sm font-medium rounded-2xl border border-[#0E542F] focus:border-[#00E564] focus:outline-none focus:ring-2 focus:ring-[#00E564]/20 transition shadow-inner"
-              />
-              {searchQuery && (
+              </button>
+
+              {/* Close Search Button */}
+              <button
+                onClick={() => {
+                  setIsSearchOpen(false);
+                  setSearchQuery("");
+                }}
+                className="w-10 h-10 rounded-2xl bg-[#062E19] border border-[#0E542F] text-emerald-300 hover:text-white flex items-center justify-center shrink-0 transition"
+                title="Close search"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Quick Filter Pill Chips Modal / Popup */}
+            {showFilterModal && (
+              <div className="mt-3 p-3 bg-[#062E19] border border-[#0E542F] rounded-2xl shadow-xl flex flex-wrap gap-2 animate-in fade-in slide-in-from-top-1">
                 <button
-                  onClick={() => setSearchQuery("")}
-                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-xs text-emerald-400 hover:text-white"
+                  onClick={() => {
+                    setFilterPopularOnly(false);
+                    setFilterFavoritesOnly(false);
+                    setActiveCategory("all");
+                    setShowFilterModal(false);
+                  }}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition ${
+                    !filterPopularOnly && !filterFavoritesOnly && activeCategory === "all"
+                      ? "bg-[#00E564] text-black"
+                      : "bg-[#042212] text-emerald-200 border border-[#0E542F]"
+                  }`}
                 >
-                  ✕
+                  All Items ({totalMenuItemsCount})
                 </button>
-              )}
-            </div>
 
-            {/* Filter Slider Button */}
-            <button
-              onClick={() => setShowFilterModal(!showFilterModal)}
-              className={`w-12 h-12 rounded-2xl border flex items-center justify-center shrink-0 transition shadow-md ${
-                filterPopularOnly || filterFavoritesOnly || showFilterModal
-                  ? "bg-[#00E564] text-black border-[#00E564]"
-                  : "bg-[#062E19] text-emerald-300 border-[#0E542F] hover:border-[#00E564]/50"
-              }`}
-              title="Filters"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-              </svg>
-            </button>
+                <button
+                  onClick={() => {
+                    setFilterPopularOnly(!filterPopularOnly);
+                    setFilterFavoritesOnly(false);
+                  }}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1 ${
+                    filterPopularOnly
+                      ? "bg-[#00E564] text-black"
+                      : "bg-[#042212] text-emerald-200 border border-[#0E542F]"
+                  }`}
+                >
+                  <span>🔥</span> Popular Specials
+                </button>
+
+                <button
+                  onClick={() => {
+                    setFilterFavoritesOnly(!filterFavoritesOnly);
+                    setFilterPopularOnly(false);
+                  }}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1 ${
+                    filterFavoritesOnly
+                      ? "bg-[#00E564] text-black"
+                      : "bg-[#042212] text-emerald-200 border border-[#0E542F]"
+                  }`}
+                >
+                  <span>❤️</span> Favorites ({favorites.length})
+                </button>
+              </div>
+            )}
           </div>
-
-          {/* Quick Filter Pill Chips Modal / Popup */}
-          {showFilterModal && (
-            <div className="mt-3 p-3 bg-[#062E19] border border-[#0E542F] rounded-2xl shadow-xl flex flex-wrap gap-2 animate-in fade-in slide-in-from-top-1">
-              <button
-                onClick={() => {
-                  setFilterPopularOnly(false);
-                  setFilterFavoritesOnly(false);
-                  setActiveCategory("all");
-                  setShowFilterModal(false);
-                }}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition ${
-                  !filterPopularOnly && !filterFavoritesOnly && activeCategory === "all"
-                    ? "bg-[#00E564] text-black"
-                    : "bg-[#042212] text-emerald-200 border border-[#0E542F]"
-                }`}
-              >
-                All Items ({totalMenuItemsCount})
-              </button>
-
-              <button
-                onClick={() => {
-                  setFilterPopularOnly(!filterPopularOnly);
-                  setFilterFavoritesOnly(false);
-                }}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1 ${
-                  filterPopularOnly
-                    ? "bg-[#00E564] text-black"
-                    : "bg-[#042212] text-emerald-200 border border-[#0E542F]"
-                }`}
-              >
-                <span>🔥</span> Popular Specials
-              </button>
-
-              <button
-                onClick={() => {
-                  setFilterFavoritesOnly(!filterFavoritesOnly);
-                  setFilterPopularOnly(false);
-                }}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1 ${
-                  filterFavoritesOnly
-                    ? "bg-[#00E564] text-black"
-                    : "bg-[#042212] text-emerald-200 border border-[#0E542F]"
-                }`}
-              >
-                <span>❤️</span> Favorites ({favorites.length})
-              </button>
-            </div>
-          )}
-        </div>
+        )}
 
         {/* 4. CURVED ARC CATEGORY CAROUSEL (Signature Visual from Screenshot) */}
         <div className="relative z-10 px-4 pt-1 pb-4">
@@ -822,24 +950,65 @@ export default function MenuView({
                           <div className="bg-[#00E564] text-black p-3 sm:p-3.5 relative">
                             {/* Curved Cut / Accent Wave Top */}
                             <div className="flex items-start justify-between gap-1">
-                              <div className="min-w-0 flex-1">
-                                <h4 className="font-black text-black text-xs sm:text-sm truncate leading-snug">
+                              <div className="min-w-0 flex-1 pr-1.5">
+                                <h4 className="font-black text-black text-xs sm:text-sm leading-tight line-clamp-2 min-h-[2rem] sm:min-h-[2.25rem] break-words">
                                   {item.name}
                                 </h4>
-                                <div className="flex items-center gap-1 text-[10px] text-[#034421] font-bold mt-0.5">
+                                <div className="flex items-center gap-1 text-[10px] text-[#034421] font-bold mt-1">
                                   <span>⏱</span>
                                   <span>15-30 min</span>
                                 </div>
                               </div>
+
+                              {/* More Button on top of Cart Icon */}
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setSelectedItem(item);
+                                  setItemModalQty(inTray ? inTray.quantity : 1);
+                                  setItemModalNotes(inTray?.specialInstructions || "");
+                                }}
+                                className="shrink-0 px-2 py-0.5 rounded-full bg-[#022812] text-[#00E564] hover:bg-black hover:scale-105 active:scale-95 transition text-[10px] font-black tracking-tight flex items-center gap-1 cursor-pointer shadow-xs border border-[#022812]"
+                                title="View food description & details"
+                              >
+                                <span>More</span>
+                                <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M9 5l7 7-7 7" />
+                                </svg>
+                              </button>
                             </div>
 
                             {/* Price & Add to Cart Circle Button */}
                             <div className="mt-2.5 flex items-center justify-between">
-                              <div className="flex flex-col">
-                                <span className="text-[10px] font-bold text-[#034421] leading-none uppercase">ETB</span>
-                                <span className="text-sm sm:text-base font-black text-black leading-tight">
-                                  {Math.round(item.price)}
-                                </span>
+                              {/* Hanging Signboard Price Card (Styled from user image) */}
+                              <div className="flex flex-col items-center origin-top group-hover:rotate-[-2deg] transition-transform duration-300">
+                                {/* Hanging Cords & Nail */}
+                                <svg className="w-9 h-2.5 overflow-visible -mb-0.5" viewBox="0 0 36 10" fill="none">
+                                  {/* Nail pin */}
+                                  <circle cx="18" cy="1.5" r="1.5" fill="#EAD9BA" stroke="#4A2E18" strokeWidth="0.8" />
+                                  {/* Left cord */}
+                                  <line x1="18" y1="1.5" x2="4" y2="9.5" stroke="#2B1A0E" strokeWidth="1.2" strokeLinecap="round" />
+                                  {/* Right cord */}
+                                  <line x1="18" y1="1.5" x2="32" y2="9.5" stroke="#2B1A0E" strokeWidth="1.2" strokeLinecap="round" />
+                                  {/* Top left eyelet */}
+                                  <circle cx="4" cy="9.5" r="1" fill="#EAD9BA" stroke="#4A2E18" strokeWidth="0.6" />
+                                  {/* Top right eyelet */}
+                                  <circle cx="32" cy="9.5" r="1" fill="#EAD9BA" stroke="#4A2E18" strokeWidth="0.6" />
+                                </svg>
+
+                                {/* Signboard Body with double border & shadow */}
+                                <div className="bg-[#FFFDF6] px-2.5 py-1 rounded-lg border-2 border-[#9E1B1B] shadow-[0_3px_6px_rgba(0,0,0,0.25)] relative flex flex-col items-center justify-center min-w-[56px]">
+                                  {/* Inner Inset Red Border Frame */}
+                                  <div className="absolute inset-0.5 rounded-[5px] border border-[#9E1B1B]/40 pointer-events-none"></div>
+
+                                  <span className="text-[7.5px] font-black text-[#9E1B1B] uppercase tracking-wider leading-none">
+                                    ETB
+                                  </span>
+                                  <span className="text-xs sm:text-sm font-black text-[#9E1B1B] tracking-tight leading-none mt-0.5">
+                                    {Math.round(item.price)}
+                                  </span>
+                                </div>
                               </div>
 
                               {/* Cart Circle Button */}
@@ -1059,11 +1228,16 @@ export default function MenuView({
               </div>
 
               {/* Description */}
-              {selectedItem.description && (
-                <p className="text-xs sm:text-sm text-emerald-100/80 mt-3 leading-relaxed bg-[#062E19]/60 p-3 rounded-2xl border border-[#0E542F]/50">
-                  {selectedItem.description}
+              <div className="mt-3.5">
+                <span className="text-[11px] uppercase font-extrabold text-[#00E564] block mb-1.5 tracking-wider flex items-center gap-1.5">
+                  <span>📖</span>
+                  <span>About This Dish</span>
+                </span>
+                <p className="text-xs sm:text-sm text-emerald-100/90 leading-relaxed bg-[#062E19] p-3.5 rounded-2xl border border-[#0E542F] shadow-inner">
+                  {selectedItem.description ||
+                    "Freshly prepared with authentic ingredients and seasoned to perfection by our chefs at BGS Chicken Restaurant."}
                 </p>
-              )}
+              </div>
 
               {/* Special Instructions Note */}
               <div className="mt-4">
@@ -1201,8 +1375,106 @@ export default function MenuView({
 
               {/* Drawer Footer */}
               {tray.length > 0 && (
-                <div className="border-t border-[#0E542F] pt-4 space-y-3">
-                  <div className="space-y-1.5 text-xs text-emerald-200/80">
+                <div className="border-t border-[#0E542F] pt-4 space-y-3.5">
+                  {/* 1. ORDER MODE SELECTION (Placed directly ABOVE Subtotal): Exist in Place vs Delivery */}
+                  <div className="bg-[#032412] p-3 rounded-2xl border border-[#0E542F] space-y-2.5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-extrabold text-emerald-300 uppercase tracking-wider">
+                        Dining Option
+                      </span>
+                      <span className="text-[10px] text-emerald-400 font-semibold">
+                        {orderMode === "dine-in" ? "Table Service" : "Only 4, 5 & 6 Kilo"}
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2 p-1 bg-[#02180B] rounded-xl border border-[#0E542F]">
+                      {/* 1. Exist in Place / Dine-In */}
+                      <button
+                        type="button"
+                        onClick={() => setOrderMode("dine-in")}
+                        className={`py-2 px-3 rounded-lg text-xs font-black transition flex items-center justify-center gap-1.5 cursor-pointer ${
+                          orderMode === "dine-in"
+                            ? "bg-[#00E564] text-black shadow-md font-black"
+                            : "text-emerald-300/70 hover:text-white hover:bg-[#062E19]"
+                        }`}
+                      >
+                        <span>🍽️</span>
+                        <span>Exist in Place</span>
+                      </button>
+
+                      {/* 2. Delivery */}
+                      <button
+                        type="button"
+                        onClick={() => setOrderMode("delivery")}
+                        className={`py-2 px-3 rounded-lg text-xs font-black transition flex items-center justify-center gap-1.5 cursor-pointer ${
+                          orderMode === "delivery"
+                            ? "bg-[#00E564] text-black shadow-md font-black"
+                            : "text-emerald-300/70 hover:text-white hover:bg-[#062E19]"
+                        }`}
+                      >
+                        <span>🛵</span>
+                        <span>Delivery</span>
+                      </button>
+                    </div>
+
+                    {/* Dynamic Conditional Option based on Mode */}
+                    {orderMode === "dine-in" ? (
+                      <div className="flex items-center justify-between gap-2 pt-0.5 animate-in fade-in">
+                        <span className="text-xs text-emerald-200 font-semibold flex items-center gap-1.5">
+                          <span>🪑</span> Select Table Number:
+                        </span>
+                        <input
+                          type="number"
+                          min="1"
+                          max="99"
+                          value={tableNumber || ""}
+                          onChange={(e) => setTableNumber(e.target.value)}
+                          placeholder="e.g. 5"
+                          className="w-24 px-3 py-1.5 text-center font-black bg-[#02180B] border border-[#0E542F] focus:border-[#00E564] rounded-xl text-white text-xs outline-none shadow-inner"
+                        />
+                      </div>
+                    ) : (
+                      <div className="space-y-2 pt-0.5 animate-in fade-in">
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-xs text-emerald-200 font-semibold flex items-center gap-1.5">
+                            <span>📍</span> Delivery Location:
+                          </span>
+                          <select
+                            value={deliveryLocation}
+                            onChange={(e) => setDeliveryLocation(e.target.value)}
+                            className="px-3 py-1.5 font-black bg-[#02180B] border border-[#0E542F] focus:border-[#00E564] rounded-xl text-[#00E564] text-xs outline-none cursor-pointer"
+                          >
+                            <option value="4 Kilo">4 Kilo</option>
+                            <option value="5 Kilo">5 Kilo</option>
+                            <option value="6 Kilo">6 Kilo</option>
+                          </select>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-2">
+                          <input
+                            type="tel"
+                            value={deliveryPhone}
+                            onChange={(e) => setDeliveryPhone(e.target.value)}
+                            placeholder="Phone (09...)"
+                            className="w-full px-2.5 py-1.5 text-xs bg-[#02180B] border border-[#0E542F] focus:border-[#00E564] rounded-xl text-white outline-none placeholder-emerald-400/50"
+                          />
+                          <input
+                            type="text"
+                            value={deliveryNotes}
+                            onChange={(e) => setDeliveryNotes(e.target.value)}
+                            placeholder="Building / Dorm / Spot"
+                            className="w-full px-2.5 py-1.5 text-xs bg-[#02180B] border border-[#0E542F] focus:border-[#00E564] rounded-xl text-white outline-none placeholder-emerald-400/50"
+                          />
+                        </div>
+                        <p className="text-[10px] text-emerald-400/70 italic">
+                          ℹ️ We deliver exclusively to 4 Kilo, 5 Kilo, and 6 Kilo areas.
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* 2. Subtotal & Totals breakdown */}
+                  <div className="space-y-1.5 text-xs text-emerald-200/80 bg-[#062E19]/40 p-3 rounded-2xl border border-[#0E542F]/50">
                     <div className="flex justify-between">
                       <span>Subtotal ({totalTrayCount} items)</span>
                       <span className="font-bold text-white">ETB {totalTrayPrice.toFixed(2)}</span>
@@ -1217,19 +1489,7 @@ export default function MenuView({
                     </div>
                   </div>
 
-                  {/* Table Number Confirmation */}
-                  <div className="bg-[#062E19] p-3 rounded-2xl border border-[#0E542F] flex items-center justify-between text-xs">
-                    <span className="text-emerald-200 font-semibold">Table Number:</span>
-                    <input
-                      type="number"
-                      value={tableNumber || ""}
-                      onChange={(e) => setTableNumber(e.target.value)}
-                      placeholder="e.g. 5"
-                      className="w-20 px-2 py-1 text-center font-black bg-[#02180B] border border-[#0E542F] rounded-lg text-white text-xs focus:border-[#00E564] outline-none"
-                    />
-                  </div>
-
-                  {/* Actions */}
+                  {/* 3. Actions */}
                   <div className="flex gap-2">
                     <button
                       onClick={clearTray}
@@ -1238,26 +1498,260 @@ export default function MenuView({
                       Clear
                     </button>
                     <button
-                      onClick={() => {
-                        toast.success(
-                          tableNumber
-                            ? `Order confirmed for Table #${tableNumber}! Staff notified.`
-                            : "Order ready! Please show this order screen to your server.",
-                          {
-                            duration: 5000,
-                            icon: "🛎️",
-                            style: { background: "#062E19", color: "#00E564", border: "1px solid #00E564" },
-                          }
-                        );
-                        setIsTrayOpen(false);
-                      }}
-                      className="flex-1 py-3 px-4 bg-[#00E564] hover:bg-[#00FF66] text-black text-xs font-black rounded-2xl transition shadow-lg shadow-[#00E564]/20 flex items-center justify-center gap-2 cursor-pointer"
+                      disabled={!isOrderReadyToConfirm}
+                      onClick={() => setIsPaymentModalOpen(true)}
+                      className={`flex-1 py-3 px-4 text-xs font-black rounded-2xl transition flex items-center justify-center gap-2 ${
+                        isOrderReadyToConfirm
+                          ? "bg-[#00E564] hover:bg-[#00FF66] text-black shadow-lg shadow-[#00E564]/20 cursor-pointer"
+                          : "bg-[#062E19] text-emerald-400/40 border border-[#0E542F] cursor-not-allowed"
+                      }`}
+                      title={!isOrderReadyToConfirm ? (orderMode === "dine-in" ? "Please enter table number" : "Please select delivery location") : "Proceed to payment"}
                     >
-                      <span>🛎️ Confirm Order • ETB {totalTrayPrice.toFixed(0)}</span>
+                      {isOrderReadyToConfirm ? (
+                        <span>🛎️ Confirm & Pay • ETB {totalTrayPrice.toFixed(0)}</span>
+                      ) : (
+                        <span>{orderMode === "dine-in" ? "⚠️ Enter Table # to Confirm" : "⚠️ Select Location to Confirm"}</span>
+                      )}
                     </button>
                   </div>
                 </div>
               )}
+            </div>
+          </div>
+        )}
+
+        {/* 10. PAYMENT & SCREENSHOT UPLOAD MODAL */}
+        {isPaymentModalOpen && (
+          <div
+            className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-end sm:items-center justify-center p-0 sm:p-4 animate-in fade-in"
+            onClick={() => setIsPaymentModalOpen(false)}
+          >
+            <div
+              className="bg-[#021C0E] text-white rounded-t-[32px] sm:rounded-[32px] w-full max-w-lg max-h-[92vh] overflow-y-auto p-6 relative shadow-2xl border-t sm:border border-[#0E542F] animate-in slide-in-from-bottom space-y-4"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Header */}
+              <div className="flex items-center justify-between border-b border-[#0E542F] pb-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl">💳</span>
+                  <div>
+                    <h3 className="text-base sm:text-lg font-black text-white">Confirm & Pay Order</h3>
+                    <p className="text-[11px] text-emerald-300/70">
+                      {orderMode === "dine-in" ? `Dine-in at Table #${tableNumber}` : `Delivery to ${deliveryLocation}`}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setIsPaymentModalOpen(false)}
+                  className="w-8 h-8 rounded-full bg-[#062E19] text-emerald-300 hover:text-white font-bold flex items-center justify-center text-sm border border-[#0E542F]"
+                >
+                  ✕
+                </button>
+              </div>
+
+              {/* Amount to Pay Banner */}
+              <div className="bg-gradient-to-r from-[#032914] to-[#06381D] p-4 rounded-2xl border border-[#00E564]/40 flex items-center justify-between shadow-lg">
+                <div>
+                  <span className="text-[11px] font-bold text-emerald-300/80 uppercase tracking-wider block">
+                    Total Amount Due
+                  </span>
+                  <span className="text-2xl font-black text-[#00E564]">
+                    ETB {totalTrayPrice.toFixed(2)}
+                  </span>
+                </div>
+                <div className="text-right">
+                  <span className="text-[10px] font-bold text-emerald-200 bg-[#00E564]/10 border border-[#00E564]/30 px-2.5 py-1 rounded-full">
+                    {totalTrayCount} items
+                  </span>
+                </div>
+              </div>
+
+              {/* Step 1: Transfer Payment Instructions */}
+              <div className="bg-[#042413] p-4 rounded-2xl border border-[#0E542F] space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-black text-emerald-300 uppercase tracking-wider flex items-center gap-1.5">
+                    <span className="w-5 h-5 rounded-full bg-[#00E564] text-black text-[10px] font-black flex items-center justify-center">1</span>
+                    <span>Transfer Payment via Telebirr / CBE</span>
+                  </span>
+                  <span className="text-[10px] text-amber-300 font-bold bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-500/20">
+                    Instant Mobile Pay
+                  </span>
+                </div>
+
+                <p className="text-xs text-emerald-100/80">
+                  Please transfer <strong className="text-white">ETB {totalTrayPrice.toFixed(2)}</strong> using Telebirr, CBE Birr, or Mobile Banking to:
+                </p>
+
+                {/* Account Number Card */}
+                <div className="p-3 bg-[#02180B] rounded-xl border border-[#0E542F] flex items-center justify-between gap-2 shadow-inner">
+                  <div>
+                    <span className="text-[10px] font-bold text-emerald-400 block uppercase">
+                      Payment Account / Phone
+                    </span>
+                    <span className="text-lg font-black text-[#00E564] tracking-wider select-all font-mono">
+                      0986131415
+                    </span>
+                    <span className="text-[10px] text-emerald-300/60 block">BGS Chicken Restaurant</span>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={handleCopyAccount}
+                    className={`px-3 py-2 rounded-xl text-xs font-black transition flex items-center gap-1 shadow-sm ${
+                      copiedAccount
+                        ? "bg-[#00E564] text-black"
+                        : "bg-[#062E19] text-[#00E564] hover:bg-[#00E564] hover:text-black border border-[#0E542F]"
+                    }`}
+                  >
+                    <span>{copiedAccount ? "✓ Copied" : "📋 Copy"}</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Step 2: Upload Payment Screenshot */}
+              <div className="bg-[#042413] p-4 rounded-2xl border border-[#0E542F] space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-black text-emerald-300 uppercase tracking-wider flex items-center gap-1.5">
+                    <span className="w-5 h-5 rounded-full bg-[#00E564] text-black text-[10px] font-black flex items-center justify-center">2</span>
+                    <span>Upload Payment Screenshot</span>
+                  </span>
+                  <span className="text-[10px] text-rose-400 font-bold">* Required</span>
+                </div>
+
+                <p className="text-xs text-emerald-100/70">
+                  Take a screenshot of your successful transaction and attach it below:
+                </p>
+
+                {receiptImage ? (
+                  <div className="relative rounded-2xl overflow-hidden border border-[#00E564] bg-[#02180B] p-2 flex items-center gap-3 shadow-md">
+                    <div className="relative w-16 h-16 rounded-xl overflow-hidden shrink-0 border border-[#0E542F]">
+                      <img src={receiptImage} alt="Receipt preview" className="w-full h-full object-cover" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1 text-xs font-black text-[#00E564]">
+                        <span>✓</span> Screenshot Attached
+                      </div>
+                      <p className="text-[11px] text-emerald-200/60 truncate mt-0.5">Ready for verification</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setReceiptImage(null)}
+                      className="px-2.5 py-1 text-xs font-bold text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 rounded-xl border border-rose-500/20"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ) : (
+                  <label className="border-2 border-dashed border-[#0E542F] hover:border-[#00E564] rounded-2xl p-4 flex flex-col items-center justify-center cursor-pointer transition bg-[#02180B]/60 group">
+                    <span className="text-3xl mb-1 group-hover:scale-110 transition">📸</span>
+                    <span className="text-xs font-black text-emerald-300 group-hover:text-[#00E564]">
+                      Tap to Upload Payment Screenshot
+                    </span>
+                    <span className="text-[10px] text-emerald-400/60 mt-0.5">PNG, JPG, or screenshot up to 10MB</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleReceiptUpload}
+                      className="hidden"
+                    />
+                  </label>
+                )}
+
+                {/* Optional Note / Reference */}
+                <input
+                  type="text"
+                  value={paymentTxnRef}
+                  onChange={(e) => setPaymentTxnRef(e.target.value)}
+                  placeholder="Txn ID or Sender Name (optional)"
+                  className="w-full px-3 py-2 text-xs bg-[#02180B] border border-[#0E542F] focus:border-[#00E564] rounded-xl text-white outline-none placeholder-emerald-400/50"
+                />
+              </div>
+
+              {/* Submit Button */}
+              <button
+                type="button"
+                disabled={!receiptImage || isSubmittingOrder}
+                onClick={handleSubmitOrderWithReceipt}
+                className={`w-full py-3.5 px-4 text-xs font-black rounded-2xl transition flex items-center justify-center gap-2 ${
+                  receiptImage && !isSubmittingOrder
+                    ? "bg-[#00E564] hover:bg-[#00FF66] text-black shadow-lg shadow-[#00E564]/30 cursor-pointer"
+                    : "bg-[#062E19] text-emerald-400/40 border border-[#0E542F] cursor-not-allowed"
+                }`}
+              >
+                {isSubmittingOrder ? (
+                  <span>⏳ Submitting Order...</span>
+                ) : receiptImage ? (
+                  <span>🚀 Submit Order with Receipt • ETB {totalTrayPrice.toFixed(0)}</span>
+                ) : (
+                  <span>📸 Please Upload Screenshot to Submit</span>
+                )}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* 11. ORDER CONFIRMATION SUCCESS MODAL */}
+        {orderConfirmed && (
+          <div
+            className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in"
+            onClick={() => setOrderConfirmed(null)}
+          >
+            <div
+              className="bg-[#021C0E] text-white rounded-3xl w-full max-w-md p-6 relative shadow-2xl border border-[#00E564]/50 animate-in zoom-in-95 space-y-4 text-center"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="w-16 h-16 rounded-full bg-[#00E564]/20 border-2 border-[#00E564] text-[#00E564] flex items-center justify-center text-3xl mx-auto shadow-lg shadow-[#00E564]/20 animate-bounce">
+                ✓
+              </div>
+
+              <div>
+                <h3 className="text-xl font-black text-white">Order Confirmed!</h3>
+                <p className="text-xs text-emerald-300 font-bold mt-1">Order #{orderConfirmed.id}</p>
+              </div>
+
+              <div className="bg-[#032412] p-4 rounded-2xl border border-[#0E542F] text-left text-xs space-y-2">
+                <div className="flex justify-between border-b border-[#0E542F] pb-2">
+                  <span className="text-emerald-300/80">Order Type:</span>
+                  <span className="font-black text-white">
+                    {orderConfirmed.orderMode === "dine-in"
+                      ? `🍽️ Dine-in (Table #${orderConfirmed.tableNumber})`
+                      : `🛵 Delivery (${orderConfirmed.deliveryLocation})`}
+                  </span>
+                </div>
+                <div className="flex justify-between border-b border-[#0E542F] pb-2">
+                  <span className="text-emerald-300/80">Payment Account:</span>
+                  <span className="font-mono font-bold text-[#00E564]">0986131415</span>
+                </div>
+                <div className="flex justify-between border-b border-[#0E542F] pb-2">
+                  <span className="text-emerald-300/80">Status:</span>
+                  <span className="font-bold text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-500/20">
+                    Payment Verification in Progress
+                  </span>
+                </div>
+                <div className="flex justify-between pt-1">
+                  <span className="text-emerald-300/80">Total Paid:</span>
+                  <span className="font-black text-base text-[#00E564]">
+                    ETB {Number(orderConfirmed.totalAmount).toFixed(2)}
+                  </span>
+                </div>
+              </div>
+
+              {orderConfirmed.receiptImage && (
+                <div className="flex items-center gap-2.5 p-2 bg-[#02180B] rounded-xl border border-[#0E542F] text-left">
+                  <img src={orderConfirmed.receiptImage} alt="Receipt thumbnail" className="w-10 h-10 object-cover rounded-lg shrink-0 border border-[#0E542F]" />
+                  <div className="text-[11px] text-emerald-200/80 truncate">
+                    Payment receipt screenshot attached successfully.
+                  </div>
+                </div>
+              )}
+
+              <button
+                type="button"
+                onClick={() => setOrderConfirmed(null)}
+                className="w-full py-3 bg-[#00E564] hover:bg-[#00FF66] text-black font-black rounded-xl text-xs transition shadow-md"
+              >
+                Back to Menu
+              </button>
             </div>
           </div>
         )}

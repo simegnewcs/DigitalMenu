@@ -221,7 +221,10 @@ export default async function PublicMenuSlugPage({
           </div>
         }
       >
-        <MenuSlugClient slug={slug} />
+        <MenuSlugClient
+          slug={slug}
+          initialRestaurant={restaurant ? JSON.parse(JSON.stringify(restaurant)) : null}
+        />
       </Suspense>
     </>
   );
